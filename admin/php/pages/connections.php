@@ -21,20 +21,20 @@ function connections_page() {
 	?>
 </div>
 
-<script>
-function submitConnection () {
-	let formData = new FormData();
-	formData.append("name", document.getElementById("name").value);
-	formData.append("username", document.getElementById("username").value);
-	formData.append("api_key", document.getElementById("api_key").value);
-	formData.append("url", document.getElementById("url").value);
-	formData.append("database_name", document.getElementById("database_name").value);
+<script type="text/javascript">
+	function submitConnection () {
+		let formData = new FormData();
+		formData.append("name", document.getElementById("name").value);
+		formData.append("username", document.getElementById("username").value);
+		formData.append("api_key", document.getElementById("api_key").value);
+		formData.append("url", document.getElementById("url").value);
+		formData.append("database_name", document.getElementById("database_name").value);
 
-	fetch("/wp-json/odoo-conn/v1/create-connection", {
-		method: "POST",
-		body: formData
-	});
-}
+		fetch("/wp-json/odoo-conn/v1/create-connection", {
+			method: "POST",
+			body: formData
+		});
+	}
 </script>
 <?php
 }

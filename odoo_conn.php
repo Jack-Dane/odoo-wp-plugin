@@ -6,6 +6,10 @@ Description: Connect your WordPress Contact 7 Forms to Odoo
 Version: 0.0.1
 */
 
+include("dependency_check.php");
+
+register_activation_hook( __FILE__, "contact_7_plugin_active" );
+
 include("activation.php");
 
 register_activation_hook(__FILE__,  "odoo_conn_activation_function");

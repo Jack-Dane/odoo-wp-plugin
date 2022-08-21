@@ -1,5 +1,7 @@
 <?php
 
+require_once("dependency_check.php");
+
 function odoo_conn_activation_function(){
 	require_once(ABSPATH . "wp-admin/includes/upgrade.php");
 
