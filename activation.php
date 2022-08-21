@@ -34,7 +34,7 @@ function create_odoo_connections_table(){
 function create_odoo_submit_table(){
 	global $wpdb, $table_prefix;
 
-	$table_name = $table_prefix . "odoo_conn_submit";
+	$table_name = $table_prefix . "odoo_conn_form";
 	$odoo_conn_table = $table_prefix . "odoo_conn_connection";
 	$charset_collate = $wpdb->get_charset_collate();
 
@@ -56,8 +56,8 @@ function create_odoo_submit_table(){
 function create_odoo_submit_field_mapping(){
 	global $wpdb, $table_prefix;
 
-	$table_name = $table_prefix . "odoo_conn_field_mapping";
-	$odoo_submit_table = $table_prefix . "odoo_conn_submit";
+	$table_name = $table_prefix . "odoo_conn_form_mapping";
+	$odoo_submit_table = $table_prefix . "odoo_conn_form";
 
 	$sql = "
 	CREATE TABLE `$table_name` (

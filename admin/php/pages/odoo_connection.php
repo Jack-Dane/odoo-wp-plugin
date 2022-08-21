@@ -1,7 +1,7 @@
 <?php 
 require_once(__DIR__ . "/../pageHelpers/tableDisplay.php");
 
-function connections_page() {
+function odoo_connection_page () {
 ?>
 <div class="wrap">
 	<h1>Connections</h1>
@@ -30,7 +30,7 @@ function connections_page() {
 		formData.append("url", document.getElementById("url").value);
 		formData.append("database_name", document.getElementById("database_name").value);
 
-		fetch("/wp-json/odoo-conn/v1/create-connection", {
+		fetch("/wp-json/odoo-conn/v1/create-odoo-connection", {
 			method: "POST",
 			body: formData
 		});

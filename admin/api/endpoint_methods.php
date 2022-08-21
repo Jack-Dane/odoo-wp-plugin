@@ -1,6 +1,6 @@
 <?php 
 
-function create_connection ($data) {
+function create_odoo_connection ($data) {
 	global $wpdb, $table_prefix;
 
 	$wpdb->insert(
@@ -15,18 +15,18 @@ function create_connection ($data) {
 	);
 }
 
-function get_connections ($data) {
+function get_odoo_connections ($data) {
 	global $wpdb, $table_prefix;
 
 	$results = $wpdb->get_results("SELECT * FROM " . $table_prefix . "odoo_conn_connection");
 	return $results;
 }
 
-function create_form_connection ($data) {
+function create_odoo_form ($data) {
 	global $wpdb, $table_prefix;
 
 	$wpdb->insert(
-		$table_prefix . "odoo_conn_submit",
+		$table_prefix . "odoo_conn_form",
 		array (
 			"odoo_connection_id" => $data["odoo_connection_id"],
 			"odoo_model" => $data["odoo_model"],
@@ -42,18 +42,18 @@ function create_form_connection ($data) {
 	);
 }
 
-function get_form_connections ($data) {
+function get_odoo_forms ($data) {
 	global $wpdb, $table_prefix;
 
-	$results = $wpdb->get_results("SELECT * FROM " . $table_prefix . "odoo_conn_submit");
+	$results = $wpdb->get_results("SELECT * FROM " . $table_prefix . "odoo_conn_form");
 	return $results;
 }
 
-function create_mapping ($data) {
+function create_odoo_form_mapping ($data) {
 	global $wpdb, $table_prefix;
 
 	$wpdb->insert(
-		$table_prefix . "odoo_conn_field_mapping",
+		$table_prefix . "odoo_conn_form_mapping",
 		array (
 			"odoo_submit_id" => $data["odoo_submit_id"],
 			"cf7_field_id" => $data["cf7_field_id"],
@@ -62,10 +62,10 @@ function create_mapping ($data) {
 	);
 }
 
-function get_mappings ($data) {
+function get_odoo_from_mappings ($data) {
 	global $wpdb, $table_prefix;
 
-	$results = $wpdb->get_results("SELECT * FROM " . $table_prefix . "odoo_conn_field_mapping");
+	$results = $wpdb->get_results("SELECT * FROM " . $table_prefix . "odoo_conn_form_mapping");
 	return $results;
 }
 

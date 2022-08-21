@@ -31,12 +31,12 @@ function get_connection_data () {
 	echo "</table>";
 }
 
-function get_submit_data () {
+function get_form_data () {
 	global $wpdb;
 
 	$column_names = ["id", "odoo_connection_id", "name", "contact_7_id"];
 
-	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_submit", ARRAY_A );
+	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form", ARRAY_A );
 
 	echo "<table>";
 	echo_headers($column_names);
@@ -51,7 +51,7 @@ function get_odoo_mappings () {
 
 	$column_names = ["id", "odoo_submit_id", "cf7_field_id", "odoo_field_name"];
 
-	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_field_mapping", ARRAY_A );
+	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form_mapping", ARRAY_A );
 
 	echo "<table>";
 	echo_headers($column_names);

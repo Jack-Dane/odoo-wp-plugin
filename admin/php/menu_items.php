@@ -1,33 +1,33 @@
 <?php
 
-include("pages/form_c7f_connection.php");
-include("pages/connections.php");
-include("pages/form_mapping.php");
+include("pages/odoo_form.php");
+include("pages/odoo_connection.php");
+include("pages/odoo_form_mapping.php");
 
 function add_top_menu_page() {
 	add_menu_page(
-		"Odoo Submits",
-		"Odoo Submits",
+		"Odoo Froms",
+		"Odoo Forms",
 		"administrator",
-		"odoo_connector_form_submit",
-		"form_c7f_connection"
+		"odoo_form",
+		"odoo_form_page"
 	);
 
 	add_submenu_page(
-		"odoo_connector_form_submit",
+		"odoo_form",
 		"Odoo Connections",
 		"Odoo Connections",
 		"administrator",
-		"odoo_connector_connections",
-		"connections_page"
+		"odoo_connection",
+		"odoo_connection_page"
 	);
 	add_submenu_page(
-		"odoo_connector_form_submit",
-		"Odoo Forms",
-		"Odoo Forms",
+		"odoo_form",
+		"Odoo Form Mappings",
+		"Odoo Form Mappings",
 		"administrator",
-		"odoo_connector_forms",
-		"forms_page"
+		"odoo_form_mapping",
+		"odoo_form_mapping_page"
 	);
 }
 
