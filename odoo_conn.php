@@ -10,4 +10,6 @@ include("activation.php");
 
 register_activation_hook(__FILE__,  "odoo_conn_activation_function");
 
+include("admin/php/main.php");
+
 ?>

@@ -40,6 +40,7 @@ function create_odoo_submit_table(){
 	CREATE TABLE `$table_name` (
 	`id` MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
 	`odoo_connection_id` MEDIUMINT(9) NOT NULL,
+	`odoo_model` VARCHAR(50) NOT NULL,
 	`name` VARCHAR(30) NOT NULL,
 	`contact_7_id` TINYINT(2) NOT NULL,
 	PRIMARY KEY (id),
@@ -60,7 +61,6 @@ function create_odoo_submit_field_mapping(){
 	CREATE TABLE `$table_name` (
 	`id` MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
 	`odoo_submit_id` MEDIUMINT(9) NOT NULL,
-	`odoo_model` VARCHAR(50) NOT NULL,
 	`cf7_field_id` TINYINT(2) NOT NULL,
 	`odoo_field_name` VARCHAR(100) NOT NULL,
 	PRIMARY KEY(id),
