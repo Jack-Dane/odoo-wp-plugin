@@ -1,5 +1,6 @@
 <?php 
 require_once(__DIR__ . "/../pageHelpers/tableDisplay.php");
+require_once(__DIR__ . "/../../../odoo_connector/odoo_connector.php");
 
 function odoo_connection_page () {
 ?>
