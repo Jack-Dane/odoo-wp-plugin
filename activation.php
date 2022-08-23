@@ -6,8 +6,8 @@ function odoo_conn_activation_function(){
 	require_once(ABSPATH . "wp-admin/includes/upgrade.php");
 
 	create_odoo_connections_table();
-	create_odoo_submit_table();
-	create_odoo_submit_field_mapping();
+	create_odoo_form_table();
+	create_odoo_form_field_mapping();
 }
 
 function create_odoo_connections_table(){
@@ -31,7 +31,7 @@ function create_odoo_connections_table(){
 	dbDelta($sql);
 }
 
-function create_odoo_submit_table(){
+function create_odoo_form_table(){
 	global $wpdb, $table_prefix;
 
 	$table_name = $table_prefix . "odoo_conn_form";
@@ -53,20 +53,20 @@ function create_odoo_submit_table(){
 	dbDelta($sql);
 }
 
-function create_odoo_submit_field_mapping(){
+function create_odoo_form_field_mapping(){
 	global $wpdb, $table_prefix;
 
 	$table_name = $table_prefix . "odoo_conn_form_mapping";
-	$odoo_submit_table = $table_prefix . "odoo_conn_form";
+	$odoo_form_table = $table_prefix . "odoo_conn_form";
 
 	$sql = "
 	CREATE TABLE `$table_name` (
 	`id` MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-	`odoo_submit_id` MEDIUMINT(9) NOT NULL,
-	`cf7_field_id` TINYINT(2) NOT NULL,
+	`odoo_form_id` MEDIUMINT(9) NOT NULL,
+	`cf7_field_name` VARCHAR(100) NOT NULL,
 	`odoo_field_name` VARCHAR(100) NOT NULL,
 	PRIMARY KEY(id),
-	FOREIGN KEY (odoo_submit_id) REFERENCES $odoo_submit_table(id)
+	FOREIGN KEY (odoo_form_id) REFERENCES $odoo_form_table(id)
 	) $charset_collate;
 	";
 

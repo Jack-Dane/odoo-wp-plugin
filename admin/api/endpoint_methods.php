@@ -55,9 +55,14 @@ function create_odoo_form_mapping ($data) {
 	$wpdb->insert(
 		$table_prefix . "odoo_conn_form_mapping",
 		array (
-			"odoo_submit_id" => $data["odoo_submit_id"],
-			"cf7_field_id" => $data["cf7_field_id"],
+			"odoo_form_id" => $data["odoo_form_id"],
+			"cf7_field_name" => $data["cf7_field_name"],
 			"odoo_field_name" => $data["odoo_field_name"]
+		),
+		array (
+			"%d",
+			"%s",
+			"%s"
 		)
 	);
 }

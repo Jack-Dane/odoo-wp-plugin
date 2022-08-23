@@ -22,7 +22,7 @@ class OdooConnector {
 		$this->get_user_id();
 
 		$models = ripcord::client($this->url . "/xmlrpc/2/object");
-		$models->execute_kw($this->database, $this->uid, $this->api_key, $model, 'create', $field_values);
+		return $models->execute_kw($this->database, $this->uid, $this->api_key, $model, 'create', $field_values);
 	}
 
 }

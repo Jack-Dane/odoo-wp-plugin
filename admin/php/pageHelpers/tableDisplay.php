@@ -49,7 +49,7 @@ function get_form_data () {
 function get_odoo_mappings () {
 	global $wpdb;
 
-	$column_names = ["id", "odoo_submit_id", "cf7_field_id", "odoo_field_name"];
+	$column_names = ["id", "odoo_submit_id", "cf7_field_name", "odoo_field_name"];
 
 	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form_mapping", ARRAY_A );
 
