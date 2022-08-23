@@ -1,7 +1,5 @@
 <?php 
 
-require_once( __DIR__ . "/../../odoo_connector/odoo_connector.php" );
-
 function send_odoo_data ($wpcf) {
 
 	$wpcf7 = WPCF7_ContactForm::get_current();
