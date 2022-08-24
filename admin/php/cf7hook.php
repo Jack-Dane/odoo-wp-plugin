@@ -20,6 +20,11 @@ function send_odoo_data ($wpcf) {
     		$odoo_field_data[$field_mapping->odoo_field_name] = $cf7_field_value;
     	}
 
+    	if (count($odoo_form_id) == 0) {
+    		error_log("Not sending data as there isn't any form field mappings.");
+    		return $wpcf;
+    	}
+
     	send_form_data_to_odoo($connection, $odoo_model, $odoo_field_data);
     }
 
