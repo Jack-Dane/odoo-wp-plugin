@@ -12,7 +12,7 @@ function send_odoo_data ($wpcf) {
     foreach ($forms as $form) {
     	$odoo_model = $form->odoo_model;
     	$connection = get_connection_from_database($form->odoo_connection_id);
-    	$field_mappings = get_field_mappings($form->id);
+    	$field_mappings = get_field_mappings_from_database($form->id);
 
     	$odoo_field_data = array();
     	foreach ($field_mappings as $field_mapping) {
@@ -20,7 +20,7 @@ function send_odoo_data ($wpcf) {
     		$odoo_field_data[$field_mapping->odoo_field_name] = $cf7_field_value;
     	}
 
-    	if (count($odoo_form_id) == 0) {
+    	if (count($field_mappings) == 0) {
     		error_log("Not sending data as there isn't any form field mappings.");
     		return $wpcf;
     	}
@@ -41,7 +41,7 @@ function send_form_data_to_odoo ($connection, $odoo_model, $odoo_field_data) {
 	$objectId = $odoo_connector->createObject($odoo_model, $odoo_field_data);
 }
 
-function get_field_mappings ($odoo_form_id) {
+function get_field_mappings_from_database ($odoo_form_id) {
 	global $wpdb;
 
 	$form_mappings = $wpdb->get_results( 
