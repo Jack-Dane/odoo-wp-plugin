@@ -47,3 +47,24 @@
 #next-button {
     float: right;
 }
+
+.create-database-record {
+    margin-bottom: 10px;
+}
+
+.submit-database {
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.submit-database input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.submit-database input[type=Submit] {
+    width: 50%;
+}
