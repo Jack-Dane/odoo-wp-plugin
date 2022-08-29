@@ -35,14 +35,16 @@ abstract class PostBaseSchema extends BaseSchema {
 
 abstract class GetBaseSchema extends BaseSchema {
 
-	protected function common_request_arguments ($query, $data) {
+	protected function prepare_query ($query, $data, $argument_array) {
+		global $wpdb;
 		
 		if (isset($data["limit"])) {
-			$query .= " LIMIT {$data["limit"]}";
+			$query .= " LIMIT %d";
+			array_push($argument_array, $data["limit"]);
 		}
 
-		return $query;
-
+		$safe_query = $wpdb->prepare($query, $argument_array);
+		return $safe_query;
 	}
 
 	public function request ($data) {
@@ -50,10 +52,12 @@ abstract class GetBaseSchema extends BaseSchema {
 
 		$table_name = $table_prefix . $this->get_table_name();
 		$query = "SELECT * FROM {$table_name}";
+		$argument_array = array();
 
-		$query = $this->common_request_arguments($query, $data);
+		$safe_query = $this->prepare_query($query, $data, $argument_array);
 
-		$results = $wpdb->get_results($query);
+		$results = $wpdb->get_results($safe_query);
 		return $results;
 	}
+
 }
