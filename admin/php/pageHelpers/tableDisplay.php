@@ -44,7 +44,11 @@ function get_connection_data () {
 	$page = isset($_GET["p"]) ? htmlspecialchars($_GET["p"]) * 10 : 0;
 	$column_names = ["id", "name", "username", "api_key", "url", "database_name"];
 
-	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_connection ORDER BY id LIMIT {$page}, 10", ARRAY_A );
+	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_connection ORDER BY id LIMIT {$page}, 11", ARRAY_A );
+	$next_page = count($rows) == 11;
+	if ($next_page) {
+		array_pop($rows);
+	}
 
 	echo "<table class='database-table'>";
 	echo echo_headers($column_names);
@@ -53,7 +57,7 @@ function get_connection_data () {
 	}
 	echo "</table>";
 
-	get_page_buttons(count($rows) == 10);
+	get_page_buttons($next_page);
 }
 
 function get_form_data () {
@@ -62,7 +66,11 @@ function get_form_data () {
 	$page = isset($_GET["p"]) ? htmlspecialchars($_GET["p"]) * 10 : 0;
 	$column_names = ["id", "odoo_connection_id", "name", "contact_7_id"];
 
-	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form ORDER BY id LIMIT {$page}, 10", ARRAY_A );
+	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form ORDER BY id LIMIT {$page}, 11", ARRAY_A );
+	$next_page = count($rows) == 11;
+	if ($next_page) {
+		array_pop($rows);
+	}
 
 	echo "<table class='database-table'>";
 	echo_headers($column_names);
@@ -71,7 +79,7 @@ function get_form_data () {
 	}
 	echo "</table>";
 
-	get_page_buttons(count($rows) == 10);
+	get_page_buttons($next_page);
 }
 
 function get_odoo_mappings () {
@@ -80,7 +88,11 @@ function get_odoo_mappings () {
 	$page = isset($_GET["p"]) ? htmlspecialchars($_GET["p"]) * 10 : 0;
 	$column_names = ["id", "odoo_form_id", "cf7_field_name", "odoo_field_name"];
 
-	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form_mapping ORDER BY id LIMIT {$page}, 10", ARRAY_A );
+	$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form_mapping ORDER BY id LIMIT {$page}, 11", ARRAY_A );
+	$next_page = count($rows) == 11;
+	if ($next_page) {
+		array_pop($rows);
+	}
 
 	echo "<table class='database-table'>";
 	echo_headers($column_names);
@@ -89,7 +101,7 @@ function get_odoo_mappings () {
 	}
 	echo "</table>";
 
-	get_page_buttons(count($rows) == 10);
+	get_page_buttons($next_page);
 }
 
 ?>
