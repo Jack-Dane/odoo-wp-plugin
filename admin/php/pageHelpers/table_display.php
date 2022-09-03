@@ -1,6 +1,6 @@
 <?php
 
-// register styles used
+// register styles & scripts used
 add_action( "admin_enqueue_scripts", "callback_for_setting_up_scripts" );
 function callback_for_setting_up_scripts() {
     wp_enqueue_style( "table-style", plugins_url("/odoo-conn/admin/php/pageHelpers/table_style.css") );
@@ -14,11 +14,14 @@ function callback_for_setting_up_scripts() {
     wp_enqueue_script( "form-creator" );
 }
 
+
 abstract class TableData {
 
 	abstract protected function get_column_names ();
 
 	abstract protected function get_table_name ();
+
+	abstract protected function get_update_endpoint ();
 
 	public function echo_table_data () {
 		global $wpdb;
@@ -53,10 +56,11 @@ abstract class TableData {
 	}
 
 	private function echo_row ($row, $index, $column_names) {
+		$endpoint = $this->get_update_endpoint();
 		echo "<tr>";
-		echo "<td><a href='#' id='table-row-{$index}' class='table-row'>Edit</a></td>";
+		echo "<td><a href='#' id='table-row-{$index}' data-endpoint='{$endpoint}' class='table-row'>Edit</a></td>";
 		foreach ($column_names as $column_name) {
-			echo "<td><span class='table-row-{$index}'>" . $row[$column_name] . "</span></td>";
+			echo "<td><span class='table-row-{$index}' data-table-field='{$column_name}'>" . $row[$column_name] . "</span></td>";
 		}
 		echo "</tr>";
 	}
@@ -78,7 +82,12 @@ abstract class TableData {
 	}
 }
 
+
 class ConnectionTableData extends TableData {
+
+	protected function get_update_endpoint () {
+		return "update-odoo-connection";
+	}
 
 	protected function get_column_names () {
 		return ["id", "name", "username", "api_key", "url", "database_name"];
@@ -90,7 +99,12 @@ class ConnectionTableData extends TableData {
 
 }
 
+
 class FormTableData extends TableData {
+
+	protected function get_update_endpoint () {
+		return "update-odoo-form";
+	}
 
 	protected function get_column_names () {
 		return ["id", "odoo_connection_id", "name", "contact_7_id"];
@@ -102,7 +116,12 @@ class FormTableData extends TableData {
 
 }
 
+
 class FormMappingTableData extends TableData {
+
+	protected function get_update_endpoint () {
+		return "update-odoo-form-mapping";
+	}
 
 	protected function get_column_names () {
 		return ["id", "odoo_form_id", "cf7_field_name", "odoo_field_name"];

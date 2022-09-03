@@ -24,13 +24,18 @@ function odoo_connection_page () {
 </div>
 
 <script type="text/javascript">
-	function submitConnection () {
+	function getFormData () {
 		let formData = new FormData();
 		formData.append("name", document.getElementById("name").value);
 		formData.append("username", document.getElementById("username").value);
 		formData.append("api_key", document.getElementById("api_key").value);
 		formData.append("url", document.getElementById("url").value);
 		formData.append("database_name", document.getElementById("database_name").value);
+		return formData;
+	}
+
+	function submitConnection () {
+		let formData = getFormData();
 
 		fetch("/wp-json/odoo-conn/v1/create-odoo-connection", {
 			method: "POST",
