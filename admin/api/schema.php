@@ -8,7 +8,21 @@ abstract class BaseSchema {
 
 }
 
-abstract class PostBaseSchema extends BaseSchema {
+
+abstract class PostPutBaseSchema extends BaseSchema {
+
+	protected function get_last_edited_record ($table_name, $id) {
+		global $wpdb;
+
+		$query = "SELECT * FROM {$table_name} WHERE id={$id}";
+		$inserted_row = $wpdb->get_results($query);
+		return $inserted_row;	
+	}
+
+}
+
+
+abstract class PostBaseSchema extends PostPutBaseSchema {
 
 	abstract protected function parse_data ($data);
 
@@ -18,20 +32,42 @@ abstract class PostBaseSchema extends BaseSchema {
 		global $wpdb, $table_prefix;
 
 		$table_name = $table_prefix . $this->get_table_name();
-		$wpdb->insert (
+		$wpdb->insert(
 			$table_name,
 			$this->parse_data($data),
 			$this->insert_data_types()
 		);
 
 		// return the row that was created
-		$id = $wpdb->insert_id;
-		$query = "SELECT * FROM {$table_name} WHERE id={$id}";
-		$inserted_row = $wpdb->get_results($query);
-		return $inserted_row;
+		return $this->get_last_edited_record($table_name, $wpdb->insert_id);
 	}
 
 }
+
+
+abstract class PutBaseSchema extends PostPutBaseSchema {
+
+	public function __construct ($id) {
+		$this->id = $id;
+	}
+
+	abstract protected function update_data ($data);
+
+	public function request ($data) {
+		global $wpdb, $table_prefix;
+
+		$table_name = $table_prefix . $this->get_table_name();
+		$wpdb->update(
+			$table_name,
+			$this->update_data($data),
+			array ("id" => $this->id)
+		);
+
+		return $this->get_last_edited_record($table_name, $this->id);
+	}
+
+}
+
 
 abstract class GetBaseSchema extends BaseSchema {
 
