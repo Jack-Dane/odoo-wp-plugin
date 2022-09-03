@@ -1,7 +1,8 @@
 <?php 
-require_once(__DIR__ . "/../pageHelpers/tableDisplay.php");
+require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_form_page () {
+	$form_table_data = new FormTableData();
 ?>
 <div class="wrap">
 	<h1>Odoo Form</h1>
@@ -16,7 +17,7 @@ function odoo_form_page () {
 	</form>
 
 	<?php 
-	get_form_data();
+	$form_table_data->echo_table_data();
 	?>
 </div>
 

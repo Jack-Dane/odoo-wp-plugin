@@ -1,7 +1,8 @@
 <?php 
-require_once(__DIR__ . "/../pageHelpers/tableDisplay.php");
+require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_form_mapping_page () {
+	$form_mapping_table_data = new FormMappingTableData();
 ?>
 <div class="wrap">
 	<h1>Odoo Form Mappings</h1>
@@ -16,10 +17,11 @@ function odoo_form_mapping_page () {
 	</form>
 
 	<?php
-	get_odoo_mappings();
+	$form_mapping_table_data->echo_table_data();
 	?>
 </div>
 <script type="text/javascript">
+
 	function form_mapping_submit () {
 		let formData = new FormData();
 		formData.append("odoo_form_id", document.getElementById("odoo_form_id").value);
@@ -43,6 +45,26 @@ function odoo_form_mapping_page () {
 			odooFormLabel.text("Create a new Form Mapping");
 		}
 	}
+
+	jQuery(".table-row").click(function () {
+		let id = jQuery(this).attr('id');
+		if (jQuery(this).attr("data-update-state") != "true") {
+			jQuery(this).attr("data-update-state", "true");
+			jQuery(this).text("Save");
+			jQuery("." + id).each(function () {
+				let text = jQuery(this).text();
+				jQuery(this).replaceWith("<input type='text' class='" + id + "' value='" + text + "'/>");
+			});
+		} else {
+			jQuery(this).attr("data-update-state", "false");
+			jQuery(this).text("Edit");
+			jQuery("." + id).each(function () {
+				let text = jQuery(this).val();
+				jQuery(this).replaceWith("<span class='" + id + "'>" + text + "</span>");
+			});
+		}
+	});
+
 </script>
 <?php
 }

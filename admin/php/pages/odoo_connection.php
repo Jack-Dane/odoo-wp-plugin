@@ -1,7 +1,8 @@
 <?php 
-require_once(__DIR__ . "/../pageHelpers/tableDisplay.php");
+require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_connection_page () {
+	$connection_table_data = new ConnectionTableData();
 ?>
 <div class="wrap">
 	<h1>Connections</h1>
@@ -18,11 +19,12 @@ function odoo_connection_page () {
 	</form>
 
 	<?php
-	get_connection_data();
+	$connection_table_data->echo_table_data();
 	?>
 </div>
 
 <script type="text/javascript">
+
 	function submitConnection () {
 		let formData = new FormData();
 		formData.append("name", document.getElementById("name").value);
@@ -48,6 +50,7 @@ function odoo_connection_page () {
 			odooFormLabel.text("Create a new Connection");
 		}
 	}
+
 </script>
 <?php
 }
