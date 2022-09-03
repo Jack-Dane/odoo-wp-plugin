@@ -7,8 +7,8 @@ function odoo_connection_page () {
 <div class="wrap">
 	<h1>Connections</h1>
 
-	<a href="#" onclick="createOdooConnection();" id="create-new-connection" class="create-database-record">Create a new Connection</a>
-	<form method="POST" onsubmit="submitConnection();" id="odoo-connection-submit" class="submit-database" style="display: none;">
+	<a href="#" id="create-data" class="create-database-record">Create new data</a>
+	<form method="POST" onsubmit="submitConnection();" id="form-data" class="submit-database" style="display: none;">
 		<h2>Create a new connection: </h2>
 		<input type="text" name="name" id="name" placeholder="Name" /><br/>
 		<input type="text" name="username" id="username" placeholder="Username" /><br/>
@@ -24,7 +24,6 @@ function odoo_connection_page () {
 </div>
 
 <script type="text/javascript">
-
 	function submitConnection () {
 		let formData = new FormData();
 		formData.append("name", document.getElementById("name").value);
@@ -38,19 +37,6 @@ function odoo_connection_page () {
 			body: formData
 		});
 	}
-
-	function createOdooConnection () {
-		let odooForm = jQuery("#odoo-connection-submit");
-		let odooFormLabel = jQuery("#create-new-connection");
-		if (odooForm.css("display") == "none") {
-			odooForm.slideDown();
-			odooFormLabel.text("Hide");
-		} else {
-			odooForm.slideUp();
-			odooFormLabel.text("Create a new Connection");
-		}
-	}
-
 </script>
 <?php
 }

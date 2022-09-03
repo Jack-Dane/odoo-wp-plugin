@@ -8,6 +8,7 @@ class GetOdooConnection extends GetBaseSchema {
 
 }
 
+
 class PostOdooConnection extends PostBaseSchema { 
 	
 	protected function get_table_name () {
@@ -30,6 +31,7 @@ class PostOdooConnection extends PostBaseSchema {
 
 }
 
+
 class PutOdooConnection extends PutBaseSchema {
 
 	protected function get_table_name () {
@@ -47,6 +49,7 @@ class PutOdooConnection extends PutBaseSchema {
 	}
 
 }
+
 
 function get_odoo_connections ($data) {
 	$get_odoo_connection = new GetOdooConnection();

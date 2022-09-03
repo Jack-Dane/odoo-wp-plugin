@@ -8,6 +8,7 @@ class GetOdooForm extends GetBaseSchema {
 
 }
 
+
 class PostOdooForm extends PostBaseSchema { 
 	
 	protected function get_table_name () {
@@ -29,6 +30,7 @@ class PostOdooForm extends PostBaseSchema {
 
 }
 
+
 class PutOdooForm extends PutBaseSchema {
 
 	protected function get_table_name () {
@@ -44,6 +46,7 @@ class PutOdooForm extends PutBaseSchema {
 	}
 
 }
+
 
 function get_odoo_forms ($data) {
 	$get_odoo_connection = new GetOdooForm();

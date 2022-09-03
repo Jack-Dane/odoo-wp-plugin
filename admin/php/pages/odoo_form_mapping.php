@@ -7,8 +7,8 @@ function odoo_form_mapping_page () {
 <div class="wrap">
 	<h1>Odoo Form Mappings</h1>
 
-	<a href="#" onclick="createOdooFormMapping();" id="create-new-form-mapping" class="create-database-record">Create a new Form Mapping</a>
-	<form method="POST" onsubmit="form_mapping_submit();" id="odoo-form-mapping-submit" class="submit-database" style="display: none;">
+	<a href="#" id="create-data" class="create-database-record">Create new data</a>
+	<form method="POST" onsubmit="form_mapping_submit();" id="form-data" class="submit-database" style="display: none;">
 		<h2>Create a New Form Mapping</h2>
 		<input type="text" id="odoo_form_id" name="odoo_form_id" placeholder="Odoo Submit Id" /><br/>
 		<input type="text" id="cf7_field_name" name="cf7_field_name" placeholder="Contact 7 Id" /><br/>
@@ -21,7 +21,6 @@ function odoo_form_mapping_page () {
 	?>
 </div>
 <script type="text/javascript">
-
 	function form_mapping_submit () {
 		let formData = new FormData();
 		formData.append("odoo_form_id", document.getElementById("odoo_form_id").value);
@@ -33,19 +32,6 @@ function odoo_form_mapping_page () {
 			body: formData
 		});
 	}
-
-	function createOdooFormMapping () {
-		let odooFormMapping = jQuery("#odoo-form-mapping-submit");
-		let odooFormLabel = jQuery("#create-new-form-mapping");
-		if (odooFormMapping.css("display") == "none") {
-			odooFormMapping.slideDown();
-			odooFormLabel.text("Hide");
-		} else {
-			odooFormMapping.slideUp();
-			odooFormLabel.text("Create a new Form Mapping");
-		}
-	}
-
 </script>
 <?php
 }

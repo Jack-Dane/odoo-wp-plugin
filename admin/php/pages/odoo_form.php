@@ -7,8 +7,8 @@ function odoo_form_page () {
 <div class="wrap">
 	<h1>Odoo Form</h1>
 	
-	<a href="#" onclick="createOdooForm();" id="create-new-form" class="create-database-record">Create a new Form</a>
-	<form method="POST" onsubmit="submitOdooForm();" id="odoo-form-submit" class="submit-database" style="display: none;">
+	<a href="#" id="create-data" class="create-database-record">Create new data</a>
+	<form method="POST" onsubmit="submitOdooForm();" id="form-data" class="submit-database" style="display: none;">
 		<input type="text" name="odoo_connection_id" id="odoo_connection_id" placeholder="Odoo Connection Id" /><br/>
 		<input type="text" name="odoo_model" id="odoo_model" placeholder="Odoo Model" /><br/>
 		<input type="text" name="name" id="name" placeholder="Name" /><br/>
@@ -34,18 +34,6 @@ function odoo_form_page () {
     		method: 'POST',
     		body: formData
 		});
-	}
-
-	function createOdooForm () {
-		let odooForm = jQuery("#odoo-form-submit");
-		let odooFormLabel = jQuery("#create-new-form");
-		if (odooForm.css("display") == "none") {
-			odooForm.slideDown();
-			odooFormLabel.text("Hide");
-		} else {
-			odooForm.slideUp();
-			odooFormLabel.text("Create a new Form");
-		}
 	}
 </script>
 <?php
