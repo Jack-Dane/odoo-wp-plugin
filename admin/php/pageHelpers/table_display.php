@@ -19,6 +19,8 @@ abstract class TableData {
 
 	abstract protected function get_column_names ();
 
+	abstract protected function get_display_friendly_column_names ();
+
 	abstract protected function get_table_name ();
 
 	abstract protected function get_update_endpoint ();
@@ -37,7 +39,7 @@ abstract class TableData {
 		}
 
 		echo "<table class='database-table'>";
-		$this->echo_headers($column_names);
+		$this->echo_headers();
 		foreach ($rows as $index => $row) {
 			$this->echo_row($row, $index, $column_names);
 		}
@@ -46,7 +48,8 @@ abstract class TableData {
 		$this->get_page_buttons($next_page);
 	}
 
-	private function echo_headers ($headers) {
+	private function echo_headers () {
+		$headers = $this->get_display_friendly_column_names();
 		echo "<tr>";
 		echo "<th>Edit</th>";
 		foreach ($headers as $header) {
@@ -60,7 +63,11 @@ abstract class TableData {
 		echo "<tr>";
 		echo "<td><a href='#' id='table-row-{$index}' data-endpoint='{$endpoint}' class='table-row'>Edit</a></td>";
 		foreach ($column_names as $column_name) {
-			echo "<td><span class='table-row-{$index}' data-table-field='{$column_name}'>" . $row[$column_name] . "</span></td>";
+			$editable = true;
+			if ($column_name == "id") {
+				$editable = false;
+			}
+			echo "<td><span class='table-row-{$index}' data-editable='{$editable}' data-table-field='{$column_name}'>" . $row[$column_name] . "</span></td>";
 		}
 		echo "</tr>";
 	}
@@ -93,6 +100,10 @@ class ConnectionTableData extends TableData {
 		return ["id", "name", "username", "api_key", "url", "database_name"];
 	}
 
+	protected function get_display_friendly_column_names () {
+		return ["Id", "Name", "Username", "URL", "Database Name"];
+	}
+
 	protected function get_table_name () {
 		return "odoo_conn_connection";
 	}
@@ -110,6 +121,10 @@ class FormTableData extends TableData {
 		return ["id", "odoo_connection_id", "name", "contact_7_id"];
 	}
 
+	protected function get_display_friendly_column_names () {
+		return ["Id", "Odoo Connection Id", "Name", "Contact Form 7 Id"];
+	}
+
 	protected function get_table_name () {
 		return "odoo_conn_form";
 	}
@@ -125,6 +140,10 @@ class FormMappingTableData extends TableData {
 
 	protected function get_column_names () {
 		return ["id", "odoo_form_id", "cf7_field_name", "odoo_field_name"];
+	}
+
+	protected function get_display_friendly_column_names () {
+		return ["Id", "Odoo Form Id", "Contact Form 7 Field Name", "Odoo Field Name"];
 	}
 
 	protected function get_table_name () {
