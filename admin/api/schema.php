@@ -71,6 +71,10 @@ abstract class PutBaseSchema extends PostPutBaseSchema {
 
 abstract class GetBaseSchema extends BaseSchema {
 
+	protected function get_columns () {
+		return "*";
+	}
+
 	protected function prepare_query ($query, $data, $argument_array) {
 		global $wpdb;
 		
@@ -87,7 +91,7 @@ abstract class GetBaseSchema extends BaseSchema {
 		global $wpdb, $table_prefix;
 
 		$table_name = $table_prefix . $this->get_table_name();
-		$query = "SELECT * FROM {$table_name}";
+		$query = "SELECT {$this->get_columns()} FROM {$table_name}";
 		$argument_array = array();
 
 		$safe_query = $this->prepare_query($query, $data, $argument_array);
@@ -97,3 +101,22 @@ abstract class GetBaseSchema extends BaseSchema {
 	}
 
 }
+
+
+abstract class GetExtendedSchema extends GetBaseSchema {
+
+	public function __construct ($where_condition) {
+		$this->where_condition = $where_condition;
+	}
+
+	protected function prepare_query ($query, $data, $argument_array) {
+		if ($this->where_condition) {
+			$query .= " WHERE " . $this->where_condition;
+		}
+
+		return parent::prepare_query($query, $data, $argument_array);
+	}
+
+}
+
+?>
