@@ -14,14 +14,8 @@ function getUpdateData (id) {
 	return formData;
 }
 
-function getEndpoint (id) {
-	return jQuery("#" + id).data("endpoint");
-}
-
-function updateData (id) {
+function updateData (id, endpoint) {
 	let updateData = getUpdateData(id);
-	console.log(updateData);
-	let endpoint = getEndpoint(id);
 
 	fetch(
 		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(updateData), 
@@ -31,36 +25,67 @@ function updateData (id) {
 	);
 }
 
-jQuery(".table-row").click(function () {
-	let id = jQuery(this).attr("id");
-	if (jQuery(this).data("update-state") != "true") {
-		jQuery(this).data("update-state", "true");
-		jQuery(this).text("Save");
-		jQuery("." + id).each(function () {
-			let editable = jQuery(this).data("editable");
-			if (!editable) {
-				return; // equal to continue in a javascript loop
-			}
-			let text = jQuery(this).text();
-			let tableField = jQuery(this).data("table-field");
-			jQuery(this).replaceWith(
-				"<input type='text' data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "' value='" + text + "'/>"
-			);
-		});
-	} else {
-		updateData(id);
-		jQuery(this).data("update-state", "false");
-		jQuery(this).text("Edit");
-		jQuery("." + id).each(function () {
-			let editable = jQuery(this).data("editable");
-			if (!editable) {
-				return; // equal to continue in a javascript loop
-			}
-			let text = jQuery(this).val();
-			let tableField = jQuery(this).data("table-field");
-			jQuery(this).replaceWith(
-				"<span class='" + id + "' data-editable='" + editable + "' data-table-field='" + tableField + "'>" + text + "</span>"
-			);
-		});
-	}
+function closeFields (id) {
+	jQuery("." + id).each(function () {
+		let editable = jQuery(this).data("editable");
+		if (!editable) {
+			return; // equal to continue in a javascript loop
+		}
+		let text = jQuery(this).val();
+		let tableField = jQuery(this).data("table-field");
+		jQuery(this).replaceWith(
+			"<span class='" + id + "' data-editable='" + editable + "' data-table-field='" + tableField + "'>" + text + "</span>"
+		);
+	});
+}
+
+function openFieldsForEdit (id) {
+	jQuery("." + id).each(function () {
+		let editable = jQuery(this).data("editable");
+		if (!editable) {
+			return; // equal to continue in a javascript loop
+		}
+		let text = jQuery(this).text();
+		let tableField = jQuery(this).data("table-field");
+		jQuery(this).replaceWith(
+			"<input type='text' data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "' value='" + text + "'/>"
+		);
+	});
+}
+
+jQuery(".table-row-edit").click(function () {
+	let id = jQuery(this).data("row-class");
+	jQuery(this).hide();
+	findElementTableRowEdit(".table-row-save", id).show();
+	findElementTableRowEdit(".table-row-close", id).show();
+	openFieldsForEdit(id);
 });
+
+jQuery(".table-row-close").click(function () {
+	let id = jQuery(this).data("row-class");
+	jQuery(this).hide();
+	findElementTableRowEdit(".table-row-save", id).hide();
+	findElementTableRowEdit(".table-row-edit", id).show();
+	closeFields(id);
+});
+
+jQuery(".table-row-save").click(function () {
+	let id = jQuery(this).data("row-class");
+	jQuery(this).hide();
+	findElementTableRowEdit(".table-row-close", id).hide();
+	findElementTableRowEdit(".table-row-edit", id).show();
+	let endpoint = jQuery(this).data("endpoint")
+	updateData(id, endpoint);
+	closeFields(id);
+});
+
+function findElementTableRowEdit (className, id) {
+	let element = null;
+	jQuery(className).each(function () {
+		if (jQuery(this).data("row-class") == id) {
+			element = jQuery(this);
+			return;
+		}
+	});
+	return element;
+}

@@ -63,7 +63,11 @@ abstract class TableData {
 	private function echo_row ($row, $index, $column_names) {
 		$endpoint = $this->get_update_endpoint();
 		echo "<tr>";
-		echo "<td><a href='#' id='table-row-{$index}' data-endpoint='{$endpoint}' class='table-row'>Edit</a></td>";
+		echo "<td>";
+		echo "<a href='#' data-row-class='table-row-{$index}' data-endpoint='{$endpoint}' class='table-row-edit'>Edit</a>";
+		echo "<a href='#' data-row-class='table-row-{$index}' data-endpoint='{$endpoint}' class='table-row-save' style='display: none;'>Save</a>";
+		echo "<a href='#' data-row-class='table-row-{$index}' data-endpoint='{$endpoint}' class='table-row-close' style='display: none;'>Close</a>";
+		echo "</td>";
 		foreach ($column_names as $column_name) {
 			$editable = true;
 			if ($column_name == "id") {
