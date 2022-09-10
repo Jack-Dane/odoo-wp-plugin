@@ -10,9 +10,10 @@ function odoo_form_mapping_page () {
 	<a href="#" id="create-data" class="create-database-record">Create new data</a>
 	<form method="POST" onsubmit="return form_mapping_submit();" id="form-data" class="submit-database" style="display: none;">
 		<h2>Create a New Form Mapping</h2>
-		<input type="text" id="odoo_form_id" name="odoo_form_id" placeholder="Odoo Submit Id" /><br/>
-		<input type="checkbox" id="value_type" name="value_type">
-		<label for="value_type"> Constant Value</label><br>
+		<label for="odoo_form_id">Odoo Form</label>
+		<select id="odoo_form_id" name="odoo_form_id" ></select><br/>
+		<label for="value_type"> Constant Value</label>
+		<input type="checkbox" id="value_type" name="value_type" /><br/>
 		<input type="text" id="cf7_field_name" name="cf7_field_name" placeholder="Contact 7 Field Name" />
 		<input type="text" id="constant_value" name="constant_value" placeholder="Constant Value" style="display: none;"/><br/>
 		<input type="text" id="odoo_field_name" name="odoo_field_name" placeholder="Odoo Field Name" />
@@ -53,6 +54,26 @@ function odoo_form_mapping_page () {
 			jQuery("#cf7_field_name").show();
 		}
 	});
+
+	async function setSelectData () {
+		formSelect = jQuery("#odoo_form_id");
+		formSelect.empty();
+
+		let forms = await fetch("/wp-json/odoo-conn/v1/get-odoo-forms").then(function (response) {
+			return response.json();
+		}).then(function (jsonResponse){
+			return jsonResponse;
+		});
+
+		forms.forEach( function(connection) {
+			let option = jQuery(
+				"<option></option>", {
+					"value": connection["id"],
+					"text": connection["name"]
+				}
+			).appendTo(formSelect);
+		});
+	}
 </script>
 <?php
 }
