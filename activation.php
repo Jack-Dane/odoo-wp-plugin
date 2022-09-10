@@ -2,7 +2,7 @@
 
 require_once("dependency_check.php");
 
-function odoo_conn_activation_function(){
+function odoo_conn_activation_function () {
 	require_once(ABSPATH . "wp-admin/includes/upgrade.php");
 
 	create_odoo_connections_table();
@@ -10,7 +10,7 @@ function odoo_conn_activation_function(){
 	create_odoo_form_field_mapping();
 }
 
-function create_odoo_connections_table(){
+function create_odoo_connections_table () {
 	global $wpdb, $table_prefix;
 
 	$table_name = $table_prefix . "odoo_conn_connection";
@@ -31,7 +31,7 @@ function create_odoo_connections_table(){
 	dbDelta($sql);
 }
 
-function create_odoo_form_table(){
+function create_odoo_form_table () {
 	global $wpdb, $table_prefix;
 
 	$table_name = $table_prefix . "odoo_conn_form";
@@ -57,7 +57,7 @@ function create_odoo_form_table(){
 	dbDelta($sql);
 }
 
-function create_odoo_form_field_mapping(){
+function create_odoo_form_field_mapping () {
 	global $wpdb, $table_prefix;
 
 	$table_name = $table_prefix . "odoo_conn_form_mapping";
@@ -68,7 +68,8 @@ function create_odoo_form_field_mapping(){
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`odoo_form_id` BIGINT(20) UNSIGNED NOT NULL,
 	`cf7_field_name` VARCHAR(100) NOT NULL,
-	`odoo_field_name` VARCHAR(100) NOT NULL,
+	`odoo_field_name` VARCHAR(100),
+	`constant_value` VARCHAR(200),
 	PRIMARY KEY(id),
 	FOREIGN KEY (odoo_form_id) REFERENCES $odoo_form_table(id)
 	) $charset_collate;

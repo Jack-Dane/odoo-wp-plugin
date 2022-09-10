@@ -16,7 +16,11 @@ function send_odoo_data ($wpcf) {
 
     	$odoo_field_data = array();
     	foreach ($field_mappings as $field_mapping) {
-    		$cf7_field_value = $posted_data[$field_mapping->cf7_field_name];
+    		if ($posted_data[$field_mapping->cf7_field_name] != "") {
+    			$cf7_field_value = $posted_data[$field_mapping->cf7_field_name];
+    		} else {
+    			$cf7_field_value = $field_mapping->constant_value;
+    		}
     		$odoo_field_data[$field_mapping->odoo_field_name] = $cf7_field_value;
     	}
 

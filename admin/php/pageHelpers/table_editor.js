@@ -43,7 +43,9 @@ jQuery(".table-row").click(function () {
 			}
 			let text = jQuery(this).text();
 			let tableField = jQuery(this).data("table-field");
-			jQuery(this).replaceWith("<input type='text' data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "' value='" + text + "'/>");
+			jQuery(this).replaceWith(
+				"<input type='text' data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "' value='" + text + "'/>"
+			);
 		});
 	} else {
 		updateData(id);
@@ -56,7 +58,9 @@ jQuery(".table-row").click(function () {
 			}
 			let text = jQuery(this).val();
 			let tableField = jQuery(this).data("table-field");
-			jQuery(this).replaceWith("<span class='" + id + "' data-editable='" + editable + "' data-table-field='" + tableField + "'>" + text + "</span>");
+			jQuery(this).replaceWith(
+				"<span class='" + id + "' data-editable='" + editable + "' data-table-field='" + tableField + "'>" + text + "</span>"
+			);
 		});
 	}
 });

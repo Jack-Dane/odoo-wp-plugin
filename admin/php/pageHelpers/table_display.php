@@ -5,7 +5,9 @@ add_action( "admin_enqueue_scripts", "callback_for_setting_up_scripts" );
 function callback_for_setting_up_scripts() {
     wp_enqueue_style( "table-style", plugins_url("/odoo-conn/admin/php/pageHelpers/table_style.css") );
 
-    wp_register_script( "table-editor", plugins_url("/odoo-conn/admin/php/pageHelpers/table_editor.js"), array("jquery"), "1.0.0", true );
+    wp_register_script( 
+    	"table-editor", plugins_url("/odoo-conn/admin/php/pageHelpers/table_editor.js"), array("jquery"), "1.0.0", true 
+    );
     wp_enqueue_script( "table-editor" );
 
     wp_register_script( 
@@ -139,11 +141,11 @@ class FormMappingTableData extends TableData {
 	}
 
 	protected function get_column_names () {
-		return ["id", "odoo_form_id", "cf7_field_name", "odoo_field_name"];
+		return ["id", "odoo_form_id", "cf7_field_name", "odoo_field_name", "constant_value"];
 	}
 
 	protected function get_display_friendly_column_names () {
-		return ["Id", "Odoo Form Id", "Contact Form 7 Field Name", "Odoo Field Name"];
+		return ["Id", "Odoo Form Id", "Contact Form 7 Field Name", "Odoo Field Name", "Constant Value"];
 	}
 
 	protected function get_table_name () {

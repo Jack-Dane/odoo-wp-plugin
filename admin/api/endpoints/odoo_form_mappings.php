@@ -19,12 +19,13 @@ class PostOdooFormMappings extends PostBaseSchema {
 		return array (
 			"odoo_form_id" => $data["odoo_form_id"],
 			"cf7_field_name" => $data["cf7_field_name"],
-			"odoo_field_name" => $data["odoo_field_name"]
+			"odoo_field_name" => $data["odoo_field_name"],
+			"constant_value" => $data["constant_value"]
 		);
 	}
 
 	protected function insert_data_types () {
-		return array ("%d", "%s", "%s");
+		return array ("%d", "%s", "%s", "%s");
 	}
 
 }
