@@ -53,30 +53,34 @@ function openFieldsForEdit (id) {
 	});
 }
 
-jQuery(".table-row-edit").click(function () {
-	let id = jQuery(this).data("row-class");
-	jQuery(this).hide();
-	findElementTableRowEdit(".table-row-save", id).show();
-	findElementTableRowEdit(".table-row-close", id).show();
-	openFieldsForEdit(id);
-});
+jQuery(document).ready(function () {
+	jQuery(".database-table").on("click", ".table-row-edit", function () {
+		let id = jQuery(this).data("row-class");
+		jQuery(this).hide();
+		findElementTableRowEdit(".table-row-save", id).show();
+		findElementTableRowEdit(".table-row-close", id).show();
+		openFieldsForEdit(id);
+	});
 
-jQuery(".table-row-close").click(function () {
-	let id = jQuery(this).data("row-class");
-	jQuery(this).hide();
-	findElementTableRowEdit(".table-row-save", id).hide();
-	findElementTableRowEdit(".table-row-edit", id).show();
-	closeFields(id);
-});
+	jQuery(".database-table").on("click", ".table-row-close", function () {
+		let id = jQuery(this).data("row-class");
+		jQuery(this).hide();
+		findElementTableRowEdit(".table-row-save", id).hide();
+		findElementTableRowEdit(".table-row-edit", id).show();
+		closeFields(id);
+		tableDisplay.displayTable();
+	});
 
-jQuery(".table-row-save").click(function () {
-	let id = jQuery(this).data("row-class");
-	jQuery(this).hide();
-	findElementTableRowEdit(".table-row-close", id).hide();
-	findElementTableRowEdit(".table-row-edit", id).show();
-	let endpoint = jQuery(this).data("endpoint")
-	updateData(id, endpoint);
-	closeFields(id);
+	jQuery(".database-table").on("click", ".table-row-save", function () {
+		let id = jQuery(this).data("row-class");
+		jQuery(this).hide();
+		findElementTableRowEdit(".table-row-close", id).hide();
+		findElementTableRowEdit(".table-row-edit", id).show();
+		let endpoint = jQuery(this).data("endpoint");
+		updateData(id, endpoint);
+		closeFields(id);
+		tableDisplay.displayTable();
+	});
 });
 
 function findElementTableRowEdit (className, id) {

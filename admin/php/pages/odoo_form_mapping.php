@@ -2,7 +2,10 @@
 require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_form_mapping_page () {
-	$form_mapping_table_data = new FormMappingTableData();
+	wp_register_script(
+    	"odoo-form-mapping", plugins_url("/odoo-conn/admin/php/pages/odoo_form_mapping.js"), array("jquery"), "1.0.0", true
+    );
+    wp_enqueue_script( "odoo-form-mapping" );
 ?>
 <div class="wrap">
 	<h1>Odoo Form Mappings</h1>
@@ -20,9 +23,8 @@ function odoo_form_mapping_page () {
 		<input type="Submit" name="submit">
 	</form>
 
-	<?php
-	$form_mapping_table_data->echo_table_data();
-	?>
+	<table class="database-table"></table>
+
 </div>
 <script type="text/javascript">
 	function form_mapping_submit () {

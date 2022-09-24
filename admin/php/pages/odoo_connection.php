@@ -1,8 +1,10 @@
 <?php 
-require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_connection_page () {
-	$connection_table_data = new ConnectionTableData();
+	wp_register_script(
+    	"odoo-connection", plugins_url("/odoo-conn/admin/php/pages/odoo_connection.js"), array("jquery"), "1.0.0", true
+    );
+    wp_enqueue_script( "odoo-connection" );
 ?>
 <div class="wrap">
 	<h1>Connections</h1>
@@ -18,9 +20,8 @@ function odoo_connection_page () {
 		<input type="Submit" name="submit" />
 	</form>
 
-	<?php
-	$connection_table_data->echo_table_data();
-	?>
+	<table class="database-table"></table>
+
 </div>
 
 <script type="text/javascript">

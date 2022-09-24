@@ -1,8 +1,10 @@
 <?php 
-require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_form_page () {
-	$form_table_data = new FormTableData();
+	wp_register_script(
+    	"odoo-form", plugins_url("/odoo-conn/admin/php/pages/odoo_form.js"), array("jquery"), "1.0.0", true
+    );
+    wp_enqueue_script( "odoo-form" );
 ?>
 <div class="wrap">
 	<h1>Odoo Form</h1>
@@ -18,9 +20,7 @@ function odoo_form_page () {
 		<input type="Submit" name="submit" />
 	</form>
 
-	<?php 
-	$form_table_data->echo_table_data();
-	?>
+	<table class="database-table"></table>
 </div>
 
 <script type="text/javascript">
