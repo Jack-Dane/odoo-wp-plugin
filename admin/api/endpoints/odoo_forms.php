@@ -48,22 +48,37 @@ class PutOdooForm extends PutBaseSchema {
 }
 
 
+class DeleteOdooForm extends DeleteBaseSchema {
+
+	protected function get_table_name () {
+		return "odoo_conn_form";
+	}
+
+}
+
+
 function get_odoo_forms ($data) {
-	$get_odoo_connection = new GetOdooForm();
-	$response = $get_odoo_connection->request($data);
+	$get_odoo_forms = new GetOdooForm();
+	$response = $get_odoo_forms->request($data);
 	return $response;
 }
 
 function create_odoo_form ($data) {
-	$post_odoo_connection = new PostOdooForm();
-	$response = $post_odoo_connection->request($data);
+	$post_odoo_form = new PostOdooForm();
+	$response = $post_odoo_form->request($data);
 	return $response;
 }
 
 function update_odoo_form ($data) {
 	$id = $data["id"];
-	$put_odoo_connection = new PutOdooForm($id);
-	$response = $put_odoo_connection->request($data);
+	$put_odoo_form = new PutOdooForm($id);
+	$response = $put_odoo_form->request($data);
+	return $response;
+}
+
+function delete_odoo_form ($data) {
+	$delete_odoo_form = new DeleteOdooForm();
+	$response = $delete_odoo_form->request($data);
 	return $response;
 }
 
@@ -81,6 +96,11 @@ add_action( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/update-odoo-form", array(
 		"methods" => "PUT",
 		"callback" => "update_odoo_form"
+	));
+
+	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form", array(
+		"methods" => "DELETE",
+		"callback" => "delete_odoo_form"
 	));
 });
 

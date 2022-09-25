@@ -47,6 +47,15 @@ class PutOdooFormMappings extends PutBaseSchema {
 }
 
 
+class DeleteOdooFromMappings extends DeleteBaseSchema {
+
+	protected function get_table_name () {
+		return "odoo_conn_form_mapping";
+	}
+
+}
+
+
 function get_odoo_from_mappings ($data) {
 	$get_odoo_form_mappings = new GetOdooFormMappings();
 	$response = $get_odoo_form_mappings->request($data);
@@ -66,6 +75,12 @@ function update_odoo_form_mapping ($data) {
 	return $response;
 }
 
+function delete_odoo_form_mapping ($data) {
+	$delete_odoo_form_mapping = new DeleteOdooFromMappings();
+	$response = $delete_odoo_form_mapping->request($data);
+	return $response;
+}
+
 add_action ( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-form-mappings", array(
 		"methods" => "GET",
@@ -80,6 +95,11 @@ add_action ( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/update-odoo-form-mapping", array(
 		"methods" => "PUT",
 		"callback" => "update_odoo_form_mapping",
+	));
+
+	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form-mapping", array(
+		"methods" => "DELETE",
+		"callback" => "delete_odoo_form_mapping",
 	));
 });
 

@@ -14,13 +14,26 @@ function getUpdateData (id) {
 	return formData;
 }
 
-function updateData (id, endpoint) {
+async function updateData (id, endpoint) {
 	let updateData = getUpdateData(id);
 
-	fetch(
+	await fetch(
 		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(updateData), 
 		{
 			method: "PUT",
+		}
+	);
+}
+
+async function deleteRow (id, endpoint) {
+	await fetch(
+		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(
+			{
+				id: id
+			}
+		),
+		{
+			method: "DELETE",
 		}
 	);
 }
@@ -71,14 +84,21 @@ jQuery(document).ready(function () {
 		tableDisplay.displayTable();
 	});
 
-	jQuery(".database-table").on("click", ".table-row-save", function () {
+	jQuery(".database-table").on("click", ".table-row-save", async function () {
 		let id = jQuery(this).data("row-class");
 		jQuery(this).hide();
 		findElementTableRowEdit(".table-row-close", id).hide();
 		findElementTableRowEdit(".table-row-edit", id).show();
 		let endpoint = jQuery(this).data("endpoint");
-		updateData(id, endpoint);
+		await updateData(id, endpoint);
 		closeFields(id);
+		tableDisplay.displayTable();
+	});
+
+	jQuery(".database-table").on("click", ".table-row-delete", async function() {
+		let rowId = jQuery(this).data("row-id");
+		let deleteEndpoint = jQuery(this).data("endpoint");
+		await deleteRow(rowId, deleteEndpoint);
 		tableDisplay.displayTable();
 	});
 });

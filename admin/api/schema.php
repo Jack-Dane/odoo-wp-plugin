@@ -125,4 +125,23 @@ abstract class GetExtendedSchema extends GetBaseSchema {
 
 }
 
+
+abstract class DeleteBaseSchema extends BaseSchema {
+
+	public function request ($data) {
+		global $wpdb, $table_prefix;
+
+		$id = $data["id"];
+		$wpdb->delete(
+			$table_prefix . $this->get_table_name(), array("id" => $id), array("%d")
+		);
+
+		return [
+			"DELETE" => $id,
+			"table" => $this->get_table_name(),
+		];
+	}
+
+}
+
 ?>

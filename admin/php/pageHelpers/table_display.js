@@ -1,9 +1,10 @@
 
 class TableDisplay {
 
-	constructor (getDataEndpoint, updateDataEndpoint) {
+	constructor (getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
 		this.getDataEndpoint = getDataEndpoint;
 		this.updateDataEndpoint = updateDataEndpoint;
+		this.deleteDataEndpoint = deleteDataEndpoint;
 		this.table = jQuery(".database-table");
 		this.cacheJsonResponse = null;
 		this.currentPageNumber = null;
@@ -110,6 +111,12 @@ class TableDisplay {
 			close.addClass("table-row-close");
 			tableRow.append(close);
 
+			let delete_ = jQuery(
+				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.deleteDataEndpoint + "' data-row-id='" + dataRow["id"] + "'>Delete</a>"
+			);
+			delete_.addClass("table-row-delete");
+			tableRow.append(delete_);
+
 			for ( let columnName in dataRow ) {
 				let editable = true;
 				if (columnName == "id") {
@@ -162,7 +169,7 @@ class TableDisplay {
 class FormMappings extends TableDisplay {
 
 	constructor () {
-		super("get-odoo-form-mappings", "update-odoo-form-mapping");
+		super("get-odoo-form-mappings", "update-odoo-form-mapping", "delete-odoo-form-mapping");
 	}
 
 	getUserFriendlyColumnNames () {
@@ -175,7 +182,7 @@ class FormMappings extends TableDisplay {
 class OdooForms extends TableDisplay {
 	
 	constructor () {
-		super("get-odoo-forms", "update-odoo-form");
+		super("get-odoo-forms", "update-odoo-form", "delete-odoo-form");
 	}
 
 	getUserFriendlyColumnNames () {
@@ -188,7 +195,7 @@ class OdooForms extends TableDisplay {
 class OdooConnections extends TableDisplay {
 
 	constructor () {
-		super("get-odoo-connections", "update-odoo-connection");
+		super("get-odoo-connections", "update-odoo-connection", "delete-odoo-connection");
 	}
 
 	getUserFriendlyColumnNames () {

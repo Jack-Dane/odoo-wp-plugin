@@ -50,6 +50,14 @@ class PutOdooConnection extends PutBaseSchema {
 
 }
 
+class DeleteOdooConnection extends DeleteBaseSchema {
+
+	protected function get_table_name () {
+		return "odoo_conn_connection";
+	}
+
+}
+
 
 function get_odoo_connections ($data) {
 	$get_odoo_connection = new GetOdooConnection();
@@ -70,6 +78,12 @@ function update_odoo_connection ($data) {
 	return $response;
 }
 
+function delete_odoo_connection ($data) {
+	$delete_odoo_connection = new DeleteOdooConnection();
+	$response = $delete_odoo_connection->request($data);
+	return $response;
+}
+
 add_action( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-connections", array(
 		"methods" => "GET",
@@ -84,6 +98,11 @@ add_action( "rest_api_init", function () {
   	register_rest_route( "odoo-conn/v1", "/update-odoo-connection", array(
     	"methods" => "PUT",
     	"callback" => "update_odoo_connection",
+	));
+
+	register_rest_route( "odoo-conn/v1", "/delete-odoo-connection", array(
+		"methods" => "DELETE",
+		"callback" => "delete_odoo_connection",
 	));
 });
 

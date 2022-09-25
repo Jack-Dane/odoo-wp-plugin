@@ -1,3 +1,3 @@
 
-let formMappings = new FormMappings();
-formMappings.displayTable();
+let tableDisplay = new FormMappings();
+tableDisplay.displayTable();

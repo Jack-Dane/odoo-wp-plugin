@@ -33,7 +33,6 @@ function odoo_form_page () {
 		formData.append("name", document.getElementById("name").value);
 		formData.append("contact_7_id", document.getElementById("contact_7_id").value);
 
-		console.log(formData);
 		fetch("/wp-json/odoo-conn/v1/create-odoo-form", {
     		method: 'POST',
     		body: formData
