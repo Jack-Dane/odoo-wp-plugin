@@ -81,6 +81,12 @@ abstract class GetBaseSchema extends BaseSchema {
 		if (isset($data["limit"])) {
 			$query .= " LIMIT %d";
 			array_push($argument_array, $data["limit"]);
+
+			// offset can only be used when a limit has already been added
+			if (isset($data["offset"])) {
+				$query .= " OFFSET %d";
+				array_push($argument_array, $data["offset"]);
+			}
 		}
 
 		$safe_query = $wpdb->prepare($query, $argument_array);

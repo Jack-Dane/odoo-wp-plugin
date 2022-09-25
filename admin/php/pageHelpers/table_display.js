@@ -9,6 +9,7 @@ class TableDisplay {
 		this.currentPageNumber = null;
 		this.currentPage = null;
 		this.showNext = false;
+		this.numberOfRows = 10;
 	}
 
 	getUserFriendlyColumnNames () {
@@ -16,33 +17,29 @@ class TableDisplay {
 	}
 
 	getRows () {
-		let self = this;
-		return fetch(
-			"/wp-json/odoo-conn/v1/" + this.getDataEndpoint
-		).then(function(response) {
-			return response.json();
-		}).then(function(jsonResponse) {
-			self.cacheJsonResponse = jsonResponse;
-		});
-	}
-
-	filterResults (results) {
-		let size = 10;
 		let pageNumber = this.currentPageNumber;
 		if (!this.currentPageNumber || this.currentPageNumber < 0) {
 			pageNumber = 0;
 		}
-		let start = pageNumber * size;
-		let end = ((pageNumber + 1) * size) + 1;
+		let offset = pageNumber * this.numberOfRows;
 
-		results = results.slice(start, end);
-
-		if (results.length == size + 1) {
-			this.showNext = true;
-			results.pop();
-		}
-
-		return results;
+		let self = this;
+		return fetch(
+			"/wp-json/odoo-conn/v1/" + this.getDataEndpoint + "?" + new URLSearchParams(
+				{
+					offset: offset,
+					limit: this.numberOfRows + 1
+				}
+			)
+		).then(function(response) {
+			return response.json();
+		}).then(function(jsonResponse) {
+			if (jsonResponse.length == self.numberOfRows + 1) {
+				self.showNext = true;
+				jsonResponse.pop();
+			}
+			self.cacheJsonResponse = jsonResponse;
+		});
 	}
 
 	async displayTable () {
@@ -92,7 +89,6 @@ class TableDisplay {
 		let dataRows = this.cacheJsonResponse;
 		let self = this;
 		let tBody = jQuery("<tbody></tbody>");
-		dataRows = self.filterResults(dataRows);
 		dataRows.forEach( function(dataRow, index) {
 			let tableRow = jQuery("<tr></tr>");
 			
