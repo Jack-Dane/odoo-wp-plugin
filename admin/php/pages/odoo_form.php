@@ -21,6 +21,8 @@ function odoo_form_page () {
 	</form>
 
 	<table class="database-table"></table>
+	<div id="pageination-display"></div>
+
 </div>
 
 <script type="text/javascript">

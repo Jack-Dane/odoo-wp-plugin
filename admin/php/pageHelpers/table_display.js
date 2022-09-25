@@ -6,6 +6,9 @@ class TableDisplay {
 		this.updateDataEndpoint = updateDataEndpoint;
 		this.table = jQuery(".database-table");
 		this.cacheJsonResponse = null;
+		this.currentPageNumber = null;
+		this.currentPage = null;
+		this.showNext = false;
 	}
 
 	getUserFriendlyColumnNames () {
@@ -24,26 +27,50 @@ class TableDisplay {
 	}
 
 	filterResults (results) {
-		let urlParams = new URLSearchParams(window.location.search);
 		let size = 10;
-		let pageNumber = parseInt(urlParams.get("p"));
-		if (!pageNumber || pageNumber < 0) {
+		let pageNumber = this.currentPageNumber;
+		if (!this.currentPageNumber || this.currentPageNumber < 0) {
 			pageNumber = 0;
 		}
 		let start = pageNumber * size;
-		let end = (pageNumber + 1) * size;
+		let end = ((pageNumber + 1) * size) + 1;
 
 		results = results.slice(start, end);
+
+		if (results.length == size + 1) {
+			this.showNext = true;
+			results.pop();
+		}
+
 		return results;
 	}
 
 	async displayTable () {
+		this.refreshPageData();
 		await this.getRows();
 		
 		this.table.empty();
 
 		this.#addHeaderData();
 		this.#addTableData();
+
+		if (this.showNext) {
+			this.#addNextButton();
+		} else {
+			this.#removeNextButton();
+		}
+		
+		if (this.currentPageNumber > 0) {
+			this.#addPreviousButton();
+		} else {
+			this.#removePreviousButton();
+		}
+	}
+
+	refreshPageData () {
+		let urlParams = new URLSearchParams(window.location.search);
+		this.currentPageNumber = parseInt(urlParams.get("p")) || 0;
+		this.currentPage = urlParams.get("page");
 	}
 
 	#addHeaderData () {
@@ -103,6 +130,36 @@ class TableDisplay {
 		self.table.append(tBody);
 	}
 
+	#addNextButton () {
+		if (jQuery("#next-button").length != 0) {
+			// button is already on the screen
+			return; 
+		}
+
+		let nextPageNumber = this.currentPageNumber + 1;
+		let nextAnchor = jQuery("<a id='next-button' href='?p=" + nextPageNumber + "&page=" + this.currentPage + "'>Next</a>");
+		jQuery("#pageination-display").append(nextAnchor);
+	}
+
+	#removeNextButton () {
+		jQuery("#next-button").remove();
+	}
+
+	#addPreviousButton () {
+		if (jQuery("#previous-button").length != 0) {
+			// button is already on the screen
+			return; 
+		}
+
+		let previousPageNumber = this.currentPageNumber - 1;
+		let previousAnchor = jQuery("<a id='previous-button' href='?p=" + previousPageNumber + "&page=" + this.currentPage + "'>Previous</a>");
+		jQuery("#pageination-display").append(previousAnchor);
+	}
+
+	#removePreviousButton () {
+		jQuery("#previous-button").remove();
+	}
+
 }
 
 
@@ -126,7 +183,7 @@ class OdooForms extends TableDisplay {
 	}
 
 	getUserFriendlyColumnNames () {
-		return ["Id", "Odoo Connection Id", "Name", "Contact Form 7 Id"];
+		return ["Id", "Odoo Connection Id", "Odoo Model", "Name", "Contact 7 Form Id"];
 	}
 
 }

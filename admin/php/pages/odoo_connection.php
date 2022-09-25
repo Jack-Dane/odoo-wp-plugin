@@ -21,6 +21,7 @@ function odoo_connection_page () {
 	</form>
 
 	<table class="database-table"></table>
+	<div id="pageination-display"></div>
 
 </div>
 
