@@ -31,7 +31,14 @@ class TableDisplay {
 					offset: offset,
 					limit: this.numberOfRows + 1
 				}
-			)
+			),
+			{
+				credentials: 'include',
+				headers: {
+					'content-type': 'application/json',
+					'X-WP-Nonce': wpApiSettings.nonce
+				}
+			}
 		).then(function(response) {
 			return response.json();
 		}).then(function(jsonResponse) {

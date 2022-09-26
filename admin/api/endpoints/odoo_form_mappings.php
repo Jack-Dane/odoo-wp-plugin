@@ -84,22 +84,26 @@ function delete_odoo_form_mapping ($data) {
 add_action ( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-form-mappings", array(
 		"methods" => "GET",
-		"callback" => "get_odoo_from_mappings"
+		"callback" => "get_odoo_from_mappings",
+		"permission_callback" => "is_authorised_to_request_data",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/create-odoo-form-mapping", array(
 		"methods" => "POST",
 		"callback" => "create_odoo_form_mapping",
+		"permission_callback" => "is_authorised_to_request_data",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/update-odoo-form-mapping", array(
 		"methods" => "PUT",
 		"callback" => "update_odoo_form_mapping",
+		"permission_callback" => "is_authorised_to_request_data",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form-mapping", array(
 		"methods" => "DELETE",
 		"callback" => "delete_odoo_form_mapping",
+		"permission_callback" => "is_authorised_to_request_data",
 	));
 });
 

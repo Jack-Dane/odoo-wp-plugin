@@ -88,21 +88,25 @@ add_action( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-connections", array(
 		"methods" => "GET",
 		"callback" => "get_odoo_connections",
+		"permission_callback" => "is_authorised_to_request_data",
 	));
 
   	register_rest_route( "odoo-conn/v1", "/create-odoo-connection", array(
     	"methods" => "POST",
     	"callback" => "create_odoo_connection",
+    	"permission_callback" => "is_authorised_to_request_data",
 	));
 
   	register_rest_route( "odoo-conn/v1", "/update-odoo-connection", array(
     	"methods" => "PUT",
     	"callback" => "update_odoo_connection",
+    	"permission_callback" => "is_authorised_to_request_data",
 	));
 
 	register_rest_route( "odoo-conn/v1", "/delete-odoo-connection", array(
 		"methods" => "DELETE",
 		"callback" => "delete_odoo_connection",
+		"permission_callback" => "is_authorised_to_request_data",
 	));
 });
 

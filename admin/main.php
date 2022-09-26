@@ -1,9 +1,11 @@
 <?php 
 
-require(__DIR__ . "/api/main.php");
+require("capabilities.php");
 
-require(__DIR__ . "/php/menu_items.php");
+require("api/main.php");
 
-require(__DIR__ . "/php/cf7hook.php");
+require("php/menu_items.php");
+
+require("php/cf7hook.php");
 
 ?>

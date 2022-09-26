@@ -26,6 +26,7 @@ add_action( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-contact-7-forms", array(
 		"methods" => "GET",
 		"callback" => "get_contact_7_forms",
+		"permission_callback" => "is_authorised_to_request_data",
 	));
 });
 
