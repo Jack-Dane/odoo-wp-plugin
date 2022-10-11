@@ -71,6 +71,22 @@ abstract class PutBaseSchema extends PostPutBaseSchema {
 
 abstract class GetBaseSchema extends BaseSchema {
 
+	protected function foreign_keys () {
+		return [];
+	}
+
+	private function join_query ($query) {
+		global $wpdb, $table_prefix;
+
+		foreach ($this->foreign_keys() as $foreign_key_column => $foreign_key_data) { 
+			$query .= " JOIN " . $foreign_key_data["table_name"];
+			$query .= " ON " . $table_prefix . $this->get_table_name() . "." . $foreign_key_column;
+			$query .= "=" . $foreign_key_data["table_name"] . "." . $foreign_key_data["column_name"];
+		}
+
+		return $query;
+	}
+
 	protected function get_columns () {
 		return "*";
 	}
@@ -100,7 +116,8 @@ abstract class GetBaseSchema extends BaseSchema {
 		$query = "SELECT {$this->get_columns()} FROM {$table_name}";
 		$argument_array = array();
 
-		$safe_query = $this->prepare_query($query, $data, $argument_array);
+		$joined_query = $this->join_query($query);
+		$safe_query = $this->prepare_query($joined_query, $data, $argument_array);
 
 		$results = $wpdb->get_results($safe_query);
 		return $results;

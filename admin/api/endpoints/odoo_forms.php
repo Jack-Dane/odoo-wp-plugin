@@ -6,6 +6,35 @@ class GetOdooForm extends GetBaseSchema {
 		return "odoo_conn_form";
 	}
 
+	protected function get_columns () {
+		global $table_prefix;
+
+		$columns = [
+			$table_prefix . "odoo_conn_form.id", 
+			$table_prefix . "odoo_conn_connection.name as 'connection_name'", 
+			$table_prefix . "odoo_conn_form.odoo_model", 
+			$table_prefix . "odoo_conn_form.name", 
+			$table_prefix . "posts.post_title"
+		];
+		
+		return implode(", ", $columns);
+	}
+
+	protected function foreign_keys () {
+		global $table_prefix;
+
+		return [
+			"odoo_connection_id" => [
+				"table_name" => $table_prefix . "odoo_conn_connection",
+				"column_name" => "id"
+			], 
+			"contact_7_id" => [
+				"table_name" => $table_prefix . "posts",
+				"column_name" => "ID"
+			]
+		];
+	}
+
 }
 
 

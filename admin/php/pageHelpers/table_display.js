@@ -193,7 +193,7 @@ class OdooForms extends TableDisplay {
 	}
 
 	getUserFriendlyColumnNames () {
-		return ["Id", "Odoo Connection Id", "Odoo Model", "Name", "Contact 7 Form Id"];
+		return ["Id", "Odoo Connection", "Odoo Model", "Name", "Contact 7 Form"];
 	}
 
 }
