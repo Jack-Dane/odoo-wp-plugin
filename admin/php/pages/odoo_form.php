@@ -43,7 +43,15 @@ function odoo_form_page () {
 		connectionsSelect = jQuery("#odoo_connection_id");
 		connectionsSelect.empty();
 
-		let connections = await fetch("/wp-json/odoo-conn/v1/get-odoo-connections").then(function (response) {
+		let connections = await fetch("/wp-json/odoo-conn/v1/get-odoo-connections",
+			{
+				credentials: 'include',
+				headers: {
+					'content-type': 'application/json',
+					'X-WP-Nonce': wpApiSettings.nonce
+				}
+			}
+		).then(function (response) {
 			return response.json();
 		}).then(function (jsonResponse){
 			return jsonResponse;

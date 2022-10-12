@@ -21,6 +21,11 @@ async function updateData (id, endpoint) {
 		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(updateData), 
 		{
 			method: "PUT",
+			credentials: 'include',
+			headers: {
+				'content-type': 'application/json',
+				'X-WP-Nonce': wpApiSettings.nonce
+			}
 		}
 	);
 }
@@ -34,6 +39,11 @@ async function deleteRow (id, endpoint) {
 		),
 		{
 			method: "DELETE",
+			credentials: 'include',
+			headers: {
+				'content-type': 'application/json',
+				'X-WP-Nonce': wpApiSettings.nonce
+			}
 		}
 	);
 }

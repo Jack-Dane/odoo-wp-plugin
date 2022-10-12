@@ -62,7 +62,15 @@ function odoo_form_mapping_page () {
 		formSelect = jQuery("#odoo_form_id");
 		formSelect.empty();
 
-		let forms = await fetch("/wp-json/odoo-conn/v1/get-odoo-forms").then(function (response) {
+		let forms = await fetch("/wp-json/odoo-conn/v1/get-odoo-forms",
+			{
+				credentials: 'include',
+				headers: {
+					'content-type': 'application/json',
+					'X-WP-Nonce': wpApiSettings.nonce
+				}
+			}
+		).then(function (response) {
 			return response.json();
 		}).then(function (jsonResponse){
 			return jsonResponse;
