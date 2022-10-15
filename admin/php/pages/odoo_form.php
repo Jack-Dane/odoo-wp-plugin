@@ -26,16 +26,32 @@ function odoo_form_page () {
 </div>
 
 <script type="text/javascript">
-	function submitOdooForm () {
+
+	function getFormData () {
 		let formData = new FormData();
 		formData.append("odoo_connection_id", document.getElementById("odoo_connection_id").value);
 		formData.append("odoo_model", document.getElementById("odoo_model").value);
 		formData.append("name", document.getElementById("name").value);
 		formData.append("contact_7_id", document.getElementById("contact_7_id").value);
+		return formData;
+	}
+
+	function submitOdooForm () {
+		let formData = getFormData();
+		let object = {};
+		formData.forEach(function(value, key){
+		    object[key] = value;
+		});
+		let json = JSON.stringify(object);
 
 		fetch("/wp-json/odoo-conn/v1/create-odoo-form", {
     		method: 'POST',
-    		body: formData
+    		body: json,
+			credentials: 'include',
+			headers: {
+				'content-type': 'application/json',
+				'X-WP-Nonce': wpApiSettings.nonce
+			}
 		});
 	}
 
@@ -53,7 +69,7 @@ function odoo_form_page () {
 			}
 		).then(function (response) {
 			return response.json();
-		}).then(function (jsonResponse){
+		}).then(function (jsonResponse) {
 			return jsonResponse;
 		});
 
@@ -69,16 +85,25 @@ function odoo_form_page () {
 		c7FormsSelect = jQuery("#contact_7_id");
 		c7FormsSelect.empty();
 
-		let c7Forms = await fetch("/wp-json/odoo-conn/v1/get-contact-7-forms").then(function (response) {
+		let c7Forms = await fetch("/wp-json/odoo-conn/v1/get-contact-7-forms",
+			{
+				credentials: 'include',
+				headers: {
+					'content-type': 'application/json',
+					'X-WP-Nonce': wpApiSettings.nonce
+				}
+			}
+		).then(function (response) {
 			return response.json();
-		}).then(function (jsonResponse){
+		}).then(function (jsonResponse) {
 			return jsonResponse;
 		});
 
 		c7Forms.forEach( function(c7Form) {
+			console.log(c7Form["ID"]);
 			let option = jQuery(
 				"<option></option>", {
-					"value": c7Forms["id"],
+					"value": c7Form["ID"],
 					"text": c7Form["post_title"]
 				}
 			).appendTo(c7FormsSelect);

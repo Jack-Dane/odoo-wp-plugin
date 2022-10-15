@@ -38,10 +38,20 @@ function odoo_connection_page () {
 
 	function submitConnection () {
 		let formData = getFormData();
+		let object = {};
+		formData.forEach(function(value, key){
+		    object[key] = value;
+		});
+		let json = JSON.stringify(object);
 
 		fetch("/wp-json/odoo-conn/v1/create-odoo-connection", {
 			method: "POST",
-			body: formData
+			body: json,
+			credentials: 'include',
+			headers: {
+				'content-type': 'application/json',
+				'X-WP-Nonce': wpApiSettings.nonce
+			}
 		});
 	}
 </script>

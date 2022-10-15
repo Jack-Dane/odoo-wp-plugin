@@ -49,8 +49,8 @@ function create_odoo_form_table () {
 	`name` VARCHAR(30) NOT NULL,
 	`contact_7_id` BIGINT(20) UNSIGNED NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (odoo_connection_id) REFERENCES $odoo_conn_table(id),
-	FOREIGN KEY (contact_7_id) REFERENCES $contact_7_form_table(ID)
+	FOREIGN KEY (odoo_connection_id) REFERENCES $odoo_conn_table(id) ON DELETE CASCADE,
+	FOREIGN KEY (contact_7_id) REFERENCES $contact_7_form_table(ID) ON DELETE CASCADE
 	) $charset_collate;
 	";
 
@@ -71,7 +71,7 @@ function create_odoo_form_field_mapping () {
 	`odoo_field_name` VARCHAR(100),
 	`constant_value` VARCHAR(200),
 	PRIMARY KEY(id),
-	FOREIGN KEY (odoo_form_id) REFERENCES $odoo_form_table(id)
+	FOREIGN KEY (odoo_form_id) REFERENCES $odoo_form_table(id) ON DELETE CASCADE
 	) $charset_collate;
 	";
 

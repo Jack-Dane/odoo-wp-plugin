@@ -11,7 +11,7 @@ function odoo_form_mapping_page () {
 	<h1>Odoo Form Mappings</h1>
 
 	<a href="#" id="create-data" class="create-database-record">Create new data</a>
-	<form method="POST" onsubmit="return form_mapping_submit();" id="form-data" class="submit-database" style="display: none;">
+	<form method="POST" onsubmit="return formMappingSubmit();" id="form-data" class="submit-database" style="display: none;">
 		<h2>Create a New Form Mapping</h2>
 		<label for="odoo_form_id">Odoo Form</label>
 		<select id="odoo_form_id" name="odoo_form_id" ></select><br/>
@@ -28,12 +28,23 @@ function odoo_form_mapping_page () {
 
 </div>
 <script type="text/javascript">
-	function form_mapping_submit () {
+	function getFormData () {
 		let formData = new FormData();
 		formData.append("odoo_form_id", document.getElementById("odoo_form_id").value);
 		formData.append("cf7_field_name", document.getElementById("cf7_field_name").value);
 		formData.append("odoo_field_name", document.getElementById("odoo_field_name").value);
 		formData.append("constant_value", document.getElementById("constant_value").value);
+		return formData;
+	}
+
+
+	function formMappingSubmit() {
+		let formData = getFormData();
+		let object = {};
+		formData.forEach(function(value, key){
+		    object[key] = value;
+		});
+		let json = JSON.stringify(object);
 
 		if (formData.get("cf7_field_name") != "" && formData.get("constant_value") != "") {
 			alert("You cannot have both an CF7 Field Name and a Constant Value");
@@ -42,7 +53,12 @@ function odoo_form_mapping_page () {
 
 		fetch("/wp-json/odoo-conn/v1/create-odoo-form-mapping", {
 			method: "POST",
-			body: formData
+			body: json,
+			credentials: 'include',
+			headers: {
+				'content-type': 'application/json',
+				'X-WP-Nonce': wpApiSettings.nonce
+			}
 		});
 	}
 
