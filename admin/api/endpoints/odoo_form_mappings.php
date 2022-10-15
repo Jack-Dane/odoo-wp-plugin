@@ -6,6 +6,31 @@ class GetOdooFormMappings extends GetBaseSchema {
 		return "odoo_conn_form_mapping";
 	}
 
+	protected function get_columns () {
+		global $table_prefix;
+
+		$columns = [
+			$table_prefix . "odoo_conn_form_mapping.id", 
+			$table_prefix . "odoo_conn_form.name", 
+			$table_prefix . "odoo_conn_form_mapping.cf7_field_name", 
+			$table_prefix . "odoo_conn_form_mapping.odoo_field_name", 
+			$table_prefix . "odoo_conn_form_mapping.constant_value"
+		];
+		
+		return implode(", ", $columns);
+	}
+
+	protected function foreign_keys () {
+		global $table_prefix;
+
+		return [
+			"odoo_form_id" => [
+				"table_name" => $table_prefix . "odoo_conn_form",
+				"column_name" => "id"
+			]
+		];
+	}
+
 }
 
 
