@@ -71,3 +71,8 @@
 .submit-database input[type=Submit] {
     width: 50%;
 }
+
+.table-operation {
+    padding-right: 5px;
+    padding-left: 5px;
+}

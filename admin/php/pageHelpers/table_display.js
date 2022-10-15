@@ -99,30 +99,33 @@ class TableDisplay {
 		let tBody = jQuery("<tbody></tbody>");
 		dataRows.forEach( function(dataRow, index) {
 			let tableRow = jQuery("<tr></tr>");
+			let tableData = jQuery("<td></td>");
 			
 			let edit = jQuery(
 				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.updateDataEndpoint + "'>Edit</a>"
 			);
-			edit.addClass("table-row-edit");
-			tableRow.append(edit);
+			edit.addClass("table-row-edit table-operation");
+			tableData.append(edit);
 
 			let save = jQuery(
 				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.updateDataEndpoint + "' style='display: none;'>Save</a>"
 			);
-			save.addClass("table-row-save");
-			tableRow.append(save);
+			save.addClass("table-row-save table-operation");
+			tableData.append(save);
 
 			let close = jQuery(
 				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.updateDataEndpoint + "' style='display: none;'>Close</a>"
 			);
-			close.addClass("table-row-close");
-			tableRow.append(close);
+			close.addClass("table-row-close table-operation");
+			tableData.append(close);
 
 			let delete_ = jQuery(
 				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.deleteDataEndpoint + "' data-row-id='" + dataRow["id"] + "'>Delete</a>"
 			);
-			delete_.addClass("table-row-delete");
-			tableRow.append(delete_);
+			delete_.addClass("table-row-delete table-operation");
+			tableData.append(delete_);
+
+			tableRow.append(tableData);
 
 			for ( let columnName in dataRow ) {
 				let editable = true;
