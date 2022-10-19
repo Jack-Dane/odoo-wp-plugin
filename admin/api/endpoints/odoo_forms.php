@@ -11,10 +11,10 @@ class GetOdooForm extends GetBaseSchema {
 
 		$columns = [
 			$table_prefix . "odoo_conn_form.id", 
-			$table_prefix . "odoo_conn_connection.name as 'connection_name'", 
+			$table_prefix . "odoo_conn_connection.name as 'odoo_connection_id'", 
 			$table_prefix . "odoo_conn_form.odoo_model", 
 			$table_prefix . "odoo_conn_form.name", 
-			$table_prefix . "posts.post_title"
+			$table_prefix . "posts.post_title as 'contact_7_id'"
 		];
 		
 		return implode(", ", $columns);

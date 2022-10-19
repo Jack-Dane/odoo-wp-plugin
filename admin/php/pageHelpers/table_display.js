@@ -17,6 +17,10 @@ class TableDisplay {
 		throw Error("NotImplementedError");
 	}
 
+	getForeignKeys () {
+		return [];
+	}
+
 	getRows () {
 		let pageNumber = this.currentPageNumber;
 		if (!this.currentPageNumber || this.currentPageNumber < 0) {
@@ -97,7 +101,7 @@ class TableDisplay {
 		let dataRows = this.cacheJsonResponse;
 		let self = this;
 		let tBody = jQuery("<tbody></tbody>");
-		dataRows.forEach( function(dataRow, index) {
+		dataRows.forEach( async function(dataRow, index) {
 			let tableRow = jQuery("<tr></tr>");
 			let tableData = jQuery("<td></td>");
 			
@@ -132,10 +136,29 @@ class TableDisplay {
 				if (columnName == "id") {
 					editable = false;
 				}
+				
+				let tableRowData = jQuery("<td></td>");
+				let span = jQuery("<span>" + dataRow[columnName] + "</span>");
+				span.addClass("table-row-" + index);
+				span.data("editable", editable);
+				span.data("table-field", columnName);
 
-				let tableRowData = jQuery(
-					"<td><span class='table-row-" + index + "' data-editable='" + editable + "' data-table-field='" + columnName + "'>" + dataRow[columnName] + "</span></td>"
-				);
+				if ( columnName in self.getForeignKeys() ) {
+					span.data(
+						"foreign-key-endpoint",
+						self.getForeignKeys()[columnName]["endpoint"]
+					);
+					span.data(
+						"foreign-key-column-name",
+						self.getForeignKeys()[columnName]["foreignColumnName"]
+					);
+					span.data(
+						"foreign-key-column-primary-key",
+						self.getForeignKeys()[columnName]["primaryKey"]
+					);
+				}
+
+				tableRowData.append(span);
 				tableRow.append(tableRowData);
 			}
 			tBody.append(tableRow);
@@ -186,6 +209,16 @@ class FormMappings extends TableDisplay {
 		return ["Id", "Odoo Form Id", "Contact Form 7 Field Name", "Odoo Field Name", "Constant Value"];
 	}
 
+	getForeignKeys () {
+		return {
+			"odoo_form_id": {
+				"endpoint": "get-odoo-forms",
+				"primaryKey": "id",
+				"foreignColumnName": "name"
+			}
+		}
+	}
+
 }
 
 
@@ -197,6 +230,21 @@ class OdooForms extends TableDisplay {
 
 	getUserFriendlyColumnNames () {
 		return ["Id", "Odoo Connection", "Odoo Model", "Name", "Contact 7 Form"];
+	}
+
+	getForeignKeys () {
+		return {
+			"odoo_connection_id": {
+				"endpoint": "get-odoo-connections",
+				"primaryKey": "id",
+				"foreignColumnName": "name"
+			}, 
+			"contact_7_id": {
+				"endpoint": "get-contact-7-forms",
+				"primaryKey": "ID",
+				"foreignColumnName": "post_title"
+			}
+		}
 	}
 
 }

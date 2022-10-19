@@ -63,16 +63,47 @@ function closeFields (id) {
 }
 
 function openFieldsForEdit (id) {
-	jQuery("." + id).each(function () {
-		let editable = jQuery(this).data("editable");
+	jQuery("." + id).each(async function () {
+		let element = jQuery(this);
+		let editable = element.data("editable");
 		if (!editable) {
 			return; // equal to continue in a javascript loop
 		}
-		let text = jQuery(this).text();
-		let tableField = jQuery(this).data("table-field");
-		jQuery(this).replaceWith(
-			"<input type='text' data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "' value='" + text + "'/>"
-		);
+		let dropDown = element.data("foreign-key-endpoint");
+		let tableField = element.data("table-field");
+
+		if (dropDown) {
+			let foreignKeyData = await fetch (
+				"/wp-json/odoo-conn/v1/" + element.data("foreign-key-endpoint"),
+				{
+					credentials: 'include',
+					headers: {
+						'content-type': 'application/json',
+						'X-WP-Nonce': wpApiSettings.nonce
+					}
+				}
+			).then( function (response) {
+				return response.json();
+			}).then( function (jsonResponse) {
+				return jsonResponse
+			});
+
+			let dropDown = jQuery("<select data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "'/>");
+			foreignKeyData.forEach( function (foreignKeyObject) {
+				let id = foreignKeyObject[element.data("foreign-key-column-primary-key")];
+				let name = foreignKeyObject[element.data("foreign-key-column-name")];
+
+				dropDown.append(
+					"<option value='" + id + "'>" + name + "</option>"
+				);
+			});
+			element.replaceWith(dropDown);
+		} else {
+			let text = element.text();
+			element.replaceWith(
+				"<input type='text' data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "' value='" + text + "'/>"
+			);
+		}
 	});
 }
 
