@@ -17,6 +17,10 @@ class TableDisplay {
 		throw Error("NotImplementedError");
 	}
 
+	getDisplayColumns () {
+		throw Error("NotImplementedError");
+	}
+
 	getForeignKeys () {
 		return [];
 	}
@@ -132,30 +136,26 @@ class TableDisplay {
 			tableRow.append(tableData);
 
 			for ( let columnName in dataRow ) {
-				let editable = true;
-				if (columnName == "id") {
-					editable = false;
+				if (!self.getDisplayColumns().includes(columnName)) {
+					continue;
 				}
+				let editable = columnName == "id" ? false : true;
 				
 				let tableRowData = jQuery("<td></td>");
 				let span = jQuery("<span>" + dataRow[columnName] + "</span>");
 				span.addClass("table-row-" + index);
 				span.data("editable", editable);
-				span.data("table-field", columnName);
 
 				if ( columnName in self.getForeignKeys() ) {
-					span.data(
-						"foreign-key-endpoint",
-						self.getForeignKeys()[columnName]["endpoint"]
-					);
-					span.data(
-						"foreign-key-column-name",
-						self.getForeignKeys()[columnName]["foreignColumnName"]
-					);
-					span.data(
-						"foreign-key-column-primary-key",
-						self.getForeignKeys()[columnName]["primaryKey"]
-					);
+					let foreignKeyData = self.getForeignKeys()[columnName];
+
+					span.data("foreign-key-endpoint", foreignKeyData["endpoint"]);
+					span.data("table-field", foreignKeyData["keyColumn"]);
+					span.data("foreign-key-column-primary-key", foreignKeyData["primaryKey"]);
+					span.data("foreign-key-column-name", foreignKeyData["foreignColumnName"]);
+					span.data("foreign-key-value", dataRow[foreignKeyData["keyColumn"]]);  // used to determin the current value of the drop down
+				} else {
+					span.data("table-field", columnName);
 				}
 
 				tableRowData.append(span);
@@ -209,9 +209,20 @@ class FormMappings extends TableDisplay {
 		return ["Id", "Odoo Form Id", "Contact Form 7 Field Name", "Odoo Field Name", "Constant Value"];
 	}
 
+	getDisplayColumns () {
+		return [
+			"id",
+			"odoo_form_name",
+			"cf7_field_name",
+			"odoo_field_name",
+			"constant_value"
+		];
+	}
+
 	getForeignKeys () {
 		return {
-			"odoo_form_id": {
+			"odoo_form_name": {
+				"keyColumn": "odoo_form_id",
 				"endpoint": "get-odoo-forms",
 				"primaryKey": "id",
 				"foreignColumnName": "name"
@@ -232,14 +243,26 @@ class OdooForms extends TableDisplay {
 		return ["Id", "Odoo Connection", "Odoo Model", "Name", "Contact 7 Form"];
 	}
 
+	getDisplayColumns () {
+		return [
+			"id",
+			"odoo_connection_name",
+			"odoo_model",
+			"name",
+			"contact_7_title"
+		];
+	}
+
 	getForeignKeys () {
 		return {
-			"odoo_connection_id": {
+			"odoo_connection_name": {
+				"keyColumn": "odoo_connection_id",
 				"endpoint": "get-odoo-connections",
 				"primaryKey": "id",
 				"foreignColumnName": "name"
 			}, 
-			"contact_7_id": {
+			"contact_7_title": {
+				"keyColumn": "contact_7_id",
 				"endpoint": "get-contact-7-forms",
 				"primaryKey": "ID",
 				"foreignColumnName": "post_title"
@@ -258,6 +281,17 @@ class OdooConnections extends TableDisplay {
 
 	getUserFriendlyColumnNames () {
 		return ["Id", "Name", "Username", "API Key", "URL", "Database Name"];
+	}
+
+	getDisplayColumns () {
+		return [
+			"id",
+			"name",
+			"username",
+			"api_key",
+			"url",
+			"database_name"
+		];
 	}
 
 }

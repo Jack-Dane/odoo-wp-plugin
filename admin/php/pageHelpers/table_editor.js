@@ -89,13 +89,17 @@ function openFieldsForEdit (id) {
 			});
 
 			let dropDown = jQuery("<select data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "'/>");
+			let selectedValue = element.data("foreign-key-value");
 			foreignKeyData.forEach( function (foreignKeyObject) {
 				let id = foreignKeyObject[element.data("foreign-key-column-primary-key")];
 				let name = foreignKeyObject[element.data("foreign-key-column-name")];
 
-				dropDown.append(
-					"<option value='" + id + "'>" + name + "</option>"
-				);
+				let option = jQuery("<option value='" + id + "'>" + name + "</option>");
+				console.log(selectedValue);
+				if (selectedValue == id) {
+					option.attr("selected", true);
+				}
+				dropDown.append(option);
 			});
 			element.replaceWith(dropDown);
 		} else {
