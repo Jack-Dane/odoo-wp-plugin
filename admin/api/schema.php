@@ -161,4 +161,45 @@ abstract class DeleteBaseSchema extends BaseSchema {
 
 }
 
+function base_get_request_arguments () {
+	return array(
+		"limit" => array(
+			"type" => "integer",
+			"description" => esc_html__("The total number of Odoo forms returned in the API")
+		),
+		"offset" => array(
+			"type" => "integer",
+			"description" => esc_html__("The offset based on the primary key")
+		),
+	);
+}
+
+function base_delete_request_schema ($title) {
+	return array(
+		"$schema" => "https://json-schema.org/draft/2020-12/schema",
+		"title" => $title,
+		"type" => 'object',
+		"properties" => array(
+			"DELETE" => array(
+				"type" => "integer",
+				"description" => esc_html__("Primary key for the Odoo Connection that was deleted"),
+			),
+			"table" => array(
+				"type" => "string",
+				"description" => esc_html__("Table that the row was deleted from"),
+			),
+		),
+	);
+}
+
+function base_delete_arguments () {
+	return array(
+		"id" => array(
+			"type" => "integer",
+			"description" => esc_html__("Primary key for an Odoo Connection"),
+			"required" => true,
+		),
+	);
+}
+
 ?>
