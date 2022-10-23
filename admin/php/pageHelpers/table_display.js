@@ -280,7 +280,7 @@ class OdooConnections extends TableDisplay {
 	}
 
 	getUserFriendlyColumnNames () {
-		return ["Id", "Name", "Username", "API Key", "URL", "Database Name"];
+		return ["Id", "Name", "Username", "URL", "Database Name"];
 	}
 
 	getDisplayColumns () {
@@ -288,7 +288,6 @@ class OdooConnections extends TableDisplay {
 			"id",
 			"name",
 			"username",
-			"api_key",
 			"url",
 			"database_name"
 		];

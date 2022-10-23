@@ -6,6 +6,18 @@ class GetOdooConnection extends GetBaseSchema {
 		return "odoo_conn_connection";
 	}
 
+	protected function get_columns () {
+		$columns = [
+			"id",
+			"name",
+			"username",
+			"url",
+			"database_name"
+		];
+
+		return implode(", ", $columns);
+	}
+
 }
 
 
