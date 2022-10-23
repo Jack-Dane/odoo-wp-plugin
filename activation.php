@@ -21,7 +21,7 @@ function create_odoo_connections_table () {
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(30) NOT NULL,
 	`username` VARCHAR(100) NOT NULL,
-	`api_key` VARCHAR(100) NOT NULL,
+	`api_key` VARCHAR(150) NOT NULL,
 	`url` VARCHAR(300) NOT NULL,
 	`database_name` VARCHAR(200) NOT NULL,
 	PRIMARY KEY  (id)
