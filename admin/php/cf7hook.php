@@ -37,7 +37,7 @@ function send_odoo_data ($wpcf) {
 
 function send_form_data_to_odoo ($connection, $odoo_model, $odoo_field_data) {
 	$username = $connection->username;
-	$api_key = $connection->api_key;
+	$api_key = decrypt_data($connection->api_key);
 	$database = $connection->database_name;
 	$url = $connection->url;
 	$odoo_field_data = array($odoo_field_data);

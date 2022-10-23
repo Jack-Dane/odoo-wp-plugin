@@ -9,6 +9,8 @@ Version: 0.0.1
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 
+require("encryption.php");
+
 require("odoo_connector/odoo_connector.php" );
 
 require("dependency_check.php");
