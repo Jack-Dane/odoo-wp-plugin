@@ -11,10 +11,14 @@ abstract class BaseSchema {
 
 abstract class PostPutBaseSchema extends BaseSchema {
 
+	protected function get_columns () {
+		return "*";
+	}
+
 	protected function get_last_edited_record ($table_name, $id) {
 		global $wpdb;
 
-		$query = "SELECT * FROM {$table_name} WHERE id={$id}";
+		$query = "SELECT {$this->get_columns()} FROM {$table_name} WHERE id={$id}";
 		$inserted_row = $wpdb->get_results($query);
 		return $inserted_row;	
 	}

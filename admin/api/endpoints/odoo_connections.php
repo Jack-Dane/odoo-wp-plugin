@@ -1,5 +1,16 @@
 <?php
 
+define("CONNECTION_COLUMNS", 
+	[
+		"id",
+		"name",
+		"username",
+		"url",
+		"database_name"
+	]
+);
+
+
 class GetOdooConnection extends GetBaseSchema {
 
 	protected function get_table_name () {
@@ -7,13 +18,7 @@ class GetOdooConnection extends GetBaseSchema {
 	}
 
 	protected function get_columns () {
-		$columns = [
-			"id",
-			"name",
-			"username",
-			"url",
-			"database_name"
-		];
+		$columns = CONNECTION_COLUMNS;
 
 		return implode(", ", $columns);
 	}
@@ -22,6 +27,12 @@ class GetOdooConnection extends GetBaseSchema {
 
 
 class PostOdooConnection extends PostBaseSchema { 
+
+	protected function get_columns () {
+		$columns = CONNECTION_COLUMNS;
+
+		return implode(", ", $columns);
+	}
 	
 	protected function get_table_name () {
 		return "odoo_conn_connection";
@@ -49,6 +60,12 @@ class PostOdooConnection extends PostBaseSchema {
 
 class PutOdooConnection extends PutBaseSchema {
 
+	protected function get_columns () {
+		$columns = CONNECTION_COLUMNS;
+
+		return implode(", ", $columns);
+	}
+
 	protected function get_table_name () {
 		return "odoo_conn_connection";
 	}
@@ -57,7 +74,6 @@ class PutOdooConnection extends PutBaseSchema {
 		return array (
 			"name" => $data["name"],
 			"username" => $data["username"],
-			"api_key" => $data["api_key"],
 			"url" => $data["url"],
 			"database_name" => $data["database_name"]
 		);
@@ -93,10 +109,6 @@ function base_odoo_connections_schema_properties () {
 			"type" => "string",
 			"description" => esc_html__("The name of the Odoo Connection instance"),
 		),
-		"api_key" => array(
-			"type" => "string",
-			"description" => esc_html__("The API Key used to authenticate the Odoo Connection"),
-		),
 		"url" => array(
 			"type" => "string",
 			"description" => esc_html__("The URL of the Odoo database"),
@@ -113,11 +125,6 @@ function base_odoo_connections_arguments () {
 		"name" => array(
 			"type" => "string",
 			"description" => esc_html__("The name of the Odoo Connection instance"),
-			"required" => true,
-		),
-		"api_key" => array(
-			"type" => "string",
-			"description" => esc_html__("The API Key used to authenticate the Odoo Connection"),
 			"required" => true,
 		),
 		"url" => array(
@@ -167,7 +174,13 @@ function create_odoo_connection_schema () {
 }
 
 function create_odoo_connection_arguments () {
-	return base_odoo_connections_arguments();
+	return base_odoo_connections_arguments() + array(
+		"api_key" => array(
+			"type" => "string",
+			"description" => esc_html__("The API Key used to authenticate the Odoo Connection"),
+			"required" => true,
+		),
+	);
 }
 
 function update_odoo_connection ($data) {
