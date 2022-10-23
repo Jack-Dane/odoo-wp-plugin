@@ -42,12 +42,11 @@ class PostOdooFormMappings extends PostBaseSchema {
 	}
 
 	protected function parse_data ($data) {
-		// TODO: validate either constant value has been parsed or cf7_field_name
-		return array (
+		return array(
 			"odoo_form_id" => $data["odoo_form_id"],
 			"cf7_field_name" => $data["cf7_field_name"],
 			"odoo_field_name" => $data["odoo_field_name"],
-			"constant_value" => $data["constant_value"]
+			"constant_value" => $data["constant_value"],
 		);
 	}
 
@@ -65,10 +64,25 @@ class PutOdooFormMappings extends PutBaseSchema {
 	}
 
 	protected function update_data ($data) {
-		return array(
+		$parsed_data = [];
+
+		if ( isset( $data["cf7_field_name"] ) && !empty( $data["cf7_field_name"] ) ) {
+			$parsed_data["cf7_field_name"] = $data["cf7_field_name"];
+		}
+
+		if ( isset( $data["constant_value"] ) && !empty( $data["constant_value"] ) ) {
+			$parsed_data["constant_value"] = $data["constant_value"];
+		}
+
+		if ( isset( $parsed_data["constant_value"] ) && isset( $parsed_data["cf7_field_name"] ) ) {
+			throw new Exception("Can't pass both a constant value and a cf7 field name as arguments");
+		}
+
+		error_log($parsed_data["constant_value"]);
+
+		return $parsed_data + array(
 			"odoo_form_id" => $data["odoo_form_id"],
-			"cf7_field_name" => $data["cf7_field_name"],
-			"odoo_field_name" => $data["odoo_field_name"]
+			"odoo_field_name" => $data["odoo_field_name"],
 		);
 	}
 }
@@ -126,7 +140,6 @@ function base_odoo_form_mappings_arguments () {
 		"cf7_field_name" => array(
 			"type" => "string",
 			"description" => esc_html__("The name of the field on the contact 7 form"),
-			"required" => true,
 		),
 		"odoo_field_name" => array(
 			"type" => "string",
@@ -136,7 +149,6 @@ function base_odoo_form_mappings_arguments () {
 		"constant_value" => array(
 			"type" => "string",
 			"description" => esc_html__("If there is a default value that needs to be mapped when filling in a form"),
-			"required" => true,
 		),
 	);
 }
@@ -245,7 +257,7 @@ add_action ( "rest_api_init", function () {
 			"callback" => "update_odoo_form_mapping",
 			"args" => update_odoo_form_mapping_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
+		// "permission_callback" => "is_authorised_to_request_data",
 		"schema" => "update_odoo_form_mapping_schema",
 	));
 

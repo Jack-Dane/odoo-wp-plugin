@@ -95,7 +95,6 @@ function openFieldsForEdit (id) {
 				let name = foreignKeyObject[element.data("foreign-key-column-name")];
 
 				let option = jQuery("<option value='" + id + "'>" + name + "</option>");
-				console.log(selectedValue);
 				if (selectedValue == id) {
 					option.attr("selected", true);
 				}

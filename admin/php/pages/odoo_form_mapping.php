@@ -34,22 +34,38 @@ function odoo_form_mapping_page () {
 		formData.append("cf7_field_name", document.getElementById("cf7_field_name").value);
 		formData.append("odoo_field_name", document.getElementById("odoo_field_name").value);
 		formData.append("constant_value", document.getElementById("constant_value").value);
+		formData.append("value_type", document.getElementById("value_type").checked);  // .checked returns a string boolean
 		return formData;
 	}
 
 
 	function formMappingSubmit() {
 		let formData = getFormData();
+
+		if (formData.get("value_type") === "true") {
+			if (formData.get("constant_value") == "" ) {
+				alert("You have not filled in a constant value");
+				return false;
+			}
+			formData.delete("cf7_field_name");
+		}
+
+		if (formData.get("value_type") === "false") {
+			if (formData.get("cf7_field_name") == "") {
+				alert("You have not filled in a Odoo Field Name");
+				return false;
+			}
+			console.log("Deleting constant value");
+			formData.delete("constant_value");
+		}
+
+		formData.delete("value_type");
+
 		let object = {};
-		formData.forEach(function(value, key){
-		    object[key] = value;
+		formData.forEach( function( value, key ) {
+			object[key] = value;
 		});
 		let json = JSON.stringify(object);
-
-		if (formData.get("cf7_field_name") != "" && formData.get("constant_value") != "") {
-			alert("You cannot have both an CF7 Field Name and a Constant Value");
-			return false;
-		}
 
 		fetch("/wp-json/odoo-conn/v1/create-odoo-form-mapping", {
 			method: "POST",

@@ -100,7 +100,6 @@ function odoo_form_page () {
 		});
 
 		c7Forms.forEach( function(c7Form) {
-			console.log(c7Form["ID"]);
 			let option = jQuery(
 				"<option></option>", {
 					"value": c7Form["ID"],

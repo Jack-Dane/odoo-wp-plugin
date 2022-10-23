@@ -67,8 +67,8 @@ function create_odoo_form_field_mapping () {
 	CREATE TABLE `$table_name` (
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`odoo_form_id` BIGINT(20) UNSIGNED NOT NULL,
-	`cf7_field_name` VARCHAR(100) NOT NULL,
-	`odoo_field_name` VARCHAR(100),
+	`cf7_field_name` VARCHAR(100),
+	`odoo_field_name` VARCHAR(100) NOT NULL,
 	`constant_value` VARCHAR(200),
 	PRIMARY KEY(id),
 	FOREIGN KEY (odoo_form_id) REFERENCES $odoo_form_table(id) ON DELETE CASCADE
