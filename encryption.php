@@ -1,18 +1,26 @@
 <?php 
 
-define("ENCRYPTION_KEY_PATH", "odoo_conn.key");
+define("ENCRYPTION_KEY_PATH", ABSPATH . "odoo_conn.key");
 
+
+function generate_encryption_key () {
+	$encryption_file = fopen( ENCRYPTION_KEY_PATH, "w" );
+	$encryption_key = sodium_crypto_secretbox_keygen();
+	fwrite( $encryption_file, $encryption_key );
+	fclose( $encryption_file );
+	return $encryption_key;
+}
 
 function get_encryption_key () {
 	$encryption_file = fopen( ENCRYPTION_KEY_PATH, "r" );
+
 	if (!$encryption_file) {
-		$encryption_file = fopen( ENCRYPTION_KEY_PATH, "w" );
-		$encryption_key = sodium_crypto_secretbox_keygen();
-		fwrite( $encryption_file, $encryption_key );
+		$encryption_key = generate_encryption_key();
 	} else {
 		$encryption_key = fread( $encryption_file, filesize( ENCRYPTION_KEY_PATH ) );
+		fclose( $encryption_file );
 	}
-	fclose($encryption_file);
+
 	return $encryption_key;
 }
 
@@ -35,6 +43,17 @@ function decrypt_data ($encrypted_data) {
 	$decrypted = sodium_crypto_secretbox_open( $encrypted_result, $nonce, $encryption_key );
 	error_log($decrypted);
 	return $decrypted;
+}
+
+function refresh_encryption_key () {
+	global $wpdb, $table_prefix;
+
+	generate_encryption_key();
+
+	// remove all connections as the api_key can no longer be decrypted
+	// keys should only be refreshed when we think it has been leaked
+	// so the api keys in Odoo should be changed making this data redundant
+	$wpdb->query("DELETE FROM {$table_prefix}odoo_conn_connection");
 }
 
 ?>
