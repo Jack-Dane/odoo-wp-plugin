@@ -23,11 +23,12 @@ This plugin can be test within a [docker environment](https://hub.docker.com/_/w
 5. Now map the Contact 7 Form fields to what values they will fill within Odoo using the Odoo Form Mapping. You can also set constant values that the form should fill in within Odoo. 
 6. Submit the form and you should see the new object created in your odoo instance. 
 
-TODO: youtube video
+[Youtube video]
 
 ## Security
 
-* API keys are encrypted in the system. 
+* API keys are encrypted in the system using Sodium symmetric key encryption.
+* Encryption keys can be refreshed if you think it has been leaked. Refreshing an encryption key will remove all the data. 
 
 ## Requirements
 
