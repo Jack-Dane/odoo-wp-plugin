@@ -5,9 +5,30 @@ define("ENCRYPTION_KEY_PATH", ABSPATH . "odoo_conn.key");
 
 function generate_encryption_key () {
 	$encryption_file = fopen( ENCRYPTION_KEY_PATH, "w" );
-	$encryption_key = sodium_crypto_secretbox_keygen();
-	fwrite( $encryption_file, $encryption_key );
-	fclose( $encryption_file );
+
+	$timeout = 10;  // seconds
+	$attempts  = 0;
+	$lock_timedout = false;
+	while ( !flock($encryption_file, LOCK_EX | LOCK_NB, $would_block ) ) {
+		if ($attempts < $timeout) {
+			$attempts++;
+			sleep(1);
+		} else {
+			if ($would_block) {
+				// this should never happen, but it is better to raise an 
+				// exception in Wordpress, rather than timeout the process
+				throw new Exception("Timed out waiting to write to the key file");
+			}
+		}
+	}
+
+	try {
+		$encryption_key = sodium_crypto_secretbox_keygen();
+		fwrite( $encryption_file, $encryption_key );
+		fclose( $encryption_file );
+	} finally {
+		flock($encryption_file, LOCK_UN);
+	}
 	return $encryption_key;
 }
 
