@@ -5,7 +5,7 @@ namespace odoo_conn\encryption;
 define("ENCRYPTION_KEY_PATH", ABSPATH . "odoo_conn.key");
 
 
-function generate_encryption_key () {
+function odoo_conn_generate_encryption_key () {
 	$encryption_file = fopen( ENCRYPTION_KEY_PATH, "w" );
 
 	$timeout = 10;  // seconds
@@ -38,11 +38,11 @@ function generate_encryption_key () {
 	return $encryption_key;
 }
 
-function get_encryption_key () {
+function odoo_conn_get_encryption_key () {
 	$encryption_key_exists = file_exists( ENCRYPTION_KEY_PATH );
 
 	if (!$encryption_key_exists) {
-		$encryption_key = generate_encryption_key();
+		$encryption_key = odoo_conn_generate_encryption_key();
 	} else {
 		$encryption_file = fopen( ENCRYPTION_KEY_PATH, "r" );
 		$encryption_key = fread( $encryption_file, filesize( ENCRYPTION_KEY_PATH ) );
@@ -52,8 +52,8 @@ function get_encryption_key () {
 	return $encryption_key;
 }
 
-function encrypt_data ($data) {
-	$encryption_key = get_encryption_key();
+function odoo_conn_encrypt_data ($data) {
+	$encryption_key = odoo_conn_get_encryption_key();
 
 	$nonce = random_bytes( SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
 	$encrypted_data = sodium_crypto_secretbox( $data, $nonce, $encryption_key );
@@ -61,8 +61,8 @@ function encrypt_data ($data) {
 	return base64_encode( $nonce . $encrypted_data );
 }
 
-function decrypt_data ($encrypted_data) {
-	$encryption_key = get_encryption_key();
+function odoo_conn_decrypt_data ($encrypted_data) {
+	$encryption_key = odoo_conn_get_encryption_key();
 	
 	$decoded_data = base64_decode( $encrypted_data );
 	$nonce = mb_substr( $decoded_data, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, "8bit" );
@@ -73,10 +73,10 @@ function decrypt_data ($encrypted_data) {
 	return $decrypted;
 }
 
-function refresh_encryption_key () {
+function odoo_conn_refresh_encryption_key () {
 	global $wpdb, $table_prefix;
 
-	generate_encryption_key();
+	odoo_conn_generate_encryption_key();
 
 	// remove all connections as the api_key can no longer be decrypted
 	// keys should only be refreshed when we think it has been leaked

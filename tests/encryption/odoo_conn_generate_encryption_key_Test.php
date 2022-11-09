@@ -1,16 +1,15 @@
 <?php 
 
-namespace odoo_conn\tests\encryptionTest_generate_encryption_key_Test;
+namespace odoo_conn\tests\odoo_conn_generate_encryption_key_Test;
 
 use \org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
+use \PHPUnit\Framework\TestCase;
 
 define("ABSPATH", "vfs://root/");
 
 require_once("encryption.php");
 
-
-class generate_encryption_key_Test extends TestCase {
+class odoo_conn_generate_encryption_key_Test extends TestCase {
 
 	use \phpmock\phpunit\PHPMock;
 
@@ -34,7 +33,7 @@ class generate_encryption_key_Test extends TestCase {
 				}
 		);
 		
-		$key = \odoo_conn\encryption\generate_encryption_key();
+		$key = \odoo_conn\encryption\odoo_conn_generate_encryption_key();
 
 		$this->assertTrue( $this->root->hasChild( "odoo_conn.key" ) );
 		$this->assertEquals( "abc", $this->root->getChild( "odoo_conn.key" )->getContent() );
@@ -53,7 +52,7 @@ class generate_encryption_key_Test extends TestCase {
 		$this->sodium_crypto_secretbox_keygen->expects($this->never());
 		$this->expectException(\Exception::class);
 
-		$key = \odoo_conn\encryption\generate_encryption_key();
+		$key = \odoo_conn\encryption\odoo_conn_generate_encryption_key();
 
 		$this->expectErrorMessage("Timed out waiting to write to the key file");
 	}
@@ -72,7 +71,7 @@ class generate_encryption_key_Test extends TestCase {
 				}
 		);
 
-		$key = \odoo_conn\encryption\generate_encryption_key();
+		$key = \odoo_conn\encryption\odoo_conn_generate_encryption_key();
 
 		$this->assertFalse($key);
 	}

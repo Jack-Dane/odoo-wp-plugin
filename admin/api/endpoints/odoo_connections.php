@@ -40,7 +40,7 @@ class PostOdooConnection extends PostBaseSchema {
 
 	protected function parse_data ($data) {
 		$api_key = $data["api_key"];
-		$encrypted_api_key = encrypt_data($api_key);
+		$encrypted_api_key = odoo_conn_encrypt_data($api_key);
 
 		return array (
 			"name" => $data["name"],

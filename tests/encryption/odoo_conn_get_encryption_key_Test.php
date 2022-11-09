@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\tests\get_encryption_key_Test; 
+namespace odoo_conn\tests\odoo_conn_get_encryption_key_Test; 
 
 use \org\bovigo\vfs\vfsStream;
 use \PHPUnit\Framework\TestCase;
@@ -9,7 +9,7 @@ define("ABSPATH", "vfs://root/");
 
 require_once("encryption.php");
 
-class get_encryption_key_Test extends TestCase {
+class odoo_conn_get_encryption_key_Test extends TestCase {
 
 	use \phpmock\phpunit\PHPMock;
 
@@ -23,7 +23,7 @@ class get_encryption_key_Test extends TestCase {
 		vfsStream::newFile( "odoo_conn.key" )->at( $this->root )->setContent( "abc" );
 		$this->flock->expects($this->never());
 
-		$key = \odoo_conn\encryption\get_encryption_key();
+		$key = \odoo_conn\encryption\odoo_conn_get_encryption_key();
 
 		$this->assertEquals("abc", $key);
 	}
@@ -43,7 +43,7 @@ class get_encryption_key_Test extends TestCase {
 				}
 		);
 
-		$key = \odoo_conn\encryption\get_encryption_key();
+		$key = \odoo_conn\encryption\odoo_conn_get_encryption_key();
 
 		$this->assertTrue( $this->root->hasChild( "odoo_conn.key" ) );
 		$this->assertEquals( "abc", $this->root->getChild( "odoo_conn.key" )->getContent() );
