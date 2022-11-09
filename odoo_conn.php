@@ -15,7 +15,7 @@ require("odoo_connector/odoo_connector.php" );
 
 require("dependency_check.php");
 
-register_activation_hook( __FILE__, "contact_7_plugin_active" );
+register_activation_hook( __FILE__, "odoo_conn_contact_7_plugin_active" );
 
 require("activation.php");
 

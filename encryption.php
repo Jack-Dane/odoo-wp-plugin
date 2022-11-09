@@ -1,5 +1,7 @@
 <?php 
 
+namespace odoo_conn\encryption;
+
 define("ENCRYPTION_KEY_PATH", ABSPATH . "odoo_conn.key");
 
 
@@ -17,7 +19,9 @@ function generate_encryption_key () {
 			if ($would_block) {
 				// this should never happen, but it is better to raise an 
 				// exception in Wordpress, rather than timeout the process
-				throw new Exception("Timed out waiting to write to the key file");
+				throw new \Exception("Timed out waiting to write to the key file");
+			} else {
+				break;
 			}
 		}
 	}
@@ -26,6 +30,8 @@ function generate_encryption_key () {
 		$encryption_key = sodium_crypto_secretbox_keygen();
 		fwrite( $encryption_file, $encryption_key );
 		fclose( $encryption_file );
+	} catch (\Exception $e) {
+		return false;
 	} finally {
 		flock($encryption_file, LOCK_UN);
 	}
@@ -33,11 +39,12 @@ function generate_encryption_key () {
 }
 
 function get_encryption_key () {
-	$encryption_file = fopen( ENCRYPTION_KEY_PATH, "r" );
+	$encryption_key_exists = file_exists( ENCRYPTION_KEY_PATH );
 
-	if (!$encryption_file) {
+	if (!$encryption_key_exists) {
 		$encryption_key = generate_encryption_key();
 	} else {
+		$encryption_file = fopen( ENCRYPTION_KEY_PATH, "r" );
 		$encryption_key = fread( $encryption_file, filesize( ENCRYPTION_KEY_PATH ) );
 		fclose( $encryption_file );
 	}
