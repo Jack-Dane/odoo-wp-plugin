@@ -1,5 +1,8 @@
 <?php 
 
+require_once("odoo_connector/ripcord/ripcord.php");
+
+
 function send_odoo_data ($wpcf) {
 
 	$wpcf7 = WPCF7_ContactForm::get_current();
@@ -41,7 +44,7 @@ function send_form_data_to_odoo ($connection, $odoo_model, $odoo_field_data) {
 	$database = $connection->database_name;
 	$url = $connection->url;
 	$odoo_field_data = array($odoo_field_data);
-	$odoo_connector = new OdooConnector($username, $api_key, $database, $url);
+	$odoo_connector = new OdooConnOdooConnector($username, $api_key, $database, $url, new \ripcord());
 	$objectId = $odoo_connector->createObject($odoo_model, $odoo_field_data);
 }
 
