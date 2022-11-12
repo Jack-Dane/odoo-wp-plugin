@@ -1,0 +1,3 @@
+[submodule "packages/ripcord"]
+	path = packages/ripcord
+	url = git@github.com:poef/ripcord.git

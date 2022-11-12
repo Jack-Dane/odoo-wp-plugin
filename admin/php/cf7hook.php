@@ -1,7 +1,5 @@
 <?php 
 
-require_once("odoo_connector/ripcord/ripcord.php");
-
 
 function send_odoo_data ($wpcf) {
 

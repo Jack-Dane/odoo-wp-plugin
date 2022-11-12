@@ -1,7 +1,5 @@
 <?php 
 
-require("capabilities.php");
-
 require("api/main.php");
 
 require("php/menu_items.php");
