@@ -1,6 +1,9 @@
 <?php
 
-class GetContact7Form extends GetExtendedSchema {
+namespace odoo_conn\admin\api\endpoints;
+
+
+class OdooConnGetContact7Form extends GetExtendedSchema {
 
 	public function __construct () {
 		parent::__construct($where_condition="post_type='wpcf7_contact_form'");
@@ -17,7 +20,7 @@ class GetContact7Form extends GetExtendedSchema {
 }
 
 function get_contact_7_forms ($data) {
-	$get_contact_7_form = new GetContact7Form();
+	$get_contact_7_form = new OdooConnGetContact7Form();
 	$response = $get_contact_7_form->request($data);
 	return $response;
 }

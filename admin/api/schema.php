@@ -1,5 +1,7 @@
 <?php
 
+namespace odoo_conn\admin\api\endpoints;
+
 abstract class BaseSchema {
 
 	abstract public function request ($data);
