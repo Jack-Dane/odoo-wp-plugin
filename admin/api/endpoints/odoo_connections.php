@@ -45,7 +45,7 @@ class OdooConnPostOdooConnection extends PostBaseSchema {
 		$api_key = $data["api_key"];
 		$encrypted_api_key = odoo_conn_encrypt_data($api_key);
 
-		return array (
+		return array(
 			"name" => $data["name"],
 			"username" => $data["username"],
 			"api_key" => $encrypted_api_key,
@@ -55,7 +55,7 @@ class OdooConnPostOdooConnection extends PostBaseSchema {
 	}
 
 	protected function insert_data_types () {
-		return array ("%s", "%s", "%s", "%s", "%s");
+		return array("%s", "%s", "%s", "%s", "%s");
 	}
 
 }
@@ -67,7 +67,7 @@ class OdooConnPutOdooConnection extends PutBaseSchema {
 	use OdooConnOdooConnectionColumns;
 
 	protected function update_data ($data) {
-		return array (
+		return array(
 			"name" => $data["name"],
 			"username" => $data["username"],
 			"url" => $data["url"],
