@@ -66,7 +66,7 @@ abstract class PutBaseSchema extends PostPutBaseSchema {
 		$wpdb->update(
 			$table_name,
 			$this->update_data($data),
-			array ("id" => $this->id)
+			array("id" => $this->id)
 		);
 
 		return $this->get_last_edited_record($table_name, $this->id);
