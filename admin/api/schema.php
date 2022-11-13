@@ -161,7 +161,7 @@ abstract class DeleteBaseSchema extends BaseSchema {
 
 		return [
 			"DELETE" => $id,
-			"table" => $this->get_table_name(),
+			"table" => $table_prefix . $this->get_table_name(),
 		];
 	}
 
