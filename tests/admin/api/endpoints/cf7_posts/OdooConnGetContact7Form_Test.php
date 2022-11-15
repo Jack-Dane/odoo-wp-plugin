@@ -11,6 +11,8 @@ use odoo_conn\admin\api\endpoints\OdooConnGetContact7Form;
 
 class OdooConnGetContact7Form_Test extends TestCase {
 
+	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
 	public function test_ok () {
 		$wpdb = \Mockery::mock("WPDB");
 		$wpdb->shouldReceive("prepare")->with("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form'", [])

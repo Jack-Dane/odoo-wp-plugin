@@ -11,6 +11,8 @@ use odoo_conn\admin\api\endpoints\OdooConnGetOdooConnection;
 
 class OdooConnGetOdooConnection_Test extends TestCase {
 
+	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
 	public function test_ok () {
 		$wpdb = \Mockery::mock("WPDB");
 		$wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection", [])

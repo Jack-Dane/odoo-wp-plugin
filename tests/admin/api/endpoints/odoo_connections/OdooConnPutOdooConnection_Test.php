@@ -11,6 +11,8 @@ use odoo_conn\admin\api\endpoints\OdooConnPutOdooConnection;
 
 class OdooConnPutOdooConnection_Test extends TestCase {
 
+	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
 	public function test_ok () {
 		$data = array(
 			"name"=>"name",
@@ -58,7 +60,6 @@ class OdooConnPutOdooConnection_Test extends TestCase {
 		$response = $odooConnGetOdooConnection->request($api_key_data);
 
 		$this->assertEquals($results, $response);
-
 	}
 
 }

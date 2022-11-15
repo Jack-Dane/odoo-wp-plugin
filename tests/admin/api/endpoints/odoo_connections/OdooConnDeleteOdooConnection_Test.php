@@ -11,6 +11,8 @@ use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooConnection;
 
 class OdooConnDeleteOdooConnection_Test extends TestCase {
 
+	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
 	public function test_ok () {
 		$data = array("id" => 5);
 		$wpdb = \Mockery::mock("WPDB");

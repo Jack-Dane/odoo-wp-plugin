@@ -1,10 +1,18 @@
 <?php
 
-class GetOdooFormMappings extends GetBaseSchema {
+namespace odoo_conn\admin\api\endpoints;
+
+
+trait OdooConnFormMappingTableName {
 
 	protected function get_table_name () {
 		return "odoo_conn_form_mapping";
 	}
+
+}
+
+
+trait OdooConnFormMappingColumns {
 
 	protected function get_columns () {
 		global $table_prefix;
@@ -21,6 +29,13 @@ class GetOdooFormMappings extends GetBaseSchema {
 		return implode(", ", $columns);
 	}
 
+}
+
+class OdooConnGetOdooFormMappings extends GetBaseSchema {
+
+	use OdooConnFormMappingTableName;
+	use OdooConnFormMappingColumns;
+
 	protected function foreign_keys () {
 		global $table_prefix;
 
@@ -35,11 +50,9 @@ class GetOdooFormMappings extends GetBaseSchema {
 }
 
 
-class PostOdooFormMappings extends PostBaseSchema { 
+class OdooConnPostOdooFormMappings extends PostBaseSchema { 
 	
-	protected function get_table_name () {
-		return "odoo_conn_form_mapping";
-	}
+	use OdooConnFormMappingTableName;
 
 	protected function parse_data ($data) {
 		return array(
@@ -57,7 +70,7 @@ class PostOdooFormMappings extends PostBaseSchema {
 }
 
 
-class PutOdooFormMappings extends PutBaseSchema {
+class OdooConnPutOdooFormMappings extends PutBaseSchema {
 	
 	protected function get_table_name () {
 		return "odoo_conn_form_mapping";
@@ -78,8 +91,6 @@ class PutOdooFormMappings extends PutBaseSchema {
 			throw new Exception("Can't pass both a constant value and a cf7 field name as arguments");
 		}
 
-		error_log($parsed_data["constant_value"]);
-
 		return $parsed_data + array(
 			"odoo_form_id" => $data["odoo_form_id"],
 			"odoo_field_name" => $data["odoo_field_name"],
@@ -88,15 +99,13 @@ class PutOdooFormMappings extends PutBaseSchema {
 }
 
 
-class DeleteOdooFromMappings extends DeleteBaseSchema {
+class OdooConnDeleteOdooFromMappings extends DeleteBaseSchema {
 
-	protected function get_table_name () {
-		return "odoo_conn_form_mapping";
-	}
+	use OdooConnFormMappingTableName;
 
 }
 
-function base_odoo_form_mappings_schema ($properties) {
+function odoo_conn_base_odoo_form_mappings_schema ($properties) {
 	return array(
 		"$schema" => "https://json-schema.org/draft/2020-12/schema",
 		"title" => "Odoo Form Mapping",
@@ -105,7 +114,7 @@ function base_odoo_form_mappings_schema ($properties) {
 	);
 }
 
-function base_odoo_form_mappings_properties () {
+function odoo_conn_base_odoo_form_mappings_properties () {
 	return array(
 		"id" => array(
 			"type" => "integer",
@@ -130,7 +139,7 @@ function base_odoo_form_mappings_properties () {
 	);
 }
 
-function base_odoo_form_mappings_arguments () {
+function odoo_conn_base_odoo_form_mappings_arguments () {
 	return array(
 		"odoo_form_id" => array(
 			"type" => "int",
@@ -153,19 +162,19 @@ function base_odoo_form_mappings_arguments () {
 	);
 }
 
-function get_odoo_from_mappings ($data) {
-	$get_odoo_form_mappings = new GetOdooFormMappings();
+function odoo_conn_get_odoo_from_mappings ($data) {
+	$get_odoo_form_mappings = new OdooConnGetOdooFormMappings();
 	$response = $get_odoo_form_mappings->request($data);
 	return $response;
 }
 
-function get_odoo_form_mappings_schema () {
-	return base_odoo_form_mappings_schema(
+function odoo_conn_get_odoo_form_mappings_schema () {
+	return odoo_conn_base_odoo_form_mappings_schema(
 		array(
 			"type" => "array",
 			"items" => array(
 				"type" => "object",
-				base_odoo_form_mappings_properties() + 
+				odoo_conn_base_odoo_form_mappings_properties() + 
 				array(
 					"odoo_form_name" => array(
 						"type" => "string",
@@ -177,98 +186,98 @@ function get_odoo_form_mappings_schema () {
 	);
 }
 
-function get_odoo_form_mapping_arguments () {
-	return base_get_request_arguments();	
+function odoo_conn_get_odoo_form_mapping_arguments () {
+	return odoo_conn_base_get_request_arguments();	
 }
 
-function create_odoo_form_mapping ($data) {
-	$post_odoo_form_mappings = new PostOdooFormMappings();
+function odoo_conn_create_odoo_form_mapping ($data) {
+	$post_odoo_form_mappings = new OdooConnPostOdooFormMappings();
 	$response = $post_odoo_form_mappings->request($data);
 	return $response;
 }
 
-function create_odoo_form_mapping_schema () {
-	return base_odoo_form_mappings_schema(base_odoo_form_mappings_properties());
+function odoo_conn_create_odoo_form_mapping_schema () {
+	return odoo_conn_base_odoo_form_mappings_schema(odoo_conn_base_odoo_form_mappings_properties());
 }
 
-function create_odoo_form_mapping_arguments () {
-	return base_odoo_form_mappings_arguments();
+function odoo_conn_create_odoo_form_mapping_arguments () {
+	return odoo_conn_base_odoo_form_mappings_arguments();
 }
 
-function update_odoo_form_mapping ($data) {
+function odoo_conn_update_odoo_form_mapping ($data) {
 	$id = $data["id"];
-	$put_odoo_form_mappings = new PutOdooFormMappings($id);
+	$put_odoo_form_mappings = new OdooConnPutOdooFormMappings($id);
 	$response = $put_odoo_form_mappings->request($data);
 	return $response;
 }
 
-function update_odoo_form_mapping_schema () {
-	return base_odoo_form_mappings_schema(base_odoo_form_mappings_properties());
+function odoo_conn_update_odoo_form_mapping_schema () {
+	return odoo_conn_base_odoo_form_mappings_schema(odoo_conn_base_odoo_form_mappings_properties());
 }
 
-function update_odoo_form_mapping_arguments () {
+function odoo_conn_update_odoo_form_mapping_arguments () {
 	return array(
 		"id" => array(
 			"type" => "integer",
 			"description" => esc_html__("Primary key for an Odoo Form Mapping"),
 			"required" => true,
 		),
-	) + base_odoo_form_mappings_arguments();
+	) + odoo_conn_base_odoo_form_mappings_arguments();
 }
 
-function delete_odoo_form_mapping ($data) {
-	$delete_odoo_form_mapping = new DeleteOdooFromMappings();
+function odoo_conn_delete_odoo_form_mapping ($data) {
+	$delete_odoo_form_mapping = new OdooConnDeleteOdooFromMappings();
 	$response = $delete_odoo_form_mapping->request($data);
 	return $response;
 }
 
-function delete_odoo_form_mapping_schema () {
-	return base_delete_request_schema("Odoo Form Mapping");
+function odoo_conn_delete_odoo_form_mapping_schema () {
+	return odoo_conn_base_delete_request_schema("Odoo Form Mapping");
 }
 
-function delete_odoo_form_mapping_arguments () {
-	return base_delete_arguments();
+function odoo_conn_delete_odoo_form_mapping_arguments () {
+	return odoo_conn_base_delete_arguments();
 }
 
 add_action ( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-form-mappings", array(
 		array(
 			"methods" => "GET",
-			"callback" => "get_odoo_from_mappings",
-			"args" => get_odoo_form_mapping_arguments(),
+			"callback" => "odoo_conn_get_odoo_from_mappings",
+			"args" => odoo_conn_get_odoo_form_mapping_arguments(),
 		),
 		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "get_odoo_form_mappings_schema",
+		"schema" => "odoo_conn_get_odoo_form_mappings_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/create-odoo-form-mapping", array(
 		array(
 			"methods" => "POST",
-			"callback" => "create_odoo_form_mapping",
-			"args" => create_odoo_form_mapping_arguments(),
+			"callback" => "odoo_conn_create_odoo_form_mapping",
+			"args" => odoo_conn_create_odoo_form_mapping_arguments(),
 		),
 		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "create_odoo_form_mapping_schema"
+		"schema" => "odoo_conn_create_odoo_form_mapping_schema"
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/update-odoo-form-mapping", array(
 		array(
 			"methods" => "PUT",
-			"callback" => "update_odoo_form_mapping",
-			"args" => update_odoo_form_mapping_arguments(),
+			"callback" => "odoo_conn_update_odoo_form_mapping",
+			"args" => odoo_conn_update_odoo_form_mapping_arguments(),
 		),
-		// "permission_callback" => "is_authorised_to_request_data",
-		"schema" => "update_odoo_form_mapping_schema",
+		"permission_callback" => "is_authorised_to_request_data",
+		"schema" => "odoo_conn_update_odoo_form_mapping_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form-mapping", array(
 		array(
 			"methods" => "DELETE",
-			"callback" => "delete_odoo_form_mapping",
-			"args" => delete_odoo_form_mapping_arguments(),
+			"callback" => "odoo_conn_delete_odoo_form_mapping",
+			"args" => odoo_conn_delete_odoo_form_mapping_arguments(),
 		),
 		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "delete_odoo_form_mapping_schema",
+		"schema" => "odoo_conn_delete_odoo_form_mapping_schema",
 	));
 });
 

@@ -2,6 +2,7 @@
 
 namespace odoo_conn\admin\api\endpoints;
 
+
 trait OdooConnOdooConnectionTableName {
 
 	protected function get_table_name () {

@@ -12,6 +12,7 @@ use odoo_conn\admin\api\endpoints\OdooConnPostOdooConnection;
 class OdooConnPostOdooConnection_Test extends TestCase {
 
 	use \phpmock\phpunit\PHPMock;
+	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 	public function test_ok () {
 		$data = array(
