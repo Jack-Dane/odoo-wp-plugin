@@ -97,7 +97,7 @@ class OdooConnPutOdooFormMappings extends PutBaseSchema {
 }
 
 
-class OdooConnDeleteOdooFromMappings extends DeleteBaseSchema {
+class OdooConnDeleteOdooFormMappings extends DeleteBaseSchema {
 
 	use OdooConnFormMappingTableName;
 

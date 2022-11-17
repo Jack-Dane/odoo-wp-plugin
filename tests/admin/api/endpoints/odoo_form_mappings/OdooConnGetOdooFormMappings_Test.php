@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\tests\admin\api\endpoints\cf7_posts\OdooConnGetOdooFormMappings;
+namespace odoo_conn\tests\admin\api\endpoints\odoo_form_mappings\OdooConnGetOdooFormMappings;
 
 require_once(__DIR__ . "/../common.php");
 require_once("admin/api/schema.php");
