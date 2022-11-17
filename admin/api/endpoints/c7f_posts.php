@@ -3,7 +3,7 @@
 namespace odoo_conn\admin\api\endpoints;
 
 
-class OdooConnGetContact7Form extends GetExtendedSchema {
+class OdooConnGetContact7Form extends OdooConnGetExtendedSchema {
 
 	public function __construct () {
 		parent::__construct($where_condition="post_type='wpcf7_contact_form'");

@@ -29,7 +29,7 @@ trait OdooConnOdooConnectionColumns {
 }
 
 
-class OdooConnGetOdooConnection extends GetBaseSchema {
+class OdooConnGetOdooConnection extends OdooConnGetBaseSchema {
 
 	use OdooConnOdooConnectionTableName;
 	use OdooConnOdooConnectionColumns;
@@ -37,7 +37,7 @@ class OdooConnGetOdooConnection extends GetBaseSchema {
 }
 
 
-class OdooConnPostOdooConnection extends PostBaseSchema { 
+class OdooConnPostOdooConnection extends OdooConnPostBaseSchema { 
 
 	use OdooConnOdooConnectionTableName;
 	use OdooConnOdooConnectionColumns;
@@ -62,7 +62,7 @@ class OdooConnPostOdooConnection extends PostBaseSchema {
 }
 
 
-class OdooConnPutOdooConnection extends PutBaseSchema {
+class OdooConnPutOdooConnection extends OdooConnPutBaseSchema {
 
 	use OdooConnOdooConnectionTableName;
 	use OdooConnOdooConnectionColumns;
@@ -79,7 +79,7 @@ class OdooConnPutOdooConnection extends PutBaseSchema {
 }
 
 
-class OdooConnDeleteOdooConnection extends DeleteBaseSchema {
+class OdooConnDeleteOdooConnection extends OdooConnDeleteBaseSchema {
 
 	use OdooConnOdooConnectionTableName;
 

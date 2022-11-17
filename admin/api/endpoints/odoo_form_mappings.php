@@ -31,7 +31,7 @@ trait OdooConnFormMappingColumns {
 
 }
 
-class OdooConnGetOdooFormMappings extends GetBaseSchema {
+class OdooConnGetOdooFormMappings extends OdooConnGetBaseSchema {
 
 	use OdooConnFormMappingTableName;
 	use OdooConnFormMappingColumns;
@@ -50,7 +50,7 @@ class OdooConnGetOdooFormMappings extends GetBaseSchema {
 }
 
 
-class OdooConnPostOdooFormMappings extends PostBaseSchema { 
+class OdooConnPostOdooFormMappings extends OdooConnPostBaseSchema { 
 	
 	use OdooConnFormMappingTableName;
 
@@ -70,7 +70,7 @@ class OdooConnPostOdooFormMappings extends PostBaseSchema {
 }
 
 
-class OdooConnPutOdooFormMappings extends PutBaseSchema {
+class OdooConnPutOdooFormMappings extends OdooConnPutBaseSchema {
 	
 	use OdooConnFormMappingTableName;
 
@@ -97,7 +97,7 @@ class OdooConnPutOdooFormMappings extends PutBaseSchema {
 }
 
 
-class OdooConnDeleteOdooFormMappings extends DeleteBaseSchema {
+class OdooConnDeleteOdooFormMappings extends OdooConnDeleteBaseSchema {
 
 	use OdooConnFormMappingTableName;
 

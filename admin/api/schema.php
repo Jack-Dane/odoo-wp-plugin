@@ -2,7 +2,7 @@
 
 namespace odoo_conn\admin\api\endpoints;
 
-abstract class BaseSchema {
+abstract class OdooConnBaseSchema {
 
 	abstract public function request ($data);
 
@@ -11,7 +11,7 @@ abstract class BaseSchema {
 }
 
 
-abstract class PostPutBaseSchema extends BaseSchema {
+abstract class OdooConnPostPutBaseSchema extends OdooConnBaseSchema {
 
 	protected function get_columns () {
 		return "*";
@@ -28,7 +28,7 @@ abstract class PostPutBaseSchema extends BaseSchema {
 }
 
 
-abstract class PostBaseSchema extends PostPutBaseSchema {
+abstract class OdooConnPostBaseSchema extends OdooConnPostPutBaseSchema {
 
 	abstract protected function parse_data ($data);
 
@@ -51,7 +51,7 @@ abstract class PostBaseSchema extends PostPutBaseSchema {
 }
 
 
-abstract class PutBaseSchema extends PostPutBaseSchema {
+abstract class OdooConnPutBaseSchema extends OdooConnPostPutBaseSchema {
 
 	public function __construct ($id) {
 		$this->id = $id;
@@ -75,7 +75,7 @@ abstract class PutBaseSchema extends PostPutBaseSchema {
 }
 
 
-abstract class GetBaseSchema extends BaseSchema {
+abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema {
 
 	protected function foreign_keys () {
 		return [];
@@ -132,7 +132,7 @@ abstract class GetBaseSchema extends BaseSchema {
 }
 
 
-abstract class GetExtendedSchema extends GetBaseSchema {
+abstract class OdooConnGetExtendedSchema extends OdooConnGetBaseSchema {
 
 	public function __construct ($where_condition) {
 		$this->where_condition = $where_condition;
@@ -149,7 +149,7 @@ abstract class GetExtendedSchema extends GetBaseSchema {
 }
 
 
-abstract class DeleteBaseSchema extends BaseSchema {
+abstract class OdooConnDeleteBaseSchema extends OdooConnBaseSchema {
 
 	public function request ($data) {
 		global $wpdb, $table_prefix;
@@ -167,7 +167,7 @@ abstract class DeleteBaseSchema extends BaseSchema {
 
 }
 
-function base_get_request_arguments () {
+function odoo_conn_base_get_request_arguments () {
 	return array(
 		"limit" => array(
 			"type" => "integer",
@@ -180,7 +180,7 @@ function base_get_request_arguments () {
 	);
 }
 
-function base_delete_request_schema ($title) {
+function odoo_conn_base_delete_request_schema ($title) {
 	return array(
 		"$schema" => "https://json-schema.org/draft/2020-12/schema",
 		"title" => $title,
@@ -198,7 +198,7 @@ function base_delete_request_schema ($title) {
 	);
 }
 
-function base_delete_arguments () {
+function odoo_conn_base_delete_arguments () {
 	return array(
 		"id" => array(
 			"type" => "integer",
