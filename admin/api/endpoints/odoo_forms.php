@@ -76,7 +76,7 @@ class OdooConnPostOdooForm extends PostBaseSchema {
 }
 
 
-class PutOdooForm extends PutBaseSchema {
+class OdooConnPutOdooForm extends PutBaseSchema {
 
 	use OdooConnOdooFormTableName;
 	
@@ -91,7 +91,7 @@ class PutOdooForm extends PutBaseSchema {
 }
 
 
-class DeleteOdooForm extends DeleteBaseSchema {
+class OdooConnDeleteOdooForm extends DeleteBaseSchema {
 
 	use OdooConnOdooFormTableName;
 
