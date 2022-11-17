@@ -86,7 +86,7 @@ class OdooConnPutOdooFormMappings extends PutBaseSchema {
 		}
 
 		if ( isset( $parsed_data["constant_value"] ) && isset( $parsed_data["cf7_field_name"] ) ) {
-			throw new Exception("Can't pass both a constant value and a cf7 field name as arguments");
+			throw new \Exception("Can't pass both a constant value and a cf7 field name as arguments");
 		}
 
 		return $parsed_data + array(
