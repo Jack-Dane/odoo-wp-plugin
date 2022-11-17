@@ -1,10 +1,18 @@
 <?php
 
-class GetOdooForm extends GetBaseSchema {
+namespace odoo_conn\admin\api\endpoints;
+
+
+trait OdooConnOdooFormTableName {
 
 	protected function get_table_name () {
 		return "odoo_conn_form";
 	}
+
+}
+
+
+trait OdooConnOdooFormColumns {
 
 	protected function get_columns () {
 		global $table_prefix;
@@ -15,12 +23,20 @@ class GetOdooForm extends GetBaseSchema {
 			$table_prefix . "odoo_conn_connection.name as 'odoo_connection_name'", 
 			$table_prefix . "odoo_conn_form.odoo_model", 
 			$table_prefix . "odoo_conn_form.name", 
-			$table_prefix . "posts.ID as 'contact_7_id'",
+			$table_prefix . "odoo_conn_form.contact_7_id as 'contact_7_id'",
 			$table_prefix . "posts.post_title as 'contact_7_title'"
 		];
 		
 		return implode(", ", $columns);
 	}
+
+}
+
+
+class OdooConnGetOdooForm extends GetBaseSchema {
+
+	use OdooConnOdooFormTableName;
+	use OdooConnOdooFormColumns;
 
 	protected function foreign_keys () {
 		global $table_prefix;
@@ -42,12 +58,10 @@ class GetOdooForm extends GetBaseSchema {
 
 class PostOdooForm extends PostBaseSchema { 
 	
-	protected function get_table_name () {
-		return "odoo_conn_form";
-	}
+	use OdooConnOdooFormTableName;
 
 	protected function parse_data ($data) {
-		return array (
+		return array(
 			"odoo_connection_id" => $data["odoo_connection_id"],
 			"odoo_model" => $data["odoo_model"],
 			"name" => $data["name"],
@@ -56,7 +70,7 @@ class PostOdooForm extends PostBaseSchema {
 	}
 
 	protected function insert_data_types () {
-		return array ("%d", "%s", "%s", "%d");
+		return array("%d", "%s", "%s", "%d");
 	}
 
 }
@@ -64,10 +78,8 @@ class PostOdooForm extends PostBaseSchema {
 
 class PutOdooForm extends PutBaseSchema {
 
-	protected function get_table_name () {
-		return "odoo_conn_form";
-	}
-
+	use OdooConnOdooFormTableName;
+	
 	protected function update_data ($data) {
 		return array(
 			"odoo_connection_id" => $data["odoo_connection_id"],
@@ -81,9 +93,7 @@ class PutOdooForm extends PutBaseSchema {
 
 class DeleteOdooForm extends DeleteBaseSchema {
 
-	protected function get_table_name () {
-		return "odoo_conn_form";
-	}
+	use OdooConnOdooFormTableName;
 
 }
 
