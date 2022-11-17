@@ -84,7 +84,8 @@ class OdooConnPutOdooForm extends OdooConnPutBaseSchema {
 		return array(
 			"odoo_connection_id" => $data["odoo_connection_id"],
 			"name" => $data["name"],
-			"contact_7_id" => $data["contact_7_id"]
+			"contact_7_id" => $data["contact_7_id"],
+			"odoo_model" => $data["odoo_model"],
 		);
 	}
 
@@ -242,41 +243,41 @@ add_action( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/create-odoo-form", array(
 		array(
 			"methods" => "POST",
-			"callback" => "create_odoo_form",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form",
 			"args" => odoo_conn_create_odoo_form_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_create_odoo_form_schema",
+		"permission_callback" => __NAMESPACE__ . "\\is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-forms", array(
 		array(
 			"methods" => "GET",
-			"callback" => "get_odoo_forms",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms",
 			"args" => odoo_conn_get_odoo_forms_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_get_odoo_forms_schema",
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/update-odoo-form", array(
 		array(
 			"methods" => "PUT",
-			"callback" => "update_odoo_form",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form",
 			"args" => odoo_conn_updated_odoo_form_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_updated_odoo_form_schema",
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_updated_odoo_form_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form", array(
 		array(
 			"methods" => "DELETE",
-			"callback" => "delete_odoo_form",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form",
 			"args" => odoo_conn_delete_odoo_form_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_delete_odoo_form_schema"
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form_schema"
 	));
 });
 

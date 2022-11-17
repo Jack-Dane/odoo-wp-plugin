@@ -44,7 +44,7 @@ class OdooConnPostOdooConnection extends OdooConnPostBaseSchema {
 
 	protected function parse_data ($data) {
 		$api_key = $data["api_key"];
-		$encrypted_api_key = odoo_conn_encrypt_data($api_key);
+		$encrypted_api_key = \odoo_conn\encryption\odoo_conn_encrypt_data($api_key);
 
 		return array(
 			"name" => $data["name"],
@@ -217,41 +217,41 @@ add_action( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-connections", array(
 		array(
 			"methods" => "GET",
-			"callback" => "odoo_conn_get_odoo_connections",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_connections",
 			"args" => odoo_conn_get_odoo_connections_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_get_odoo_connections_schema",
+		"permission_callback" => __NAMESPACE__ . "\\is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_connections_schema",
 	));
 
   	register_rest_route( "odoo-conn/v1", "/create-odoo-connection", array(
   		array(
   			"methods" => "POST",
-    		"callback" => "odoo_conn_create_odoo_connection",
+    		"callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_connection",
     		"args" => odoo_conn_create_odoo_connection_arguments(),
   		),
-    	"permission_callback" => "is_authorised_to_request_data",
-    	"schema" => "odoo_conn_create_odoo_connection_schema",
+    	"permission_callback" => __NAMESPACE__ . "\\is_authorised_to_request_data",
+    	"schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_connection_schema",
 	));
 
   	register_rest_route( "odoo-conn/v1", "/update-odoo-connection", array(
   		array(
   			"methods" => "PUT",
-    		"callback" => "odoo_conn_update_odoo_connection",
+    		"callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_connection",
     		"args" => odoo_conn_update_odoo_connection_arguments(),
   		),
-    	"permission_callback" => "is_authorised_to_request_data",
-    	"schema" => "odoo_conn_update_odoo_connection_schema",
+    	"permission_callback" => __NAMESPACE__ . "\\is_authorised_to_request_data",
+    	"schema" => __NAMESPACE__ . "\\odoo_conn_update_odoo_connection_schema",
 	));
 
 	register_rest_route( "odoo-conn/v1", "/delete-odoo-connection", array(
 		array(
 			"methods" => "DELETE",
-			"callback" => "odoo_conn_delete_odoo_connection",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_connection",
 			"args" => odoo_conn_delete_odoo_connection_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_delete_odoo_connection_schema",
+		"permission_callback" => __NAMESPACE__ . "\\is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_connection_schema",
 	));
 });
 

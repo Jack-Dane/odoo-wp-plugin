@@ -2,6 +2,7 @@
 
 namespace odoo_conn\admin\api\endpoints;
 
+
 abstract class OdooConnBaseSchema {
 
 	abstract public function request ($data);

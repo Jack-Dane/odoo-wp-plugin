@@ -224,7 +224,7 @@ function odoo_conn_update_odoo_form_mapping_arguments () {
 }
 
 function odoo_conn_delete_odoo_form_mapping ($data) {
-	$delete_odoo_form_mapping = new OdooConnDeleteOdooFromMappings();
+	$delete_odoo_form_mapping = new OdooConnDeleteOdooFormMappings();
 	$response = $delete_odoo_form_mapping->request($data);
 	return $response;
 }
@@ -241,41 +241,41 @@ add_action ( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-form-mappings", array(
 		array(
 			"methods" => "GET",
-			"callback" => "odoo_conn_get_odoo_from_mappings",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_from_mappings",
 			"args" => odoo_conn_get_odoo_form_mapping_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_get_odoo_form_mappings_schema",
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_form_mappings_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/create-odoo-form-mapping", array(
 		array(
 			"methods" => "POST",
-			"callback" => "odoo_conn_create_odoo_form_mapping",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_mapping",
 			"args" => odoo_conn_create_odoo_form_mapping_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_create_odoo_form_mapping_schema"
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_mapping_schema"
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/update-odoo-form-mapping", array(
 		array(
 			"methods" => "PUT",
-			"callback" => "odoo_conn_update_odoo_form_mapping",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form_mapping",
 			"args" => odoo_conn_update_odoo_form_mapping_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_update_odoo_form_mapping_schema",
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form_mapping_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form-mapping", array(
 		array(
 			"methods" => "DELETE",
-			"callback" => "odoo_conn_delete_odoo_form_mapping",
+			"callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form_mapping",
 			"args" => odoo_conn_delete_odoo_form_mapping_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "odoo_conn_delete_odoo_form_mapping_schema",
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form_mapping_schema",
 	));
 });
 

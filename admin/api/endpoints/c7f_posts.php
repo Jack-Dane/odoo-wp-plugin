@@ -19,13 +19,13 @@ class OdooConnGetContact7Form extends OdooConnGetExtendedSchema {
 
 }
 
-function get_contact_7_forms ($data) {
+function odoo_conn_get_contact_7_forms ($data) {
 	$get_contact_7_form = new OdooConnGetContact7Form();
 	$response = $get_contact_7_form->request($data);
 	return $response;
 }
 
-function get_contact_7_forms_schema () {
+function odoo_conn_get_contact_7_forms_schema () {
 	return array(
 		"$schema" => "https://json-schema.org/draft/2020-12/schema",
 		"title" => "Contact 7 Form",
@@ -49,19 +49,19 @@ function get_contact_7_forms_schema () {
 	);
 }
 
-function get_contact_7_forms_arguments () {
-	return base_get_request_arguments();
+function odoo_conn_get_contact_7_forms_arguments () {
+	return odoo_conn_base_get_request_arguments();
 }
 
 add_action( "rest_api_init", function () {
 	register_rest_route ( "odoo-conn/v1", "/get-contact-7-forms", array(
 		array(
 			"methods" => "GET",
-			"callback" => "get_contact_7_forms",
-			"args" => get_contact_7_forms_arguments(),
+			"callback" => __NAMESPACE__ . "\\odoo_conn_get_contact_7_forms",
+			"args" => odoo_conn_get_contact_7_forms_arguments(),
 		),
-		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "get_contact_7_forms_schema",
+		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+		"schema" => __NAMESPACE__ . "\\odoo_conn_get_contact_7_forms_schema",
 	));
 });
 

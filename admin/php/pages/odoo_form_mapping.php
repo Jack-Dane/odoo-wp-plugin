@@ -47,7 +47,6 @@ function odoo_form_mapping_page () {
 				alert("You have not filled in a constant value");
 				return false;
 			}
-			formData.delete("cf7_field_name");
 		}
 
 		if (formData.get("value_type") === "false") {
@@ -55,8 +54,6 @@ function odoo_form_mapping_page () {
 				alert("You have not filled in a Odoo Field Name");
 				return false;
 			}
-			console.log("Deleting constant value");
-			formData.delete("constant_value");
 		}
 
 		formData.delete("value_type");
