@@ -20,8 +20,8 @@ class OdooConnDeleteOdooFormMappings_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odooConnGetOdooConnection = new OdooConnDeleteOdooFormMappings();
-		$results = $odooConnGetOdooConnection->request($data);
+		$odoo_conn_delete_odoo_from_mappings = new OdooConnDeleteOdooFormMappings();
+		$results = $odoo_conn_delete_odoo_from_mappings->request($data);
 
 		$this->assertEquals(
 			array("DELETE" => 5, "table" => "wp_odoo_conn_form_mapping"), $results

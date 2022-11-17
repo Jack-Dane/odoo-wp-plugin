@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\tests\admin\api\endpoints\cf7_posts\OdooConnPostOdooConnection;
+namespace odoo_conn\tests\admin\api\endpoints\odoo_connections\OdooConnPostOdooConnection;
 
 require_once(__DIR__ . "/../common.php");
 require_once("admin/api/schema.php");
@@ -35,8 +35,8 @@ class OdooConnPostOdooConnection_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odooConnGetOdooConnection = new OdooConnPostOdooConnection();
-		$response = $odooConnGetOdooConnection->request($data);
+		$odoo_conn_post_odoo_connection = new OdooConnPostOdooConnection();
+		$response = $odoo_conn_post_odoo_connection->request($data);
 
 		$this->assertEquals($results, $response);
 	}

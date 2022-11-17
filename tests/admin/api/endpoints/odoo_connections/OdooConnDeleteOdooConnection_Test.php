@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\tests\admin\api\endpoints\cf7_posts\OdooConnDeleteOdooConnection;
+namespace odoo_conn\tests\admin\api\endpoints\odoo_connections\OdooConnDeleteOdooConnection;
 
 require_once(__DIR__ . "/../common.php");
 require_once("admin/api/schema.php");
@@ -20,8 +20,8 @@ class OdooConnDeleteOdooConnection_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odooConnGetOdooConnection = new OdooConnDeleteOdooConnection();
-		$results = $odooConnGetOdooConnection->request($data);
+		$odoo_conn_delete_odoo_connection = new OdooConnDeleteOdooConnection();
+		$results = $odoo_conn_delete_odoo_connection->request($data);
 
 		$this->assertEquals(
 			array("DELETE" => 5, "table" => "wp_odoo_conn_connection"), $results

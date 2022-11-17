@@ -22,8 +22,8 @@ class OdooConnGetContact7Form_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odooConnGetContact7Form = new OdooConnGetContact7Form();
-		$results = $odooConnGetContact7Form->request(array());
+		$odoo_conn_get_contact_7_form = new OdooConnGetContact7Form();
+		$results = $odoo_conn_get_contact_7_form->request(array());
 		
 		$this->assertEquals(array(array("ID"=>4, "post_title"=>"Title")), $results);
 	}

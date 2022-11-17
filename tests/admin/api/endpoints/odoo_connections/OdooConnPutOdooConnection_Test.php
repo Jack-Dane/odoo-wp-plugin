@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\tests\admin\api\endpoints\cf7_posts\OdooConnPutOdooConnection;
+namespace odoo_conn\tests\admin\api\endpoints\odoo_connections\OdooConnPutOdooConnection;
 
 require_once(__DIR__ . "/../common.php");
 require_once("admin/api/schema.php");
@@ -31,8 +31,8 @@ class OdooConnPutOdooConnection_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odooConnGetOdooConnection = new OdooConnPutOdooConnection(3);
-		$response = $odooConnGetOdooConnection->request($data);
+		$odoo_conn_put_odoo_connection = new OdooConnPutOdooConnection(3);
+		$response = $odoo_conn_put_odoo_connection->request($data);
 
 		$this->assertEquals($results, $response);
 	}
@@ -56,8 +56,8 @@ class OdooConnPutOdooConnection_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odooConnGetOdooConnection = new OdooConnPutOdooConnection(3);
-		$response = $odooConnGetOdooConnection->request($api_key_data);
+		$odoo_conn_put_odoo_connection = new OdooConnPutOdooConnection(3);
+		$response = $odoo_conn_put_odoo_connection->request($api_key_data);
 
 		$this->assertEquals($results, $response);
 	}

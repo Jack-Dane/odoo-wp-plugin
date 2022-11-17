@@ -28,8 +28,8 @@ class OdooConnGetOdooForm_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odoo_conn_get_odoo_form_mappings = new OdooConnGetOdooForm();	
-		$result = $odoo_conn_get_odoo_form_mappings->request(array());
+		$odoo_conn_get_odoo_form = new OdooConnGetOdooForm();	
+		$result = $odoo_conn_get_odoo_form->request(array());
 
 		$this->assertEquals($query_response, $result);
 	}

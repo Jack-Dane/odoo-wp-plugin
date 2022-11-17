@@ -29,8 +29,8 @@ class OdooConnPostOdooForm_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odooConnGetOdooConnection = new OdooConnPostOdooForm();
-		$response = $odooConnGetOdooConnection->request($data);
+		$odoo_conn_post_odoo_form = new OdooConnPostOdooForm();
+		$response = $odoo_conn_post_odoo_form->request($data);
 
 		$this->assertEquals($results, $response);
 	}
