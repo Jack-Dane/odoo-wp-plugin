@@ -56,7 +56,7 @@ class OdooConnGetOdooForm extends GetBaseSchema {
 }
 
 
-class PostOdooForm extends PostBaseSchema { 
+class OdooConnPostOdooForm extends PostBaseSchema { 
 	
 	use OdooConnOdooFormTableName;
 
@@ -97,7 +97,7 @@ class DeleteOdooForm extends DeleteBaseSchema {
 
 }
 
-function base_odoo_forms_schema ($properties) {
+function odoo_conn_base_odoo_forms_schema ($properties) {
 	return array(
 		"$schema" => "https://json-schema.org/draft/2020-12/schema",
 		"title" => "Odoo Form",
@@ -106,7 +106,7 @@ function base_odoo_forms_schema ($properties) {
 	);
 }
 
-function base_odoo_forms_schema_properties () {
+function odoo_conn_base_odoo_forms_schema_properties () {
 	return array(
 		"id" => array(
 			"type" => "integer",
@@ -131,7 +131,7 @@ function base_odoo_forms_schema_properties () {
 	);
 }
 
-function base_odoo_forms_arguments () {
+function odoo_conn_base_odoo_forms_arguments () {
 	return array(
 		"odoo_connection_id" => array(
 			"type" => "integer",
@@ -156,19 +156,19 @@ function base_odoo_forms_arguments () {
 	);
 }
 
-function get_odoo_forms ($data) {
-	$get_odoo_forms = new GetOdooForm();
+function odoo_conn_get_odoo_forms ($data) {
+	$get_odoo_forms = new OdooConnGetOdooForm();
 	$response = $get_odoo_forms->request($data);
 	return $response;
 }
 
-function get_odoo_forms_schema () {
-	return base_odoo_forms_schema(
+function odoo_conn_get_odoo_forms_schema () {
+	return odoo_conn_base_odoo_forms_schema(
 		array(
 			"type" => "array",
 			"items" => array(
 				"type" => "object",
-				"properties" => base_odoo_forms_schema_properties() + array(
+				"properties" => odoo_conn_base_odoo_forms_schema_properties() + array(
 					"odoo_connection_name" => array(
 						"type" => "string",
 						"description" => esc_html__("The name of the connection name from the Connection object")
@@ -183,36 +183,36 @@ function get_odoo_forms_schema () {
 	);
 }
 
-function get_odoo_forms_arguments () {
-	return base_get_request_arguments();
+function odoo_conn_get_odoo_forms_arguments () {
+	return odoo_conn_base_get_request_arguments();
 }
 
-function create_odoo_form ($data) {
-	$post_odoo_form = new PostOdooForm();
+function odoo_conn_create_odoo_form ($data) {
+	$post_odoo_form = new OdooConnPostOdooForm();
 	$response = $post_odoo_form->request($data);
 	return $response;
 }
 
-function create_odoo_form_schema () {
-	return base_odoo_forms_schema(base_odoo_forms_schema_properties());
+function odoo_conn_create_odoo_form_schema () {
+	return odoo_conn_base_odoo_forms_schema(odoo_conn_base_odoo_forms_schema_properties());
 }
 
-function create_odoo_form_arguments () {
-	return base_odoo_forms_arguments();
+function odoo_conn_create_odoo_form_arguments () {
+	return odoo_conn_base_odoo_forms_arguments();
 }
 
-function update_odoo_form ($data) {
+function odoo_conn_update_odoo_form ($data) {
 	$id = $data["id"];
-	$put_odoo_form = new PutOdooForm($id);
+	$put_odoo_form = new OdooConnPutOdooForm($id);
 	$response = $put_odoo_form->request($data);
 	return $response;
 }
 
-function updated_odoo_form_schema () {
-	return base_odoo_forms_schema(base_odoo_forms_schema_properties());
+function odoo_conn_updated_odoo_form_schema () {
+	return odoo_conn_base_odoo_forms_schema(odoo_conn_base_odoo_forms_schema_properties());
 }
 
-function updated_odoo_form_arguments () {
+function odoo_conn_updated_odoo_form_arguments () {
 	return (
 		array(
 			"id" => array(
@@ -220,22 +220,22 @@ function updated_odoo_form_arguments () {
 				"description" => esc_html__("Primary key for an Odoo Form"),
 				"required" => true,
 			),
-		) + base_odoo_forms_arguments()
+		) + odoo_conn_base_odoo_forms_arguments()
 	);
 }
 
-function delete_odoo_form ($data) {
-	$delete_odoo_form = new DeleteOdooForm();
+function odoo_conn_delete_odoo_form ($data) {
+	$delete_odoo_form = new OdooConnDeleteOdooForm();
 	$response = $delete_odoo_form->request($data);
 	return $response;
 }
 
-function delete_odoo_form_schema () {
-	return base_delete_request_schema("Odoo Form");
+function odoo_conn_delete_odoo_form_schema () {
+	return odoo_conn_base_delete_request_schema("Odoo Form");
 }
 
-function delete_odoo_form_arguments () {
-	return base_delete_arguments();
+function odoo_conn_delete_odoo_form_arguments () {
+	return odoo_conn_base_delete_arguments();
 }
 
 add_action( "rest_api_init", function () {
@@ -243,40 +243,40 @@ add_action( "rest_api_init", function () {
 		array(
 			"methods" => "POST",
 			"callback" => "create_odoo_form",
-			"args" => create_odoo_form_arguments(),
+			"args" => odoo_conn_create_odoo_form_arguments(),
 		),
 		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "create_odoo_form_schema",
+		"schema" => "odoo_conn_create_odoo_form_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/get-odoo-forms", array(
 		array(
 			"methods" => "GET",
 			"callback" => "get_odoo_forms",
-			"args" => get_odoo_forms_arguments(),
+			"args" => odoo_conn_get_odoo_forms_arguments(),
 		),
 		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "get_odoo_forms_schema",
+		"schema" => "odoo_conn_get_odoo_forms_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/update-odoo-form", array(
 		array(
 			"methods" => "PUT",
 			"callback" => "update_odoo_form",
-			"args" => updated_odoo_form_arguments(),
+			"args" => odoo_conn_updated_odoo_form_arguments(),
 		),
 		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "updated_odoo_form_schema",
+		"schema" => "odoo_conn_updated_odoo_form_schema",
 	));
 
 	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form", array(
 		array(
 			"methods" => "DELETE",
 			"callback" => "delete_odoo_form",
-			"args" => delete_odoo_form_arguments(),
+			"args" => odoo_conn_delete_odoo_form_arguments(),
 		),
 		"permission_callback" => "is_authorised_to_request_data",
-		"schema" => "delete_odoo_form_schema"
+		"schema" => "odoo_conn_delete_odoo_form_schema"
 	));
 });
 
