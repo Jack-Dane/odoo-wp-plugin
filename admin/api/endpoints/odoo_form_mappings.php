@@ -72,9 +72,7 @@ class OdooConnPostOdooFormMappings extends PostBaseSchema {
 
 class OdooConnPutOdooFormMappings extends PutBaseSchema {
 	
-	protected function get_table_name () {
-		return "odoo_conn_form_mapping";
-	}
+	use OdooConnFormMappingTableName;
 
 	protected function update_data ($data) {
 		$parsed_data = [];
