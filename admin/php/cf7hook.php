@@ -1,11 +1,18 @@
 <?php 
 
+namespace odoo_conn\admin\php\cf7hook;
+
+
+use \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;
+use \odoo_conn\encryption\OdooConnEncryptionFileHandler;
+use \odoo_conn\encryption\OdooConnEncryptionHandler;
+
 
 function send_odoo_data ($wpcf) {
 
-	$wpcf7 = WPCF7_ContactForm::get_current();
+	$wpcf7 = \WPCF7_ContactForm::get_current();
 
-	$submission = WPCF7_Submission::get_instance();
+	$submission = \WPCF7_Submission::get_instance();
     $contact_form_id = $contact_form->id;
     $forms = get_forms_from_database($contact_form_id);
     $posted_data = $submission->get_posted_data();
@@ -37,17 +44,15 @@ function send_odoo_data ($wpcf) {
 }
 
 function send_form_data_to_odoo ($connection, $odoo_model, $odoo_field_data) {
-	$odoo_conn_file_hanlder = new \odoo_conn\encryption\OdooConnEncryptionFileHandler();
-	$odoo_conn_encryption_handler = new \odoo_conn\encryption\OdooConnEncryptionHandler(
-		$odoo_conn_file_hanlder
-	);
+	$odoo_conn_file_hanlder = new OdooConnEncryptionFileHandler();
+	$odoo_conn_encryption_handler = new OdooConnEncryptionHandler($odoo_conn_file_hanlder);
 
 	$username = $connection->username;
 	$api_key = $odoo_conn_encryption_handler->decrypt($connection->api_key);
 	$database = $connection->database_name;
 	$url = $connection->url;
 	$odoo_field_data = array($odoo_field_data);
-	$odoo_connector = new \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector(
+	$odoo_connector = new OdooConnOdooConnector(
 		$username, $api_key, $database, $url, new \ripcord()
 	);
 	$objectId = $odoo_connector->createObject($odoo_model, $odoo_field_data);
@@ -66,7 +71,7 @@ function get_field_mappings_from_database ($odoo_form_id) {
 function get_connection_from_database ($connection_id) {
 	global $wpdb;
 
-	$connections = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_connection WHERE id = {$connection_id}", OBJECT );
+	$connections = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}odoo_conn_connection WHERE id = {$connection_id}", OBJECT);
 
 	return $connections[0];
 }
@@ -74,11 +79,11 @@ function get_connection_from_database ($connection_id) {
 function get_forms_from_database ($contact_form_id) {
 	global $wpdb;
 
-	$forms = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odoo_conn_form", OBJECT );
+	$forms = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}odoo_conn_form", OBJECT);
 
 	return $forms;
 }
 
-add_action( "wpcf7_before_send_mail", "send_odoo_data");
+add_action("wpcf7_before_send_mail", __NAMESPACE__ . "\\send_odoo_data");
 
 ?>

@@ -2,6 +2,9 @@
 
 namespace odoo_conn\admin\api\endpoints;
 
+use \odoo_conn\encryption\OdooConnEncryptionFileHandler;
+use \odoo_conn\encryption\OdooConnEncryptionHandler;
+
 
 trait OdooConnOdooConnectionTableName {
 
@@ -163,8 +166,8 @@ function odoo_conn_get_odoo_connections_arguments () {
 }
 
 function odoo_conn_create_odoo_connection ($data) {
-	$odoo_conn_file_hanlder = new \odoo_conn\encryption\OdooConnEncryptionFileHandler();
-	$odoo_conn_encryption_handler = new \odoo_conn\encryption\OdooConnEncryptionHandler($odoo_conn_file_hanlder);
+	$odoo_conn_file_hanlder = new OdooConnEncryptionFileHandler();
+	$odoo_conn_encryption_handler = new OdooConnEncryptionHandler($odoo_conn_file_hanlder);
 	$post_odoo_connection = new OdooConnPostOdooConnection($odoo_conn_encryption_handler);
 	$response = $post_odoo_connection->request($data);
 	return $response;
