@@ -37,12 +37,19 @@ function send_odoo_data ($wpcf) {
 }
 
 function send_form_data_to_odoo ($connection, $odoo_model, $odoo_field_data) {
+	$odoo_conn_file_hanlder = new \odoo_conn\encryption\OdooConnEncryptionFileHandler();
+	$odoo_conn_encryption_handler = new \odoo_conn\encryption\OdooConnEncryptionHandler(
+		$odoo_conn_file_hanlder
+	);
+
 	$username = $connection->username;
-	$api_key = odoo_conn_decrypt_data($connection->api_key);
+	$api_key = $odoo_conn_encryption_handler->decrypt($connection->api_key);
 	$database = $connection->database_name;
 	$url = $connection->url;
 	$odoo_field_data = array($odoo_field_data);
-	$odoo_connector = new OdooConnOdooConnector($username, $api_key, $database, $url, new \ripcord());
+	$odoo_connector = new \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector(
+		$username, $api_key, $database, $url, new \ripcord()
+	);
 	$objectId = $odoo_connector->createObject($odoo_model, $odoo_field_data);
 }
 

@@ -42,9 +42,13 @@ class OdooConnPostOdooConnection extends OdooConnPostBaseSchema {
 	use OdooConnOdooConnectionTableName;
 	use OdooConnOdooConnectionColumns;
 
+	public function __construct ($encryption_handler) {
+		$this->encryption_handler = $encryption_handler;
+	}
+
 	protected function parse_data ($data) {
 		$api_key = $data["api_key"];
-		$encrypted_api_key = \odoo_conn\encryption\odoo_conn_encrypt_data($api_key);
+		$encrypted_api_key = $this->encryption_handler->encrypt($api_key);
 
 		return array(
 			"name" => $data["name"],
@@ -159,7 +163,9 @@ function odoo_conn_get_odoo_connections_arguments () {
 }
 
 function odoo_conn_create_odoo_connection ($data) {
-	$post_odoo_connection = new OdooConnPostOdooConnection();
+	$odoo_conn_file_hanlder = new \odoo_conn\encryption\OdooConnEncryptionFileHandler();
+	$odoo_conn_encryption_handler = new \odoo_conn\encryption\OdooConnEncryptionHandler($odoo_conn_file_hanlder);
+	$post_odoo_connection = new OdooConnPostOdooConnection($odoo_conn_encryption_handler);
 	$response = $post_odoo_connection->request($data);
 	return $response;
 }

@@ -18,6 +18,7 @@ class OdooConnPutOdooForm_Test extends TestCase {
 			"odoo_connection_id"=>1,
 			"name"=>"form name",
 			"contact_7_id"=>1,
+			"odoo_model"=>"res.partner"
 		);
 		$results = array(array("id"=>3) + $data);
 		$wpdb = \Mockery::mock("WPDB");

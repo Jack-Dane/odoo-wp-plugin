@@ -3,7 +3,7 @@
 function odoo_settings () {
 
 	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		odoo_conn_refresh_encryption_key();
+		odoo_conn\encryption\odoo_conn_refresh_encryption_key();
 		?>
 		<p>Refreshed the Encryption Key</p>
 		<?php
