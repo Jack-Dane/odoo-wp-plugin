@@ -36,6 +36,8 @@ class OdooConnPostOdooConnection_Test extends TestCase {
 			"database_name"=>"database_name"
 		);
 		$wpdb->shouldReceive("insert")->with("wp_odoo_conn_connection", $encrypted_data, array("%s", "%s", "%s", "%s", "%s"))->once();
+		$wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=%d", array(3))
+			->once()->andReturn("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3");
 		$wpdb->shouldReceive("get_results")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3")
 			->once()->andReturn($results);
 		$GLOBALS["wpdb"] = $wpdb;

@@ -19,7 +19,7 @@ class OdooConnOdooConnector {
 		$this->uid = $common->authenticate($this->database, $this->username, $this->api_key, $version);
 	}
 
-	public function createObject ($model, $field_values) {
+	public function create_object ($model, $field_values) {
 		$this->get_user_id();
 
 		$models = $this->ripcord::client($this->url . "/xmlrpc/2/object");

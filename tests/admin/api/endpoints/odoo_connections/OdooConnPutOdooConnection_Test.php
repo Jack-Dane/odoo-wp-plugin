@@ -26,6 +26,8 @@ class OdooConnPutOdooConnection_Test extends TestCase {
 		$wpdb = \Mockery::mock("WPDB");
 		$wpdb->insert_id = 3;
 		$wpdb->shouldReceive("update")->with("wp_odoo_conn_connection", $data, array("id" => 3))->once();
+		$wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=%d", array(3))
+			->once()->andReturn("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3");
 		$wpdb->shouldReceive("get_results")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3")
 			->once()->andReturn($results);
 		$GLOBALS["wpdb"] = $wpdb;
@@ -51,6 +53,8 @@ class OdooConnPutOdooConnection_Test extends TestCase {
 		$wpdb = \Mockery::mock("WPDB");
 		$wpdb->insert_id = 3;
 		$wpdb->shouldReceive("update")->with("wp_odoo_conn_connection", $data, array("id" => 3))->once();
+		$wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=%d", array(3))
+			->once()->andReturn("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3");
 		$wpdb->shouldReceive("get_results")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3")
 			->once()->andReturn($results);
 		$GLOBALS["wpdb"] = $wpdb;

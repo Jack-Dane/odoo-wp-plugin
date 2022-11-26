@@ -29,6 +29,8 @@ class OdooConnPutOdooFormMappings_Test extends TestCase {
 		);
 		$results = array(array("id"=>3) + $data);
 		$this->wpdb->shouldReceive("update")->with("wp_odoo_conn_form_mapping", $data, array("id" => 3))->once();
+		$this->wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3))
+			->once()->andReturn("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3");
 		$this->wpdb->shouldReceive("get_results")->with(
 			"SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3"
 		)->once()->andReturn($results);
@@ -46,6 +48,8 @@ class OdooConnPutOdooFormMappings_Test extends TestCase {
 		);
 		$results = array(array("id"=>3) + $data);
 		$this->wpdb->shouldReceive("update")->with("wp_odoo_conn_form_mapping", $data, array("id" => 3))->once();
+		$this->wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3))
+			->once()->andReturn("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3");
 		$this->wpdb->shouldReceive("get_results")->with(
 			"SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3"
 		)->once()->andReturn($results);
@@ -63,6 +67,7 @@ class OdooConnPutOdooFormMappings_Test extends TestCase {
 			"odoo_field_name"=>"name",
 		);
 		$this->wpdb->shouldReceive("update")->never();
+		$this->wpdb->shouldReceive("prepare")->never();
 		$this->wpdb->shouldReceive("get_results")->never();
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage("Can't pass both a constant value and a cf7 field name as arguments");

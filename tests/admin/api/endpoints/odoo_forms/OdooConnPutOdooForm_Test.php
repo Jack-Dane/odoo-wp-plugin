@@ -24,6 +24,8 @@ class OdooConnPutOdooForm_Test extends TestCase {
 		$wpdb = \Mockery::mock("WPDB");
 		$wpdb->insert_id = 3;
 		$wpdb->shouldReceive("update")->with("wp_odoo_conn_form", $data, array("id" => 3))->once();
+		$wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_form WHERE id=%d", array(3))
+			->once()->andReturn("SELECT * FROM wp_odoo_conn_form WHERE id=3");
 		$wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_form WHERE id=3")
 			->once()->andReturn($results);
 		$GLOBALS["wpdb"] = $wpdb;

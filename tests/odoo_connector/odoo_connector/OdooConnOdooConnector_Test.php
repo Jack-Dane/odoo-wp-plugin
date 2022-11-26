@@ -22,7 +22,7 @@ class OdooConnOdooConnector_Test extends TestCase {
 		$ripcord_mock->shouldReceive("client")->with("url/xmlrpc/2/object")->once()->andReturn($models_mock);
 
 		$odoo_connector = new OdooConnOdooConnector("username", "api_key", "database", "url", $ripcord_mock);
-		$odoo_connector->createObject("res.partner", array("name" => "Jack"));
+		$odoo_connector->create_object("res.partner", array("name" => "Jack"));
 	} 
 
 }

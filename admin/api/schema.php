@@ -21,8 +21,8 @@ abstract class OdooConnPostPutBaseSchema extends OdooConnBaseSchema {
 	protected function get_last_edited_record ($table_name, $id) {
 		global $wpdb;
 
-		$query = "SELECT {$this->get_columns()} FROM {$table_name} WHERE id={$id}";
-		$inserted_row = $wpdb->get_results($query);
+		$query = "SELECT {$this->get_columns()} FROM {$table_name} WHERE id=%d";
+		$inserted_row = $wpdb->get_results($wpdb->prepare($query, array($id)));
 		return $inserted_row;	
 	}
 

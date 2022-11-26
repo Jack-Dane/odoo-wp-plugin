@@ -26,6 +26,8 @@ class OdooConnPostOdooFormMappings_Test extends TestCase {
 		$wpdb = \Mockery::mock("WPDB");
 		$wpdb->insert_id = 3;
 		$wpdb->shouldReceive("insert")->with("wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s"))->once();
+		$wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3))->once()
+			->andReturn("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3");
 		$wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3")
 			->once()->andReturn($results);
 		$GLOBALS["wpdb"] = $wpdb;
