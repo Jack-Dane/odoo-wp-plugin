@@ -1,4 +1,110 @@
 
+
+class TableFunctionButton {
+
+	static createButton (buttonType, index, endpoint) {
+		let button = null;
+		switch (buttonType) {
+			case "edit":
+				button = new EditButton(index, endpoint);
+				break;
+			case "save":
+				button = new SaveButton(index, endpoint);
+				break;
+			case "close":
+				button = new CloseButton(index, endpoint);
+				break;
+			case "delete":
+				button = new DeleteButton(index, endpoint);
+				break;
+		}
+		if (button == null) {
+			throw new Error("Could not create button, " + buttonType + " doesn't exist");
+		}
+		return button.createElement();
+	}
+
+}
+
+
+class ButtonBase {
+
+	constructor (index, endpoint, text, tableRowClass) {
+		this.index = index;
+		this.endpoint = endpoint;
+		this.text = text;
+		this.tableRowClass = tableRowClass;
+	}
+
+	createElement () {
+		let buttonElement = jQuery("<a href='#'></a>");
+		buttonElement.data("endpoint", this.endpoint);
+		buttonElement.data("row-class", "table-row-" + this.index);
+		buttonElement.text(this.text);
+		if (!this.shouldShow) {
+			buttonElement.css("display", "none");
+		}
+		buttonElement.addClass(this.classes.join(" "));
+		return buttonElement;
+	}
+
+	get shouldShow () {
+		return true;
+	}
+
+	get classes () {
+		return [
+			"table-operation",
+			this.tableRowClass
+		];
+	}
+
+}
+
+
+class EditButton extends ButtonBase {
+
+	constructor (index, endpoint) {
+		super(index, endpoint, "Edit", "table-row-edit");
+	}
+
+}
+
+
+class SaveButton extends ButtonBase {
+
+	constructor (index, endpoint) {
+		super(index, endpoint, "Save", "table-row-save");
+	}
+
+	get shouldShow () {
+		return false;
+	}
+
+}
+
+
+class CloseButton extends ButtonBase {
+
+	constructor (index, endpoint) {
+		super(index, endpoint, "Close", "table-row-close");
+	}
+
+	get shouldShow () {
+		return false;
+	}
+
+}
+
+
+class DeleteButton extends ButtonBase {
+
+	constructor (index, endpoint) {
+		super(index, endpoint, "Delete", "table-row-delete");
+	}
+}
+
+
 class TableDisplay {
 
 	constructor (getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
@@ -14,11 +120,11 @@ class TableDisplay {
 	}
 
 	getUserFriendlyColumnNames () {
-		throw Error("NotImplementedError");
+		throw new Error("NotImplementedError");
 	}
 
 	getDisplayColumns () {
-		throw Error("NotImplementedError");
+		throw new Error("NotImplementedError");
 	}
 
 	getForeignKeys () {
@@ -109,29 +215,12 @@ class TableDisplay {
 			let tableRow = jQuery("<tr></tr>");
 			let tableData = jQuery("<td></td>");
 			
-			let edit = jQuery(
-				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.updateDataEndpoint + "'>Edit</a>"
-			);
-			edit.addClass("table-row-edit table-operation");
-			tableData.append(edit);
-
-			let save = jQuery(
-				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.updateDataEndpoint + "' style='display: none;'>Save</a>"
-			);
-			save.addClass("table-row-save table-operation");
-			tableData.append(save);
-
-			let close = jQuery(
-				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.updateDataEndpoint + "' style='display: none;'>Close</a>"
-			);
-			close.addClass("table-row-close table-operation");
-			tableData.append(close);
-
-			let delete_ = jQuery(
-				"<a href='#' data-row-class='table-row-" + index + "' data-endpoint='" + self.deleteDataEndpoint + "' data-row-id='" + dataRow["id"] + "'>Delete</a>"
-			);
-			delete_.addClass("table-row-delete table-operation");
-			tableData.append(delete_);
+			tableData.append(TableFunctionButton.createButton("edit", index, self.updateDataEndpoint));
+			tableData.append(TableFunctionButton.createButton("save", index, self.updateDataEndpoint));
+			tableData.append(TableFunctionButton.createButton("close", index, self.updateDataEndpoint));
+			let _delete = TableFunctionButton.createButton("delete", index, self.deleteDataEndpoint);
+			_delete.data("row-id", dataRow["id"]);
+			tableData.append(_delete);
 
 			tableRow.append(tableData);
 
@@ -173,7 +262,9 @@ class TableDisplay {
 		}
 
 		let nextPageNumber = this.currentPageNumber + 1;
-		let nextAnchor = jQuery("<a id='next-button' href='?p=" + nextPageNumber + "&page=" + this.currentPage + "'>Next</a>");
+		let nextAnchor = jQuery(
+			"<a id='next-button' href='?p=" + nextPageNumber + "&page=" + this.currentPage + "'>Next</a>"
+		);
 		jQuery("#pageination-display").append(nextAnchor);
 	}
 
@@ -188,7 +279,9 @@ class TableDisplay {
 		}
 
 		let previousPageNumber = this.currentPageNumber - 1;
-		let previousAnchor = jQuery("<a id='previous-button' href='?p=" + previousPageNumber + "&page=" + this.currentPage + "'>Previous</a>");
+		let previousAnchor = jQuery(
+			"<a id='previous-button' href='?p=" + previousPageNumber + "&page=" + this.currentPage + "'>Previous</a>"
+		);
 		jQuery("#pageination-display").append(previousAnchor);
 	}
 
@@ -206,7 +299,13 @@ class FormMappings extends TableDisplay {
 	}
 
 	getUserFriendlyColumnNames () {
-		return ["Id", "Odoo Form Id", "Contact Form 7 Field Name", "Odoo Field Name", "Constant Value"];
+		return [
+			"Id", 
+			"Odoo Form Id", 
+			"Contact Form 7 Field Name", 
+			"Odoo Field Name", 
+			"Constant Value"
+		];
 	}
 
 	getDisplayColumns () {
@@ -240,7 +339,13 @@ class OdooForms extends TableDisplay {
 	}
 
 	getUserFriendlyColumnNames () {
-		return ["Id", "Odoo Connection", "Odoo Model", "Name", "Contact 7 Form"];
+		return [
+			"Id", 
+			"Odoo Connection", 
+			"Odoo Model", 
+			"Name", 
+			"Contact 7 Form"
+		];
 	}
 
 	getDisplayColumns () {
@@ -280,7 +385,13 @@ class OdooConnections extends TableDisplay {
 	}
 
 	getUserFriendlyColumnNames () {
-		return ["Id", "Name", "Username", "URL", "Database Name"];
+		return [
+			"Id", 
+			"Name", 
+			"Username", 
+			"URL", 
+			"Database Name"
+		];
 	}
 
 	getDisplayColumns () {
