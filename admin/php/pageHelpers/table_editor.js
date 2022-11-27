@@ -18,7 +18,9 @@ async function updateData (id, endpoint) {
 	let updateData = getUpdateData(id);
 
 	await fetch(
-		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(updateData), 
+		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(
+			updateData
+		), 
 		{
 			method: "PUT",
 			credentials: 'include',
@@ -48,6 +50,23 @@ async function deleteRow (id, endpoint) {
 	);
 }
 
+async function getForeignKeyData (foreignKeyData) {
+	return await fetch (
+		"/wp-json/odoo-conn/v1/" + foreignKeyData,
+		{
+			credentials: 'include',
+			headers: {
+				'content-type': 'application/json',
+				'X-WP-Nonce': wpApiSettings.nonce
+			}
+		}
+	).then( function (response) {
+		return response.json();
+	}).then( function (jsonResponse) {
+		return jsonResponse
+	});
+}
+
 function closeFields (id) {
 	jQuery("." + id).each(function () {
 		let editable = jQuery(this).data("editable");
@@ -56,9 +75,12 @@ function closeFields (id) {
 		}
 		let text = jQuery(this).val();
 		let tableField = jQuery(this).data("table-field");
-		jQuery(this).replaceWith(
-			"<span class='" + id + "' data-editable='" + editable + "' data-table-field='" + tableField + "'>" + text + "</span>"
-		);
+
+		let span = jQuery("<span></span>");
+		span.data("editable", editable);
+		span.data("table-field", tableField);
+		span.text(text);
+		jQuery(this).replaceWith(span);
 	});
 }
 
@@ -67,34 +89,34 @@ function openFieldsForEdit (id) {
 		let element = jQuery(this);
 		let editable = element.data("editable");
 		if (!editable) {
-			return; // equal to continue in a javascript loop
+			return; // will continue to the next element in the loop
 		}
 		let dropDown = element.data("foreign-key-endpoint");
 		let tableField = element.data("table-field");
 
 		if (dropDown) {
-			let foreignKeyData = await fetch (
-				"/wp-json/odoo-conn/v1/" + element.data("foreign-key-endpoint"),
-				{
-					credentials: 'include',
-					headers: {
-						'content-type': 'application/json',
-						'X-WP-Nonce': wpApiSettings.nonce
-					}
-				}
-			).then( function (response) {
-				return response.json();
-			}).then( function (jsonResponse) {
-				return jsonResponse
-			});
+			foreignKeyData = await getForeignKeyData(
+				element.data("foreign-key-endpoint")
+			);
 
-			let dropDown = jQuery("<select data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "'/>");
+			let dropDown = jQuery("<select></select>");
+			dropDown.data("editable", editable);
+			dropDown.data("table-field", tableField);
+			dropDown.addClass(id);
+
 			let selectedValue = element.data("foreign-key-value");
 			foreignKeyData.forEach( function (foreignKeyObject) {
-				let id = foreignKeyObject[element.data("foreign-key-column-primary-key")];
-				let name = foreignKeyObject[element.data("foreign-key-column-name")];
+				let id = foreignKeyObject[element.data(
+					"foreign-key-column-primary-key"
+				)];
+				let name = foreignKeyObject[element.data(
+					"foreign-key-column-name"
+				)];
 
-				let option = jQuery("<option value='" + id + "'>" + name + "</option>");
+				let option = jQuery("<option></option>");
+				option.attr("value", id);
+				option.text(name);
+
 				if (selectedValue == id) {
 					option.attr("selected", true);
 				}
@@ -103,9 +125,14 @@ function openFieldsForEdit (id) {
 			element.replaceWith(dropDown);
 		} else {
 			let text = element.text();
-			element.replaceWith(
-				"<input type='text' data-editable='" + editable + "' data-table-field='" + tableField + "' class='" + id + "' value='" + text + "'/>"
-			);
+
+			let input = jQuery("<input></input>");
+			input.data("editable", editable);
+			input.data("table-field", tableField);
+			input.addClass(id);
+			input.attr("value", text);
+
+			element.replaceWith(input);
 		}
 	});
 }

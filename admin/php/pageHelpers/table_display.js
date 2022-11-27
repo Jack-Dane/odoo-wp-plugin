@@ -321,14 +321,15 @@ class TableDisplay {
 				span.addClass("table-row-" + index);
 				span.data("editable", editable);
 
-				if ( columnName in self.getForeignKeys() ) {
+				if (columnName in self.getForeignKeys()) {
 					let foreignKeyData = self.getForeignKeys()[columnName];
 
 					span.data("foreign-key-endpoint", foreignKeyData["endpoint"]);
 					span.data("table-field", foreignKeyData["keyColumn"]);
 					span.data("foreign-key-column-primary-key", foreignKeyData["primaryKey"]);
 					span.data("foreign-key-column-name", foreignKeyData["foreignColumnName"]);
-					span.data("foreign-key-value", dataRow[foreignKeyData["keyColumn"]]);  // used to determin the current value of the drop down
+					span.data("foreign-key-value", dataRow[foreignKeyData["keyColumn"]]);  
+					// used to determine the current value of the drop down
 				} else {
 					span.data("table-field", columnName);
 				}
