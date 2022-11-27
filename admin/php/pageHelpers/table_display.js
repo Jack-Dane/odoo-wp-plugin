@@ -1,33 +1,5 @@
 
-
-class TableFunctionButton {
-
-	static createButton (buttonType, index, endpoint) {
-		let button = null;
-		switch (buttonType) {
-			case "edit":
-				button = new EditButton(index, endpoint);
-				break;
-			case "save":
-				button = new SaveButton(index, endpoint);
-				break;
-			case "close":
-				button = new CloseButton(index, endpoint);
-				break;
-			case "delete":
-				button = new DeleteButton(index, endpoint);
-				break;
-		}
-		if (button == null) {
-			throw new Error("Could not create button, " + buttonType + " doesn't exist");
-		}
-		return button.createElement();
-	}
-
-}
-
-
-class ButtonBase {
+class TableButtonBase {
 
 	constructor (index, endpoint, text, tableRowClass) {
 		this.index = index;
@@ -59,10 +31,32 @@ class ButtonBase {
 		];
 	}
 
+	static createButton (buttonType, index, endpoint) {
+		let button = null;
+		switch (buttonType) {
+			case "edit":
+				button = new EditButton(index, endpoint);
+				break;
+			case "save":
+				button = new SaveButton(index, endpoint);
+				break;
+			case "close":
+				button = new CloseButton(index, endpoint);
+				break;
+			case "delete":
+				button = new DeleteButton(index, endpoint);
+				break;
+		}
+		if (button == null) {
+			throw new Error("Could not create button, " + buttonType + " doesn't exist");
+		}
+		return button.createElement();
+	}
+
 }
 
 
-class EditButton extends ButtonBase {
+class EditButton extends TableButtonBase {
 
 	constructor (index, endpoint) {
 		super(index, endpoint, "Edit", "table-row-edit");
@@ -71,7 +65,7 @@ class EditButton extends ButtonBase {
 }
 
 
-class SaveButton extends ButtonBase {
+class SaveButton extends TableButtonBase {
 
 	constructor (index, endpoint) {
 		super(index, endpoint, "Save", "table-row-save");
@@ -84,7 +78,7 @@ class SaveButton extends ButtonBase {
 }
 
 
-class CloseButton extends ButtonBase {
+class CloseButton extends TableButtonBase {
 
 	constructor (index, endpoint) {
 		super(index, endpoint, "Close", "table-row-close");
@@ -97,11 +91,79 @@ class CloseButton extends ButtonBase {
 }
 
 
-class DeleteButton extends ButtonBase {
+class DeleteButton extends TableButtonBase {
 
 	constructor (index, endpoint) {
 		super(index, endpoint, "Delete", "table-row-delete");
 	}
+}
+
+
+class PaginationButton {
+
+	constructor (currentPageNumber, currentPage) {
+		this.currentPageNumber = currentPageNumber;
+		this.currentPage = currentPage;
+	}
+
+	createElement () {
+		let element = jQuery("<a></a>");
+		element.attr("id", this.idValue);
+		element.attr("href", "?p=" + this.pageNumber + "&page=" + this.currentPage);
+		element.text(this.text);
+		return element;
+	}
+
+	static createButton (buttonType, pageNumber, currentPage) {
+		let button = null;
+		switch (buttonType) {
+			case "next":
+				button = new NextPaginationButton(pageNumber, currentPage);
+				break;
+			case "previous":
+				button = new PerviousPageinationButton(pageNumber, currentPage);
+				break;
+		}
+		if (button == null) {
+			throw new Error("Could not create button, " + buttonType + " doesn't exist");
+		}
+		return button.createElement();
+	}
+
+}
+
+
+class PerviousPageinationButton extends PaginationButton {
+
+	get text () {
+		return "Previous";
+	}
+
+	get pageNumber () {
+		return this.currentPageNumber - 1;
+	}
+
+	get idValue () {
+		return "previous-button";
+	}
+
+}
+
+
+class NextPaginationButton extends PaginationButton {
+
+	get text () {
+		return "Next";
+	}
+
+	get pageNumber () {
+		return this.currentPageNumber + 1;
+	}
+
+	get idValue () {
+		return "next-button";
+	}
+
 }
 
 
@@ -231,16 +293,16 @@ class TableDisplay {
 			let tableRow = jQuery("<tr></tr>");
 			let tableData = jQuery("<td></td>");
 			
-			tableData.append(TableFunctionButton.createButton(
+			tableData.append(TableButtonBase.createButton(
 				"edit", index, self.tableData.updateDataEndpoint
 			));
-			tableData.append(TableFunctionButton.createButton(
+			tableData.append(TableButtonBase.createButton(
 				"save", index, self.tableData.updateDataEndpoint
 			));
-			tableData.append(TableFunctionButton.createButton(
+			tableData.append(TableButtonBase.createButton(
 				"close", index, self.tableData.updateDataEndpoint
 			));
-			let _delete = TableFunctionButton.createButton(
+			let _delete = TableButtonBase.createButton(
 				"delete", index, self.tableData.deleteDataEndpoint
 			);
 			_delete.data("row-id", dataRow["id"]);
@@ -284,12 +346,9 @@ class TableDisplay {
 			// button is already on the screen
 			return; 
 		}
-
-		let nextPageNumber = this.currentPageNumber + 1;
-		let nextAnchor = jQuery(
-			"<a id='next-button' href='?p=" + nextPageNumber + "&page=" + this.currentPage + "'>Next</a>"
-		);
-		jQuery("#pageination-display").append(nextAnchor);
+		jQuery("#pageination-display").append(PaginationButton.createButton(
+			"next", this.currentPageNumber, this.currentPage
+		));
 	}
 
 	#removeNextButton () {
@@ -301,12 +360,9 @@ class TableDisplay {
 			// button is already on the screen
 			return; 
 		}
-
-		let previousPageNumber = this.currentPageNumber - 1;
-		let previousAnchor = jQuery(
-			"<a id='previous-button' href='?p=" + previousPageNumber + "&page=" + this.currentPage + "'>Previous</a>"
-		);
-		jQuery("#pageination-display").append(previousAnchor);
+		jQuery("#pageination-display").append(PaginationButton.createButton(
+			"previous", this.currentPageNumber, this.currentPage
+		));
 	}
 
 	#removePreviousButton () {
