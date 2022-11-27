@@ -139,7 +139,7 @@ jQuery(document).ready(function () {
 		tableDisplay.displayTable();
 	});
 
-	jQuery("tr").on("click", ".table-row-delete", async function() {
+	jQuery(".database-table").on("click", ".table-row-delete", async function() {
 		let rowId = jQuery(this).data("row-id");
 		let deleteEndpoint = jQuery(this).data("endpoint");
 		await deleteRow(rowId, deleteEndpoint);

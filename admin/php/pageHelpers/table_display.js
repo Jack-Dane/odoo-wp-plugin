@@ -105,18 +105,51 @@ class DeleteButton extends ButtonBase {
 }
 
 
-class TableDisplay {
+class TableData {
 
 	constructor (getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
 		this.getDataEndpoint = getDataEndpoint;
 		this.updateDataEndpoint = updateDataEndpoint;
 		this.deleteDataEndpoint = deleteDataEndpoint;
-		this.table = jQuery(".database-table");
 		this.cacheJsonResponse = null;
+	}
+
+	getRows (offset, limit) {
+		let self = this;
+		return fetch(
+			"/wp-json/odoo-conn/v1/" + this.getDataEndpoint + "?" + new URLSearchParams(
+				{
+					offset: offset,
+					limit: limit
+				}
+			),
+			{
+				credentials: 'include',
+				headers: {
+					'content-type': 'application/json',
+					'X-WP-Nonce': wpApiSettings.nonce
+				}
+			}
+		).then(function(response) {
+			return response.json();
+		}).then(function(jsonResponse) {
+			self.cacheJsonResponse = jsonResponse;
+		});
+	}
+
+}
+
+
+class TableDisplay {
+
+	constructor (tableData) {
+		this.tableData = tableData;
+		this.table = jQuery(".database-table");
 		this.currentPageNumber = null;
 		this.currentPage = null;
 		this.showNext = false;
 		this.numberOfRows = 10;
+		this.displayData = null;
 	}
 
 	getUserFriendlyColumnNames () {
@@ -131,37 +164,20 @@ class TableDisplay {
 		return [];
 	}
 
-	getRows () {
+	async getRows () {
 		let pageNumber = this.currentPageNumber;
 		if (!this.currentPageNumber || this.currentPageNumber < 0) {
 			pageNumber = 0;
 		}
 		let offset = pageNumber * this.numberOfRows;
 
-		let self = this;
-		return fetch(
-			"/wp-json/odoo-conn/v1/" + this.getDataEndpoint + "?" + new URLSearchParams(
-				{
-					offset: offset,
-					limit: this.numberOfRows + 1
-				}
-			),
-			{
-				credentials: 'include',
-				headers: {
-					'content-type': 'application/json',
-					'X-WP-Nonce': wpApiSettings.nonce
-				}
-			}
-		).then(function(response) {
-			return response.json();
-		}).then(function(jsonResponse) {
-			if (jsonResponse.length == self.numberOfRows + 1) {
-				self.showNext = true;
-				jsonResponse.pop();
-			}
-			self.cacheJsonResponse = jsonResponse;
-		});
+		await this.tableData.getRows(offset, this.numberOfRows + 1);
+
+		this.displayData = this.tableData.cacheJsonResponse
+		if (this.displayData.length == this.numberOfRows + 1) {
+			this.showNext = true;
+			this.displayData.pop();
+		}
 	}
 
 	async displayTable () {
@@ -208,17 +224,25 @@ class TableDisplay {
 	}
 
 	#addTableData () {
-		let dataRows = this.cacheJsonResponse;
+		let dataRows = this.displayData;
 		let self = this;
 		let tBody = jQuery("<tbody></tbody>");
 		dataRows.forEach( async function(dataRow, index) {
 			let tableRow = jQuery("<tr></tr>");
 			let tableData = jQuery("<td></td>");
 			
-			tableData.append(TableFunctionButton.createButton("edit", index, self.updateDataEndpoint));
-			tableData.append(TableFunctionButton.createButton("save", index, self.updateDataEndpoint));
-			tableData.append(TableFunctionButton.createButton("close", index, self.updateDataEndpoint));
-			let _delete = TableFunctionButton.createButton("delete", index, self.deleteDataEndpoint);
+			tableData.append(TableFunctionButton.createButton(
+				"edit", index, self.tableData.updateDataEndpoint
+			));
+			tableData.append(TableFunctionButton.createButton(
+				"save", index, self.tableData.updateDataEndpoint
+			));
+			tableData.append(TableFunctionButton.createButton(
+				"close", index, self.tableData.updateDataEndpoint
+			));
+			let _delete = TableFunctionButton.createButton(
+				"delete", index, self.tableData.deleteDataEndpoint
+			);
 			_delete.data("row-id", dataRow["id"]);
 			tableData.append(_delete);
 
@@ -295,7 +319,12 @@ class TableDisplay {
 class FormMappings extends TableDisplay {
 
 	constructor () {
-		super("get-odoo-form-mappings", "update-odoo-form-mapping", "delete-odoo-form-mapping");
+		let tableData = new TableData(
+			"get-odoo-form-mappings", 
+			"update-odoo-form-mapping", 
+			"delete-odoo-form-mapping"
+		);
+		super(tableData);
 	}
 
 	getUserFriendlyColumnNames () {
@@ -335,7 +364,12 @@ class FormMappings extends TableDisplay {
 class OdooForms extends TableDisplay {
 	
 	constructor () {
-		super("get-odoo-forms", "update-odoo-form", "delete-odoo-form");
+		let tableData = new TableData(
+			"get-odoo-forms", 
+			"update-odoo-form", 
+			"delete-odoo-form"
+		);
+		super(tableData);
 	}
 
 	getUserFriendlyColumnNames () {
@@ -381,7 +415,12 @@ class OdooForms extends TableDisplay {
 class OdooConnections extends TableDisplay {
 
 	constructor () {
-		super("get-odoo-connections", "update-odoo-connection", "delete-odoo-connection");
+		let tableData = new TableData(
+			"get-odoo-connections", 
+			"update-odoo-connection", 
+			"delete-odoo-connection"
+		);
+		super(tableData);
 	}
 
 	getUserFriendlyColumnNames () {
