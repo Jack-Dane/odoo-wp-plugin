@@ -34,3 +34,7 @@ This plugin can be test within a [docker environment](https://hub.docker.com/_/w
 
 * PHP 7 or greater
 * Ideally Odoo 14 or greater as version before 14 don't support API keys. 
+
+## Try with Docker
+
+You can easily try the plugin within docker, just use the command `docker compose up`. You will have a newly wordpress instance running on port 8080. You just need to install the plugin from the install page along with Contact Form 7. 
