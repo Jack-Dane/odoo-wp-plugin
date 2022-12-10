@@ -223,7 +223,7 @@ function odoo_conn_delete_odoo_connection_arguments () {
 }
 
 add_action( "rest_api_init", function () {
-	register_rest_route ( "odoo-conn/v1", "/get-odoo-connections", array(
+	register_rest_route ( "odoo_conn/v1", "/get-odoo-connections", array(
 		array(
 			"methods" => "GET",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_connections",
@@ -233,7 +233,7 @@ add_action( "rest_api_init", function () {
 		"schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_connections_schema",
 	));
 
-  	register_rest_route( "odoo-conn/v1", "/create-odoo-connection", array(
+  	register_rest_route( "odoo_conn/v1", "/create-odoo-connection", array(
   		array(
   			"methods" => "POST",
     		"callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_connection",
@@ -243,7 +243,7 @@ add_action( "rest_api_init", function () {
     	"schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_connection_schema",
 	));
 
-  	register_rest_route( "odoo-conn/v1", "/update-odoo-connection", array(
+  	register_rest_route( "odoo_conn/v1", "/update-odoo-connection", array(
   		array(
   			"methods" => "PUT",
     		"callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_connection",
@@ -253,7 +253,7 @@ add_action( "rest_api_init", function () {
     	"schema" => __NAMESPACE__ . "\\odoo_conn_update_odoo_connection_schema",
 	));
 
-	register_rest_route( "odoo-conn/v1", "/delete-odoo-connection", array(
+	register_rest_route( "odoo_conn/v1", "/delete-odoo-connection", array(
 		array(
 			"methods" => "DELETE",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_connection",

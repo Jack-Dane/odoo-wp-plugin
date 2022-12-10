@@ -240,7 +240,7 @@ function odoo_conn_delete_odoo_form_arguments () {
 }
 
 add_action( "rest_api_init", function () {
-	register_rest_route ( "odoo-conn/v1", "/create-odoo-form", array(
+	register_rest_route ( "odoo_conn/v1", "/create-odoo-form", array(
 		array(
 			"methods" => "POST",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form",
@@ -250,7 +250,7 @@ add_action( "rest_api_init", function () {
 		"schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_schema",
 	));
 
-	register_rest_route ( "odoo-conn/v1", "/get-odoo-forms", array(
+	register_rest_route ( "odoo_conn/v1", "/get-odoo-forms", array(
 		array(
 			"methods" => "GET",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms",
@@ -260,7 +260,7 @@ add_action( "rest_api_init", function () {
 		"schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms_schema",
 	));
 
-	register_rest_route ( "odoo-conn/v1", "/update-odoo-form", array(
+	register_rest_route ( "odoo_conn/v1", "/update-odoo-form", array(
 		array(
 			"methods" => "PUT",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form",
@@ -270,7 +270,7 @@ add_action( "rest_api_init", function () {
 		"schema" => __NAMESPACE__ . "\\odoo_conn_updated_odoo_form_schema",
 	));
 
-	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form", array(
+	register_rest_route ( "odoo_conn/v1", "/delete-odoo-form", array(
 		array(
 			"methods" => "DELETE",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form",

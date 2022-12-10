@@ -3,7 +3,7 @@ require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_form_mapping_page () {
 	wp_register_script(
-    	"odoo-form-mapping", plugins_url("/odoo-conn/admin/php/pages/odoo_form_mapping.js"), array("jquery"), "1.0.0", true
+    	"odoo-form-mapping", plugins_url("/odoo_conn/admin/php/pages/odoo_form_mapping.js"), array("jquery"), "1.0.0", true
     );
     wp_enqueue_script( "odoo-form-mapping" );
 ?>
@@ -64,7 +64,7 @@ function odoo_form_mapping_page () {
 		});
 		let json = JSON.stringify(object);
 
-		fetch("/wp-json/odoo-conn/v1/create-odoo-form-mapping", {
+		fetch("/wp-json/odoo_conn/v1/create-odoo-form-mapping", {
 			method: "POST",
 			body: json,
 			credentials: 'include',
@@ -91,7 +91,7 @@ function odoo_form_mapping_page () {
 		formSelect = jQuery("#odoo_form_id");
 		formSelect.empty();
 
-		let forms = await fetch("/wp-json/odoo-conn/v1/get-odoo-forms",
+		let forms = await fetch("/wp-json/odoo_conn/v1/get-odoo-forms",
 			{
 				credentials: 'include',
 				headers: {

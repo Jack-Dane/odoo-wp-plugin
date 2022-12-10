@@ -238,7 +238,7 @@ function odoo_conn_delete_odoo_form_mapping_arguments () {
 }
 
 add_action ( "rest_api_init", function () {
-	register_rest_route ( "odoo-conn/v1", "/get-odoo-form-mappings", array(
+	register_rest_route ( "odoo_conn/v1", "/get-odoo-form-mappings", array(
 		array(
 			"methods" => "GET",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_from_mappings",
@@ -248,7 +248,7 @@ add_action ( "rest_api_init", function () {
 		"schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_form_mappings_schema",
 	));
 
-	register_rest_route ( "odoo-conn/v1", "/create-odoo-form-mapping", array(
+	register_rest_route ( "odoo_conn/v1", "/create-odoo-form-mapping", array(
 		array(
 			"methods" => "POST",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_mapping",
@@ -258,7 +258,7 @@ add_action ( "rest_api_init", function () {
 		"schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_mapping_schema"
 	));
 
-	register_rest_route ( "odoo-conn/v1", "/update-odoo-form-mapping", array(
+	register_rest_route ( "odoo_conn/v1", "/update-odoo-form-mapping", array(
 		array(
 			"methods" => "PUT",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form_mapping",
@@ -268,7 +268,7 @@ add_action ( "rest_api_init", function () {
 		"schema" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form_mapping_schema",
 	));
 
-	register_rest_route ( "odoo-conn/v1", "/delete-odoo-form-mapping", array(
+	register_rest_route ( "odoo_conn/v1", "/delete-odoo-form-mapping", array(
 		array(
 			"methods" => "DELETE",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form_mapping",

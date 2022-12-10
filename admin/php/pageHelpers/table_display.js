@@ -179,7 +179,7 @@ class TableData {
 	getRows (offset, limit) {
 		let self = this;
 		return fetch(
-			"/wp-json/odoo-conn/v1/" + this.getDataEndpoint + "?" + new URLSearchParams(
+			"/wp-json/odoo_conn/v1/" + this.getDataEndpoint + "?" + new URLSearchParams(
 				{
 					offset: offset,
 					limit: limit

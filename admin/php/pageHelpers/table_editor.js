@@ -18,7 +18,7 @@ async function updateData (id, endpoint) {
 	let updateData = getUpdateData(id);
 
 	await fetch(
-		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(
+		"/wp-json/odoo_conn/v1/" + endpoint + "?" + new URLSearchParams(
 			updateData
 		), 
 		{
@@ -34,7 +34,7 @@ async function updateData (id, endpoint) {
 
 async function deleteRow (id, endpoint) {
 	await fetch(
-		"/wp-json/odoo-conn/v1/" + endpoint + "?" + new URLSearchParams(
+		"/wp-json/odoo_conn/v1/" + endpoint + "?" + new URLSearchParams(
 			{
 				id: id
 			}
@@ -52,7 +52,7 @@ async function deleteRow (id, endpoint) {
 
 async function getForeignKeyData (foreignKeyData) {
 	return await fetch (
-		"/wp-json/odoo-conn/v1/" + foreignKeyData,
+		"/wp-json/odoo_conn/v1/" + foreignKeyData,
 		{
 			credentials: 'include',
 			headers: {

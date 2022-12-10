@@ -2,7 +2,7 @@
 
 function odoo_connection_page () {
 	wp_register_script(
-    	"odoo-connection", plugins_url("/odoo-conn/admin/php/pages/odoo_connection.js"), array("jquery"), "1.0.0", true
+    	"odoo-connection", plugins_url("/odoo_conn/admin/php/pages/odoo_connection.js"), array("jquery"), "1.0.0", true
     );
     wp_enqueue_script( "odoo-connection" );
 ?>
@@ -44,7 +44,7 @@ function odoo_connection_page () {
 		});
 		let json = JSON.stringify(object);
 
-		fetch("/wp-json/odoo-conn/v1/create-odoo-connection", {
+		fetch("/wp-json/odoo_conn/v1/create-odoo-connection", {
 			method: "POST",
 			body: json,
 			credentials: 'include',

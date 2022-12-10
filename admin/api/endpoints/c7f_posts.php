@@ -54,7 +54,7 @@ function odoo_conn_get_contact_7_forms_arguments () {
 }
 
 add_action( "rest_api_init", function () {
-	register_rest_route ( "odoo-conn/v1", "/get-contact-7-forms", array(
+	register_rest_route ( "odoo_conn/v1", "/get-contact-7-forms", array(
 		array(
 			"methods" => "GET",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_get_contact_7_forms",

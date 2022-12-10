@@ -2,7 +2,7 @@
 
 function odoo_form_page () {
 	wp_register_script(
-    	"odoo-form", plugins_url("/odoo-conn/admin/php/pages/odoo_form.js"), array("jquery"), "1.0.0", true
+    	"odoo-form", plugins_url("/odoo_conn/admin/php/pages/odoo_form.js"), array("jquery"), "1.0.0", true
     );
     wp_enqueue_script( "odoo-form" );
 ?>
@@ -44,7 +44,7 @@ function odoo_form_page () {
 		});
 		let json = JSON.stringify(object);
 
-		fetch("/wp-json/odoo-conn/v1/create-odoo-form", {
+		fetch("/wp-json/odoo_conn/v1/create-odoo-form", {
     		method: 'POST',
     		body: json,
 			credentials: 'include',
@@ -59,7 +59,7 @@ function odoo_form_page () {
 		connectionsSelect = jQuery("#odoo_connection_id");
 		connectionsSelect.empty();
 
-		let connections = await fetch("/wp-json/odoo-conn/v1/get-odoo-connections",
+		let connections = await fetch("/wp-json/odoo_conn/v1/get-odoo-connections",
 			{
 				credentials: 'include',
 				headers: {
@@ -85,7 +85,7 @@ function odoo_form_page () {
 		c7FormsSelect = jQuery("#contact_7_id");
 		c7FormsSelect.empty();
 
-		let c7Forms = await fetch("/wp-json/odoo-conn/v1/get-contact-7-forms",
+		let c7Forms = await fetch("/wp-json/odoo_conn/v1/get-contact-7-forms",
 			{
 				credentials: 'include',
 				headers: {
