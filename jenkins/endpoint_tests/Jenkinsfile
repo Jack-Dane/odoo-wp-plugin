@@ -1,0 +1,17 @@
+
+pipeline {
+
+	agent any
+
+	stages {
+		stage('Build') {
+			steps {
+				// make sure there aren't any already existing containers
+            	sh 'docker compose rm -f'
+            	sh 'docker compose pull'
+            	sh 'docker compose up --force-recreate --build --wait'
+			}
+		}
+	}
+
+}

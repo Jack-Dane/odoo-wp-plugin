@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+
+  test_wordpress:
+    restart: always
+    image: wordpress:apache
+    ports:
+      - 8000:80
+    environment:
+      WORDPRESS_DB_HOST: test_db
+      WORDPRESS_DB_USER: odoo_conn_test_user
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: odoo_conn_test
+    volumes:
+      - wp_data:/var/www/html
+      - type: bind
+        source: ../../
+        target: /var/www/html/wp-content/plugins/odoo_conn
+
+  test_db:
+    restart: always
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: odoo_conn_test
+      MYSQL_USER: odoo_conn_test_user
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+
+  test_wpcli:
+    user: xfs
+    image: wordpress:cli
+    depends_on:
+      - test_wordpress
+      - test_db
+    command: '/bin/bash /var/www/html/wp-content/plugins/odoo_conn/jenkins/endpoint_tests/startup.sh'
+    environment:
+      WORDPRESS_DB_HOST: test_db
+      WORDPRESS_DB_USER: odoo_conn_test_user
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: odoo_conn_test
+    volumes:
+      - wp_data:/var/www/html
+      - type: bind
+        source: ../../
+        target: /var/www/html/wp-content/plugins/odoo_conn
+
+volumes:
+  wp_data:

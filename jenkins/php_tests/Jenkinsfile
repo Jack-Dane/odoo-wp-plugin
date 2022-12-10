@@ -31,6 +31,7 @@ pipeline {
             }
         }
     }
+
     post { 
         always {
             // send the reslt to GitHub
@@ -42,4 +43,5 @@ pipeline {
                 -d \'{\"state\":\"${currentBuild.result.toLowerCase()}\",\"context\":\"Jenkins UTs\"}\'"
         }
     }
+
 }
