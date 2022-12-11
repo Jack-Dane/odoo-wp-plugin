@@ -4,6 +4,9 @@ function odoo_connection_page () {
 	wp_register_script(
     	"odoo-connection", plugins_url("/odoo_conn/admin/php/pages/odoo_connection.js"), array("jquery"), "1.0.0", true
     );
+    wp_localize_script("odoo-connection", "wpApiSettings", array(
+        "root" => esc_url_raw(rest_url()), "nonce" => wp_create_nonce("wp_rest")
+    ));
     wp_enqueue_script( "odoo-connection" );
 ?>
 <div class="wrap">
@@ -24,37 +27,6 @@ function odoo_connection_page () {
 	<div id="pageination-display"></div>
 
 </div>
-
-<script type="text/javascript">
-	function getFormData () {
-		let formData = new FormData();
-		formData.append("name", document.getElementById("name").value);
-		formData.append("username", document.getElementById("username").value);
-		formData.append("api_key", document.getElementById("api_key").value);
-		formData.append("url", document.getElementById("url").value);
-		formData.append("database_name", document.getElementById("database_name").value);
-		return formData;
-	}
-
-	function submitConnection () {
-		let formData = getFormData();
-		let object = {};
-		formData.forEach(function(value, key){
-		    object[key] = value;
-		});
-		let json = JSON.stringify(object);
-
-		fetch("/wp-json/odoo_conn/v1/create-odoo-connection", {
-			method: "POST",
-			body: json,
-			credentials: 'include',
-			headers: {
-				'content-type': 'application/json',
-				'X-WP-Nonce': wpApiSettings.nonce
-			}
-		});
-	}
-</script>
 <?php
 }
 ?>
