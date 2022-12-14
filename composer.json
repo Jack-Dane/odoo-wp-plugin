@@ -5,5 +5,8 @@
         "php-mock/php-mock": "^2.3",
         "php-mock/php-mock-phpunit": "^2.6",
         "mockery/mockery": "^1.5"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
     }
 }

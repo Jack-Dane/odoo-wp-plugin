@@ -3,8 +3,12 @@ pipeline {
 
 	agent any
 
+	environment {
+        GITHUB_TOKEN = credentials('477fb846-8aa4-4ae3-a378-53f6d33d93db')
+    }
+
 	stages {
-		stage('Build') {
+		stage ('Build Docker Containers') {
 			steps {
 				// make sure there aren't any already existing containers
             	sh 'docker compose rm -f'
@@ -12,6 +16,58 @@ pipeline {
             	sh 'docker compose up --force-recreate --build --wait'
 			}
 		}
+
+		stage ('Install Vendor') {
+			agent {
+				dockerfile {
+            		filename '../dockerfile'
+            		dir 'jenkins/endpoint_tests'
+            		args '-it --entrypoint='
+        		}
+			}
+			
+			steps {
+				sh 'cd $WORKSPACE'
+	            // no-cache because the container fails to create directories when cloning
+	            // from git eg:
+	            // could not create leading directories of 
+	            // '/.composer/cache/vcs/https ---github.com-bovigo-vfsStream.git'
+	            sh 'composer install --no-cache'
+			}
+		}
+
+        stage ('Test') {
+        	agent {
+				dockerfile {
+            		filename '../dockerfile'
+            		dir 'jenkins/endpoint_tests'
+            		args '-it --entrypoint='
+        		}
+			}
+			
+            steps {
+                sh 'vendor/bin/phpunit tests'
+            }
+        }
+
+		stage ('Teardown') {
+			steps {
+				sh 'docker compose down'
+            	sh 'docker compose rm -f'
+			}
+		}
 	}
+
+	post { 
+        always {
+            // send the reslt to GitHub
+            sh "curl \
+                -X POST \
+                -H \"Accept: application/vnd.github+json\" \
+                -H \"Authorization: Bearer $GITHUB_TOKEN\" \
+                https://api.github.com/repos/jack-dane/odoo-wp-plugin/statuses/$GIT_COMMIT \
+                -d \'{\"state\":\"${currentBuild.result.toLowerCase()}\",\"context\":\"Jenkins Endpoint Tests\"}\'"
+        }
+    }
 
 }

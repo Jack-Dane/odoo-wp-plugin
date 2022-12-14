@@ -3,7 +3,7 @@ pipeline {
     
     agent { 
         dockerfile {
-            filename 'dockerfile'
+            filename '../dockerfile'
             dir 'jenkins/php_tests'
             args '-it --entrypoint='
         }

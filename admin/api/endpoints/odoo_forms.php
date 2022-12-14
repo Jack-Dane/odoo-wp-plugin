@@ -245,8 +245,8 @@ add_action( "rest_api_init", function () {
 			"methods" => "POST",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form",
 			"args" => odoo_conn_create_odoo_form_arguments(),
+			"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		),
-		"permission_callback" => __NAMESPACE__ . "\\is_authorised_to_request_data",
 		"schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_schema",
 	));
 
@@ -255,8 +255,8 @@ add_action( "rest_api_init", function () {
 			"methods" => "GET",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms",
 			"args" => odoo_conn_get_odoo_forms_arguments(),
+			"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		),
-		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		"schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms_schema",
 	));
 
@@ -265,8 +265,8 @@ add_action( "rest_api_init", function () {
 			"methods" => "PUT",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form",
 			"args" => odoo_conn_updated_odoo_form_arguments(),
+			"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		),
-		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		"schema" => __NAMESPACE__ . "\\odoo_conn_updated_odoo_form_schema",
 	));
 
@@ -275,8 +275,8 @@ add_action( "rest_api_init", function () {
 			"methods" => "DELETE",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form",
 			"args" => odoo_conn_delete_odoo_form_arguments(),
+			"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		),
-		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		"schema" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form_schema"
 	));
 });

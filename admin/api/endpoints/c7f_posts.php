@@ -59,8 +59,8 @@ add_action( "rest_api_init", function () {
 			"methods" => "GET",
 			"callback" => __NAMESPACE__ . "\\odoo_conn_get_contact_7_forms",
 			"args" => odoo_conn_get_contact_7_forms_arguments(),
+			"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		),
-		"permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
 		"schema" => __NAMESPACE__ . "\\odoo_conn_get_contact_7_forms_schema",
 	));
 });
