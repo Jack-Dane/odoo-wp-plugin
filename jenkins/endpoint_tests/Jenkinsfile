@@ -11,9 +11,9 @@ pipeline {
 		stage ('Build Docker Containers') {
 			steps {
 				// make sure there aren't any already existing containers
-            	sh 'docker compose rm -f'
-            	sh 'docker compose pull'
-            	sh 'docker compose up --force-recreate --build --wait'
+            	sh 'docker compose --project-directory jenkins/endpoint_tests rm -f'
+            	sh 'docker compose --project-directory jenkins/endpoint_tests pull'
+            	sh 'docker compose --project-directory jenkins/endpoint_tests up --force-recreate --build --wait'
 			}
 		}
 
