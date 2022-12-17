@@ -17,6 +17,11 @@ services:
       - type: bind
         source: ../../
         target: /var/www/html/wp-content/plugins/odoo_conn
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 200M
 
   test_db:
     restart: always
@@ -26,6 +31,11 @@ services:
       MYSQL_USER: odoo_conn_test_user
       MYSQL_PASSWORD: password
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 250M
 
   test_wpcli:
     user: xfs
@@ -44,6 +54,11 @@ services:
       - type: bind
         source: ../../
         target: /var/www/html/wp-content/plugins/odoo_conn
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 60M
 
 volumes:
   wp_data:
