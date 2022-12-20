@@ -1,7 +1,7 @@
 
 pipeline {
 
-	agent any
+	agent { label 'AWS' }
 
 	environment {
         GITHUB_TOKEN = credentials('Github-Token')
