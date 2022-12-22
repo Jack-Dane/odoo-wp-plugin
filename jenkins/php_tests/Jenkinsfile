@@ -40,7 +40,7 @@ pipeline {
                 -H \"Accept: application/vnd.github+json\" \
                 -H \"Authorization: Bearer $GITHUB_TOKEN\" \
                 https://api.github.com/repos/jack-dane/odoo-wp-plugin/statuses/$GIT_COMMIT \
-                -d \'{\"state\":\"${currentBuild.result.toLowerCase()}\",\"context\":\"Jenkins UTs\"}\'"
+                -d \'{\"state\":\"${currentBuild.result.toLowerCase()}\",\"context\":\"Jenkins Unit Tests\"}\'"
         }
     }
 
