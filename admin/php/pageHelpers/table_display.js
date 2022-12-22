@@ -178,8 +178,9 @@ class TableData {
 
 	getRows (offset, limit) {
 		let self = this;
+		let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
 		return fetch(
-			"/wp-json/odoo_conn/v1/" + this.getDataEndpoint + "?" + new URLSearchParams(
+			wpApiSettings.root + "odoo_conn/v1/" + this.getDataEndpoint + joinParam + new URLSearchParams(
 				{
 					offset: offset,
 					limit: limit

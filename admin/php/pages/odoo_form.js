@@ -19,7 +19,7 @@ function submitOdooForm () {
 	});
 	let json = JSON.stringify(object);
 
-	fetch("/wp-json/odoo_conn/v1/create-odoo-form", {
+	fetch(wpApiSettings.root + "odoo_conn/v1/create-odoo-form", {
 		method: 'POST',
 		body: json,
 		credentials: 'include',
@@ -34,7 +34,7 @@ async function setSelectData () {
 	connectionsSelect = jQuery("#odoo_connection_id");
 	connectionsSelect.empty();
 
-	let connections = await fetch("/wp-json/odoo_conn/v1/get-odoo-connections",
+	let connections = await fetch(wpApiSettings.root + "odoo_conn/v1/get-odoo-connections",
 		{
 			credentials: 'include',
 			headers: {
@@ -60,7 +60,7 @@ async function setSelectData () {
 	c7FormsSelect = jQuery("#contact_7_id");
 	c7FormsSelect.empty();
 
-	let c7Forms = await fetch("/wp-json/odoo_conn/v1/get-contact-7-forms",
+	let c7Forms = await fetch(wpApiSettings.root + "odoo_conn/v1/get-contact-7-forms",
 		{
 			credentials: 'include',
 			headers: {

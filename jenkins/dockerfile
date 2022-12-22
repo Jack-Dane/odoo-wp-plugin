@@ -4,4 +4,6 @@ FROM php:7.4-cli
 RUN apt-get update
 RUN apt-get -y install git unzip
 
+COPY . /usr/src/odoo_conn
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer

@@ -38,7 +38,7 @@ function formMappingSubmit() {
 	});
 	let json = JSON.stringify(object);
 
-	fetch("/wp-json/odoo_conn/v1/create-odoo-form-mapping", {
+	fetch(wpApiSettings.root + "odoo_conn/v1/create-odoo-form-mapping", {
 		method: "POST",
 		body: json,
 		credentials: 'include',
@@ -65,7 +65,7 @@ async function setSelectData () {
 	formSelect = jQuery("#odoo_form_id");
 	formSelect.empty();
 
-	let forms = await fetch("/wp-json/odoo_conn/v1/get-odoo-forms",
+	let forms = await fetch(wpApiSettings + "odoo_conn/v1/get-odoo-forms",
 		{
 			credentials: 'include',
 			headers: {

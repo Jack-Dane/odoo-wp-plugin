@@ -16,9 +16,10 @@ function getUpdateData (id) {
 
 async function updateData (id, endpoint) {
 	let updateData = getUpdateData(id);
+	let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
 
 	await fetch(
-		"/wp-json/odoo_conn/v1/" + endpoint + "?" + new URLSearchParams(
+		wpApiSettings.root + "odoo_conn/v1/" + endpoint + joinParam + new URLSearchParams(
 			updateData
 		), 
 		{
@@ -33,8 +34,9 @@ async function updateData (id, endpoint) {
 }
 
 async function deleteRow (id, endpoint) {
+	let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
 	await fetch(
-		"/wp-json/odoo_conn/v1/" + endpoint + "?" + new URLSearchParams(
+		wpApiSettings.root + "odoo_conn/v1/" + endpoint + joinParam + new URLSearchParams(
 			{
 				id: id
 			}
@@ -52,7 +54,7 @@ async function deleteRow (id, endpoint) {
 
 async function getForeignKeyData (foreignKeyData) {
 	return await fetch (
-		"/wp-json/odoo_conn/v1/" + foreignKeyData,
+		wpApiSettings.root + "odoo_conn/v1/" + foreignKeyData,
 		{
 			credentials: 'include',
 			headers: {

@@ -20,7 +20,7 @@ function submitConnection () {
 	});
 	let json = JSON.stringify(object);
 
-	fetch("/wp-json/odoo_conn/v1/create-odoo-connection", {
+	fetch(wpApiSettings.root + "odoo_conn/v1/create-odoo-connection", {
 		method: "POST",
 		body: json,
 		credentials: 'include',
