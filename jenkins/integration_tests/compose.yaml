@@ -43,7 +43,7 @@ services:
     depends_on:
       - test_wordpress
       - test_db
-    command: '/bin/bash /var/www/html/wp-content/plugins/odoo_conn/jenkins/endpoint_tests/startup.sh'
+    command: '/bin/bash /var/www/html/wp-content/plugins/odoo_conn/jenkins/integration_tests/startup.sh'
     environment:
       WORDPRESS_DB_HOST: test_db
       WORDPRESS_DB_USER: odoo_conn_test_user

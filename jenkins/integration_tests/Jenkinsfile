@@ -11,9 +11,9 @@ pipeline {
 		stage ('Build Docker Containers') {
 			steps {
 				// make sure there aren't any already existing containers
-            	sh 'docker compose --project-directory jenkins/endpoint_tests rm -f'
-            	sh 'docker compose --project-directory jenkins/endpoint_tests pull'
-            	sh 'docker compose --project-directory jenkins/endpoint_tests up --force-recreate --build --wait'
+            	sh 'docker compose --project-directory jenkins/integration_tests rm -f'
+            	sh 'docker compose --project-directory jenkins/integration_tests pull'
+            	sh 'docker compose --project-directory jenkins/integration_tests up --force-recreate --build --wait'
 			}
 		}
 
@@ -21,7 +21,7 @@ pipeline {
 			agent {
 				dockerfile {
             		filename '../dockerfile'
-            		dir 'jenkins/endpoint_tests'
+            		dir 'jenkins/integration_tests'
             		args '-it --entrypoint='
         		}
 			}
@@ -40,7 +40,7 @@ pipeline {
         	agent {
 				dockerfile {
             		filename '../dockerfile'
-            		dir 'jenkins/endpoint_tests'
+            		dir 'jenkins/integration_tests'
             		args '-it --entrypoint='
         		}
 			}
@@ -66,7 +66,7 @@ pipeline {
                 -H \"Accept: application/vnd.github+json\" \
                 -H \"Authorization: Bearer $GITHUB_TOKEN\" \
                 https://api.github.com/repos/jack-dane/odoo-wp-plugin/statuses/$GIT_COMMIT \
-                -d \'{\"state\":\"${currentBuild.result.toLowerCase()}\",\"context\":\"Jenkins Endpoint Tests\"}\'"
+                -d \'{\"state\":\"${currentBuild.result.toLowerCase()}\",\"context\":\"Jenkins Integration Tests\"}\'"
         }
     }
 
