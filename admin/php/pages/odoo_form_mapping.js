@@ -65,7 +65,7 @@ async function setSelectData () {
 	formSelect = jQuery("#odoo_form_id");
 	formSelect.empty();
 
-	let forms = await fetch(wpApiSettings + "odoo_conn/v1/get-odoo-forms",
+	let forms = await fetch(wpApiSettings.root + "odoo_conn/v1/get-odoo-forms",
 		{
 			credentials: 'include',
 			headers: {
