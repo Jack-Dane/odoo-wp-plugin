@@ -28,7 +28,6 @@ pipeline {
 					// a docker container within the pipeline agent
 					dockerImageId = sh(returnStdout: true, script: 'docker build -f jenkins/dockerfile . -q').trim()
 					dockerContainerId = sh(returnStdout: true, script: "docker container run -d --network=host ${dockerImageId} tail -f /dev/null").trim()
-					echo dockerContainerId
 				}
 			}
 		}
