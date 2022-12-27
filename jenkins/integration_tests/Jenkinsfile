@@ -26,8 +26,8 @@ pipeline {
 					// have to do this instead of using a docker agent as it needs to run on the same agent
 					// using a docker agent in this step seems to use another agent completly rather than
 					// a docker container within the pipeline agent
-					dockerImageId = sh(returnStdout: true, script: 'docker build -f jenkins/dockerfile . -q').trim()
-					dockerContainerId = sh(returnStdout: true, script: "docker container run -d --network=host ${dockerImageId} tail -f /dev/null").trim()
+					dockerPHPImageId = sh(returnStdout: true, script: 'docker build -f jenkins/dockerfile . -q').trim()
+					dockerPHPContainerId = sh(returnStdout: true, script: "docker container run -d --network=host ${dockerPHPImageId} tail -f /dev/null").trim()
 				}
 			}
 		}
@@ -38,14 +38,29 @@ pipeline {
 	            // from git eg:
 	            // could not create leading directories of 
 	            // '/.composer/cache/vcs/https ---github.com-bovigo-vfsStream.git'
-				sh "docker exec ${dockerContainerId} /bin/sh -c 'cd /usr/src/odoo_conn; composer install --no-cache'"
+				sh "docker exec ${dockerPHPContainerId} /bin/sh -c 'cd /usr/src/odoo_conn; composer install --no-cache'"
 			}
 		}
 
         stage ('Endpoint Tests') {
             steps {
-                sh "docker exec ${dockerContainerId} /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit jenkins/integration_tests/tests/endpoint_tests'"
+                sh "docker exec ${dockerPHPContainerId} /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit jenkins/integration_tests/tests/endpoint_tests'"
             }
+        }
+
+        stage ('Selenium Tests') {
+        	steps {
+        		script {
+        			dockerSeleniumContainerId = sh(
+        				returnStdout: true, script: "docker run -d --rm -it --network host --shm-size 2g selenium/standalone-chrome"
+        			).trim()
+        		}
+        		// wait for the chrome driver to be running
+        		sh "sleep 10"
+        		sh "docker exec ${dockerPHPContainerId} /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit jenkins/integration_tests/tests/selenium_tests/Create_Test.php'"
+        		sh "docker exec ${dockerPHPContainerId} /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit jenkins/integration_tests/tests/selenium_tests/Update_Test.php'"
+        		sh "docker exec ${dockerPHPContainerId} /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit jenkins/integration_tests/tests/selenium_tests/Delete_Test.php'"
+        	}
         }
 	}
 
@@ -53,7 +68,7 @@ pipeline {
         always {
         	sh 'docker compose --project-directory jenkins/integration_tests down'
         	sh 'docker compose --project-directory jenkins/integration_tests rm -f'
-            sh "docker container rm --force ${dockerContainerId}"
+            sh "docker container rm --force ${dockerPHPContainerId}"
             sh "curl \
                 -X POST \
                 -H \"Accept: application/vnd.github+json\" \
