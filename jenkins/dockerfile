@@ -2,7 +2,8 @@
 FROM php:7.4-cli
 
 RUN apt-get update
-RUN apt-get -y install git unzip
+RUN apt-get -y install git unzip libzip-dev 
+RUN docker-php-ext-install zip
 
 COPY . /usr/src/odoo_conn
 
