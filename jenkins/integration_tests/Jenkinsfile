@@ -69,6 +69,7 @@ pipeline {
         	sh 'docker compose --project-directory jenkins/integration_tests down'
         	sh 'docker compose --project-directory jenkins/integration_tests rm -f'
             sh "docker container rm --force ${dockerPHPContainerId}"
+            sh "docker container rm --force ${dockerSeleniumContainerId}"
             sh "curl \
                 -X POST \
                 -H \"Accept: application/vnd.github+json\" \
