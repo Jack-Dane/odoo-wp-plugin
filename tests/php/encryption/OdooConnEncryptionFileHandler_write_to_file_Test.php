@@ -22,7 +22,7 @@ class OdooConnEncryptionFileHandler_write_to_file_Test extends TestCase {
 
 	public function test_ok () {
 		vfsStream::newFile("odoo_conn.key")->at($this->root)->setContent("def");
-		$this->flock->expects($this->exactly(2))->willReturnCallback(
+		$this->flock->expects($this->exactly(1))->willReturnCallback(
 			function ($encryption_file, $lock_type, &$would_block_lock=false) {
 				$would_block_lock = false;
 				return true;
