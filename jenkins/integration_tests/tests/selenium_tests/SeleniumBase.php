@@ -35,9 +35,18 @@ class SeleniumBase extends TestCase {
 
 	private function wait_for_table_row ($row_id) {
 		$table_elements = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-" . $row_id));
+
+		$total_attempts = 0;
 		while (!$table_elements) {
 			$table_elements = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-" . $row_id));
 			sleep(1);
+
+			$total_attempts++;
+			if ($total_attempts > 10) {
+				throw new Exception(
+					"Could not find any table rows displayed after checking " . $total_attempts . " times"
+				);
+			}
 		}
 		return $table_elements;
 	}
