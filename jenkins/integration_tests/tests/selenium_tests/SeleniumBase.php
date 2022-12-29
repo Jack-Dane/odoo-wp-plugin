@@ -25,12 +25,21 @@ class SeleniumBase extends TestCase {
 	}
 
 	protected function get_table_row_text ($row_id) {
-		$table_elements = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-" . $row_id));
+		$table_elements = $this->wait_for_table_row($row_id);
 		$text_table_elements = array();
 		foreach ($table_elements as $element) {
 			array_push($text_table_elements, $element->getText());
 		}
 		return $text_table_elements;
+	}
+
+	private function wait_for_table_row ($row_id) {
+		$table_elements = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-" . $row_id));
+		while (!$table_elements) {
+			$table_elements = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-" . $row_id));
+			sleep(1);
+		}
+		return $table_elements;
 	}
 
 	protected function wait_for_element ($id) {
