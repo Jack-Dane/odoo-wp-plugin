@@ -12,7 +12,7 @@ class Create_Test extends SeleniumBase {
 
 		$this->driver->findElement(WebDriverBy::id("create-data"))->click();
 		$this->wait_for_element("name");
-		
+
 		$this->driver->findElement(WebDriverBy::id("name"))->sendKeys("test_name");
 		$this->driver->findElement(WebDriverBy::id("username"))->sendKeys("test_username");
 		$this->driver->findElement(WebDriverBy::id("api_key"))->sendKeys("test_api_key");
