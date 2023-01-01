@@ -17,12 +17,41 @@ class SeleniumBase extends TestCase {
 		$this->driver->findElement(WebDriverBy::id("wp-submit"))->click();
 
 		// wait for the login to occur
-		$this->wait_for_element("wp-admin-bar-wp-logo");
+		$this->wait_for_element_id("wp-admin-bar-wp-logo");
 	}
 
 	public function tearDown (): void {
 		$this->driver->quit();
 	}
+
+	protected function wait_for_element_id ($id) {
+		return $this->wait_for_element(WebDriverBy::id($id));
+	}
+
+	protected function wait_for_element ($element, $timeout=10) {
+		return $this->wait_for_elements($element, $timeout)[0];
+	}
+
+	protected function wait_for_elements ($element, $timeout=10) {
+		$found_elements = $this->driver->findElements($element);
+
+		$attempts = 0;
+		while (!$found_elements) {
+			$attempts++;
+			if ($attempts > $timeout) {
+				throw new \Exception("Could not find element after " . $timeout . " seconds");
+			}
+
+			sleep(1);
+			$found_elements = $this->driver->findElements($element); 
+		}
+		return $found_elements;
+	}
+
+}
+
+
+class WordpressTableBase extends SeleniumBase {
 
 	protected function get_table_row_text ($row_id) {
 		$table_elements = $this->wait_for_table_row($row_id);
@@ -34,30 +63,7 @@ class SeleniumBase extends TestCase {
 	}
 
 	private function wait_for_table_row ($row_id) {
-		$table_elements = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-" . $row_id));
-
-		$total_attempts = 0;
-		while (!$table_elements) {
-			$table_elements = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-" . $row_id));
-			sleep(1);
-
-			$total_attempts++;
-			if ($total_attempts > 10) {
-				throw new Exception(
-					"Could not find any table rows displayed after checking " . $total_attempts . " times"
-				);
-			}
-		}
-		return $table_elements;
-	}
-
-	protected function wait_for_element ($id) {
-		$element = $this->driver->findElement(WebDriverBy::id($id));
-		while (!$element) {
-			sleep(1);
-			$element = $this->driver->findElement(WebDriverBy::id($id));
-		}
-		return $element;
+		return $this->wait_for_elements(WebDriverBy::cssSelector(".table-row-" . $row_id));
 	}
 	
 }

@@ -4,7 +4,9 @@ services:
 
   test_wordpress:
     restart: always
-    image: wordpress:apache
+    build: 
+      context: "."
+      dockerfile: "wordpress_dockerfile"
     ports:
       - 8000:80
     environment:

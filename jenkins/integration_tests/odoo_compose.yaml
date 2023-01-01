@@ -1,0 +1,37 @@
+version: '3.1'
+
+networks:
+  integration_tests_default:
+    external: true
+
+services:
+
+  odoo_web:
+    image: odoo:14.0
+    depends_on:
+      - odoo_db
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=odoo_db
+    networks: 
+      - integration_tests_default
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 200M
+
+  odoo_db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    networks: 
+      - integration_tests_default
+    deploy:
+      resources:
+        limits:
+          cpus: '0.4'
+          memory: 200M

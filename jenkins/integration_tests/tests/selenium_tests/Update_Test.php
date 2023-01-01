@@ -4,7 +4,7 @@ require_once(__DIR__ . "/SeleniumBase.php");
 
 use Facebook\WebDriver\WebDriverBy;
 
-class Update_Test extends SeleniumBase {
+class Update_Test extends WordpressTableBase {
 
 	public function test_update_connection () {
 		$this->update_row("http://localhost:8000/wp-admin/admin.php?page=odoo-connection", array());

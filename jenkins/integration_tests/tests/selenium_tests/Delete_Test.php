@@ -4,7 +4,7 @@ require_once(__DIR__ . "/SeleniumBase.php");
 
 use Facebook\WebDriver\WebDriverBy;
 
-class Delete_Test extends SeleniumBase {
+class Delete_Test extends WordpressTableBase {
 
 	public function test_delete_conections () {
 		$this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-connection");

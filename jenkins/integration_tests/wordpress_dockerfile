@@ -1,0 +1,10 @@
+FROM wordpress:apache
+
+RUN apt-get update
+# install xmlrpc to send the requests
+RUN apt-get install libxml2-dev -y
+RUN docker-php-ext-install -j$(nproc) xmlrpc
+
+# enable xmlrpc in the php.ini files
+RUN sed -i 's/;extension=xmlrpc/extension=xmlrpc/' /usr/local/etc/php/php.ini-development
+RUN sed -i 's/;extension=xmlrpc/extension=xmlrpc/' /usr/local/etc/php/php.ini-production
