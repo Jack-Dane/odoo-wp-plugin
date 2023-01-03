@@ -33,7 +33,7 @@ class SendData_Test extends SeleniumBase {
 		// // 1.2 install the contacts app
 		$this->driver->get("http://localhost:8069");
 
-		$this->odoo_click_on_app("Apps")
+		$this->odoo_click_on_app("Apps");
 		$this->wait_for_element(
 			WebDriverBy::cssSelector(".o_searchview_input")
 		)->sendKeys("contacts")->sendKeys(WebDriverKeys::ENTER);
@@ -95,7 +95,7 @@ class SendData_Test extends SeleniumBase {
 		// 5. check the odoo contact exists
 		$this->driver->get("http://localhost:8069");
 		
-		$this->odoo_click_on_app("Contacts")
+		$this->odoo_click_on_app("Contacts");
 
 		$kanban_contact = $this->wait_for_element(
 			WebDriverBy::xpath("//span[text() = 'test_name']")

@@ -6,6 +6,8 @@ Description: Connect your WordPress Contact 7 Forms to Odoo
 Version: 0.0.1
 */
 
+require("vendor/autoload.php");
+
 require("packages/ripcord/ripcord.php");
 
 require("encryption.php");

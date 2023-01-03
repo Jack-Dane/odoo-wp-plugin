@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45bdec50df46ad98fcfb927ec54e75ae",
+    "content-hash": "bd49c34b83ca7b369ac28e11f225269e",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -385,6 +385,61 @@
                 "webdriver"
             ],
             "time": "2022-10-11T11:49:44+00:00"
+        },
+        {
+            "name": "phpxmlrpc/phpxmlrpc",
+            "version": "4.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gggeek/phpxmlrpc.git",
+                "reference": "1658b0c236e490c485e3b1233964223ceece52fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gggeek/phpxmlrpc/zipball/1658b0c236e490c485e3b1233964223ceece52fe",
+                "reference": "1658b0c236e490c485e3b1233964223ceece52fe",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "php": "^5.3.0 || ^7.0 || ^8.0"
+            },
+            "conflict": {
+                "phpxmlrpc/extras": "<= 0.6.3"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "ext-dom": "*",
+                "ext-mbstring": "*",
+                "phpunit/phpunit": "^4.8 || ^5.0 || ^8.5.14",
+                "phpunit/phpunit-selenium": "*",
+                "yoast/phpunit-polyfills": "*"
+            },
+            "suggest": {
+                "ext-curl": "Needed for HTTPS and HTTP 1.1 support, NTLM Auth etc...",
+                "ext-mbstring": "Needed to allow reception of requests/responses in character sets other than ASCII,LATIN-1,UTF-8",
+                "ext-zlib": "Needed for sending compressed requests and receiving compressed responses, if cURL is not available",
+                "phpxmlrpc/extras": "Adds more featured Server classes and other useful bits",
+                "phpxmlrpc/jsonrpc": "Adds support for the JSON-RPC protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpXmlRpc\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "A php library for building xmlrpc clients and servers",
+            "homepage": "https://gggeek.github.io/phpxmlrpc/",
+            "keywords": [
+                "webservices",
+                "xml-rpc",
+                "xmlrpc"
+            ],
+            "time": "2022-12-20T16:24:51+00:00"
         },
         {
             "name": "psr/http-client",

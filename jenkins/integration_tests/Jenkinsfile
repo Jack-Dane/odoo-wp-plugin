@@ -69,12 +69,12 @@ pipeline {
 
 	post { 
         always {
-        	sh 'docker compose --project-directory jenkins/integration_tests down'
-        	sh 'docker compose --project-directory jenkins/integration_tests rm -f'
         	sh 'docker compose -f jenkins/integration_tests/odoo_compose.yaml down'
         	sh 'docker compose -f jenkins/integration_tests/odoo_compose.yaml rm -f'
-            sh "docker container rm --force ${dockerPHPContainerId}"
-            sh "docker container rm --force ${dockerSeleniumContainerId}"
+        	sh 'docker compose --project-directory jenkins/integration_tests down'
+        	sh 'docker compose --project-directory jenkins/integration_tests rm -f'
+        	sh "docker container rm --force ${dockerPHPContainerId}"
+        	sh "docker container rm --force ${dockerSeleniumContainerId}"
 
             // Reduce the amount of storage used by the docker containers
             // Keep the images as it would reap the rewards from the speed increase from not having to download them again

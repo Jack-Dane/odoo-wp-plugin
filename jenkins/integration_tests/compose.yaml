@@ -4,9 +4,9 @@ services:
 
   test_wordpress:
     restart: always
-    build: 
-      context: "."
-      dockerfile: "wordpress_dockerfile"
+    build:
+      context: .
+      dockerfile: wordpress_dockerfile
     ports:
       - 8000:80
     environment:
@@ -24,6 +24,8 @@ services:
         limits:
           cpus: '0.25'
           memory: 200M
+    # install composer before starting the apache server
+    command: '/bin/sh -c "cd /var/www/html/wp-content/plugins/odoo_conn; composer install --no-cache; cd /var/www/html/; docker-entrypoint.sh apache2-foreground"'
 
   test_db:
     restart: always

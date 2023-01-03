@@ -62,6 +62,7 @@ function create_odoo_form_field_mapping () {
 
 	$table_name = $table_prefix . "odoo_conn_form_mapping";
 	$odoo_form_table = $table_prefix . "odoo_conn_form";
+	$charset_collate = $wpdb->get_charset_collate();
 
 	$sql = "
 	CREATE TABLE `$table_name` (
