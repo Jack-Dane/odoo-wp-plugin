@@ -10,6 +10,11 @@ pipeline {
 	stages {
 		stage ('Build Docker Containers') {
 			steps {
+				script {
+					dockerPHPContainerId = null
+					dockerSeleniumContainerId = null
+				}
+				
 				// make sure there aren't any already existing containers
             	sh 'docker compose -f jenkins/integration_tests/compose.yaml rm -f'
             	sh 'docker compose -f jenkins/integration_tests/compose.yaml up --force-recreate --build --wait'
@@ -73,8 +78,14 @@ pipeline {
         	sh 'docker compose -f jenkins/integration_tests/odoo_compose.yaml rm -f'
         	sh 'docker compose --project-directory jenkins/integration_tests down'
         	sh 'docker compose --project-directory jenkins/integration_tests rm -f'
-        	sh "docker container rm --force ${dockerPHPContainerId}"
-        	sh "docker container rm --force ${dockerSeleniumContainerId}"
+        	script {
+        		if (dockerPHPContainerId) {
+        			sh(script: "docker container rm --force ${dockerPHPContainerId}")
+        		}
+        		if (dockerSeleniumContainerId) {
+        			sh(script: "docker container rm --force ${dockerSeleniumContainerId}")
+        		}
+        	}
 
             // Reduce the amount of storage used by the docker containers
             // Keep the images as it would reap the rewards from the speed increase from not having to download them again
