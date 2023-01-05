@@ -12,7 +12,7 @@ function odoo_form_page () {
 <div class="wrap">
 	<h1>Odoo Form</h1>
 	
-	<a href="#" id="create-data" class="create-database-record">Create new data</a>
+	<a href="#" id="create-data" class="create-database-record button-primary">Create new Data</a>
 	<form method="POST" onsubmit="submitOdooForm();" id="form-data" class="submit-database" style="display: none;">
 		<label for="odoo_connection_id">Odoo Connection</label>
 		<select id="odoo_connection_id" name="odoo_connection_id" /><br/>
@@ -20,7 +20,7 @@ function odoo_form_page () {
 		<input type="text" name="name" id="name" placeholder="Name" /><br/>
 		<label for="contact_7_id">Contact 7 Form</label>
 		<select name="contact_7_id" id="contact_7_id"/><br/>
-		<input type="Submit" name="submit" />
+		<input type="Submit" name="submit" class="button-primary" />
 	</form>
 
 	<table class="database-table"></table>

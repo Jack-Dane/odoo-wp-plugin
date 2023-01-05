@@ -274,6 +274,7 @@ class TableDisplay {
 	#addHeaderData () {
 		let tHead = jQuery("<thead></thead>");
 		let tableHeaderRow = jQuery("<tr></tr>");
+		tableHeaderRow.addClass("wp-ui-highlight wp-core-ui");
 
 		tableHeaderRow.append("<th>Edit</th>");
 		let headers = this.getUserFriendlyColumnNames();

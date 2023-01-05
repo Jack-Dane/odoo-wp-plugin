@@ -12,7 +12,7 @@ function odoo_connection_page () {
 <div class="wrap">
 	<h1>Connections</h1>
 
-	<a href="#" id="create-data" class="create-database-record">Create new data</a>
+	<a href="#" id="create-data" class="create-database-record button-primary">Create new data</a>
 	<form method="POST" onsubmit="submitConnection();" id="form-data" class="submit-database" style="display: none;">
 		<h2>Create a new connection: </h2>
 		<input type="text" name="name" id="name" placeholder="Name" /><br/>
@@ -20,7 +20,7 @@ function odoo_connection_page () {
 		<input type="text" name="api_key" id="api_key" placeholder="API Key" /><br/>
 		<input type="text" name="url" id="url" placeholder="URL" /><br/>
 		<input type="text" name="database_name" id="database_name" placeholder="Database Name" /><br/>
-		<input type="Submit" name="submit" />
+		<input type="Submit" name="submit" class="button-primary" />
 	</form>
 
 	<table class="database-table"></table>

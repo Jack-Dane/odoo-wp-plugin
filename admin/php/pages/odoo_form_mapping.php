@@ -10,7 +10,7 @@ function odoo_form_mapping_page () {
 <div class="wrap">
 	<h1>Odoo Form Mappings</h1>
 
-	<a href="#" id="create-data" class="create-database-record">Create new data</a>
+	<a href="#" id="create-data" class="create-database-record button-primary">Create new data</a>
 	<form method="POST" onsubmit="return formMappingSubmit();" id="form-data" class="submit-database" style="display: none;">
 		<h2>Create a New Form Mapping</h2>
 		<label for="odoo_form_id">Odoo Form</label>
@@ -20,7 +20,7 @@ function odoo_form_mapping_page () {
 		<input type="text" id="cf7_field_name" name="cf7_field_name" placeholder="Contact 7 Field Name" />
 		<input type="text" id="constant_value" name="constant_value" placeholder="Constant Value" style="display: none;"/><br/>
 		<input type="text" id="odoo_field_name" name="odoo_field_name" placeholder="Odoo Field Name" />
-		<input type="Submit" name="submit">
+		<input type="Submit" name="submit" class="button-primary" />
 	</form>
 
 	<table class="database-table"></table>
