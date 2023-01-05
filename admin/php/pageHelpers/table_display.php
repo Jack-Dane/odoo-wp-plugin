@@ -30,7 +30,7 @@ function callback_for_setting_up_scripts() {
     ));
     wp_enqueue_script("form-creator");
 
-    wp_enqueue_style("table-style", plugins_url("/odoo_conn/admin/php/pageHelpers/table_style.css"));
+    wp_enqueue_style("odoo-page-style", plugins_url("/odoo_conn/admin/php/pageHelpers/page_style.css"));
 }
 
 ?>

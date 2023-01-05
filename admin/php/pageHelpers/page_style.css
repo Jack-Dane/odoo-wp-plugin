@@ -1,11 +1,11 @@
 
 .database-table {
     border-collapse: collapse;
-    margin: 25px 0;
+    margin: 2.5em 0px;
     font-size: 0.9em;
     font-family: sans-serif;
     width: 100%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 2em rgba(0, 0, 0, 0.15);
 }
 
 .database-table thead tr {
@@ -14,12 +14,12 @@
 }
 
 .database-table th, .database-table td {
-    padding: 12px 15px;
+    padding: 1.2em 1.5em;
     text-align: center;
 }
 
 .database-table tbody tr {
-    border-bottom: 1px solid #dddddd;
+    border-bottom: .1em solid #dddddd;
 }
 
 .database-table tbody tr:nth-of-type(even) {
@@ -39,7 +39,7 @@
 }
 
 .create-database-record {
-    margin-bottom: 10px;
+    margin-bottom: 1em;
 }
 
 .submit-database {
@@ -48,13 +48,13 @@
     width: 100%;
     max-width: 400px;
     text-align: center;
-    padding: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    padding: 2em;
+    box-shadow: 0 0 2em rgba(0, 0, 0, 0.15);
 }
 
 .submit-database input:not([type=checkbox]) {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 1em;
 }
 
 .submit-database input[type=Submit] {
@@ -62,6 +62,25 @@
 }
 
 .table-operation {
-    padding-right: 5px;
-    padding-left: 5px;
+    padding-right: .5em;
+    padding-left: .5em;
+}
+
+#form-data > select {
+    width: 48%;
+    margin-bottom: 1em;
+}
+
+#form-data > label {
+    display: inline-block;
+    width: 50%;
+    margin-bottom: 1em;
+}
+
+.input-wrapper {
+    display: inline-block;
+    width: 49%;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 0px;
 }

@@ -12,6 +12,6 @@ jQuery("#create-data").click(function() {
 		formLabel.text("Hide");
 	} else {
 		form.slideUp();
-		formLabel.text("Create new data");
+		formLabel.text(jQuery(this).attr("value"));
 	}
 });
