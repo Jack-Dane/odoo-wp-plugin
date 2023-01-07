@@ -48,6 +48,8 @@ class SendData_Test extends SeleniumBase {
 		$this->wait_for_element(
 			WebDriverBy::name("button_immediate_install")
 		)->click();
+		// wait for the contacts module to install
+		sleep(10);
 
 		// 2. create a new post for to test the form
 		// 2.1 get the short code to display on the post
