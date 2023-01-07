@@ -2,7 +2,7 @@
 
 function odoo_connection_page () {
 	wp_register_script(
-    	"odoo-connection", plugins_url("/odoo_conn/admin/php/pages/odoo_connection.js"), array("jquery"), "1.0.0", true
+    	"odoo-connection", plugins_url("/odoo_conn/admin/pages/odoo_connection.js"), array("jquery"), "1.0.0", true
     );
     wp_localize_script("odoo-connection", "wpApiSettings", array(
         "root" => esc_url_raw(rest_url()), "nonce" => wp_create_nonce("wp_rest")

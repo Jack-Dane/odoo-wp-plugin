@@ -11,7 +11,7 @@ namespace odoo_conn\admin\php\cf7hook {
 
 namespace odoo_conn\tests\admin\php\OdooConnContactForm7Hook_Test {
 
-	require_once("admin/php/cf7hook.php");
+	require_once("admin/cf7hook.php");
 
 	use \odoo_conn\admin\php\cf7hook\OdooConnContactForm7Hook;
 	use \PHPUnit\Framework\TestCase;

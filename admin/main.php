@@ -2,8 +2,8 @@
 
 require("api/main.php");
 
-require("php/menu_items.php");
+require("menu_items.php");
 
-require("php/cf7hook.php");
+require("cf7hook.php");
 
 ?>

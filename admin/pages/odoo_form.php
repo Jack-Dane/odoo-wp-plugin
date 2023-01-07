@@ -2,7 +2,7 @@
 
 function odoo_form_page () {
 	wp_register_script(
-    	"odoo-form", plugins_url("/odoo_conn/admin/php/pages/odoo_form.js"), array("jquery"), "1.0.0", true
+    	"odoo-form", plugins_url("/odoo_conn/admin/pages/odoo_form.js"), array("jquery"), "1.0.0", true
     );
     wp_localize_script("table-display", "wpApiSettings", array(
         "root" => esc_url_raw(rest_url()), "nonce" => wp_create_nonce("wp_rest")
