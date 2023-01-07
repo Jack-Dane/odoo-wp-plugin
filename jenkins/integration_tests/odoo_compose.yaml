@@ -7,7 +7,7 @@ networks:
 services:
 
   odoo_web:
-    image: odoo:14.0
+    image: odoo:16.0
     depends_on:
       - odoo_db
     ports:

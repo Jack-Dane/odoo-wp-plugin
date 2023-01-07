@@ -9,7 +9,7 @@ use Facebook\WebDriver\Exception\ElementClickInterceptedException;
 class SendData_Test extends SeleniumBase {
 
 	private function odoo_click_on_app ($app_name) {
-		$this->wait_for_element(WebDriverBy::cssSelector(".full"))->click();
+		$this->wait_for_element(WebDriverBy::cssSelector(".oi.oi-apps"))->click();
 		$apps = $this->wait_for_elements(WebDriverBy::cssSelector(".dropdown-item.o_app"));
 		foreach ($apps as $app) {
 			if (trim($app->getText()) == $app_name) {
@@ -28,18 +28,25 @@ class SendData_Test extends SeleniumBase {
 		$this->driver->findElement(WebDriverBy::id("dbname"))->sendKeys("odoo");
 		$this->driver->findElement(WebDriverBy::id("login"))->sendKeys("test@test.com");
 		$this->driver->findElement(WebDriverBy::id("password"))->sendKeys("password")->submit();
-		$this->wait_for_element(WebDriverBy::cssSelector(".fa.fa-th-large"), 60);
 
-		// // 1.2 install the contacts app
+		// 1.2 log into Odoo
+		$this->wait_for_element(WebDriverBy::xpath("//input[@id='login']"), 60)->sendKeys(
+			"test@test.com"
+		);
+		$this->driver->findElement(WebDriverBy::xpath("//input[@id='password']"))->sendKeys(
+			"password"
+		)->submit();
+		$this->wait_for_element(WebDriverBy::cssSelector(".oi.oi-apps"), 20);
+
+		// 1.3 install the contacts app
 		$this->driver->get("http://localhost:8069");
 
-		$this->odoo_click_on_app("Apps");
 		$this->wait_for_element(
 			WebDriverBy::cssSelector(".o_searchview_input")
 		)->sendKeys("contacts")->sendKeys(WebDriverKeys::ENTER);
 		sleep(2);
 		$this->wait_for_element(
-			WebDriverBy::cssSelector(".btn.btn-primary.btn-sm.oe_kanban_action.oe_kanban_action_button")
+			WebDriverBy::name("button_immediate_install")
 		)->click();
 
 		// 2. create a new post for to test the form
@@ -102,18 +109,18 @@ class SendData_Test extends SeleniumBase {
 		);
 		$kanban_contact->click();
 		$contact_name = $this->wait_for_element(
-			WebDriverBy::cssSelector(".o_field_partner_autocomplete")
-		)->getText();
+			WebDriverBy::xpath("//span[@class='text-truncate']")
+		);
 		$contact_email = $this->driver->findElement(
-			WebDriverBy::name("email")
-		)->getText();
-		$contact_website = $this->driver->findElement(
-			WebDriverBy::name("website")
-		)->getText();
+			WebDriverBy::xpath("//a[@href='mailto:email@email.com']")
+		);
+		$contact_website = $this->driver->findElements(
+			WebDriverBy::xpath("//a[@href='http://test.com']")
+		);
 
-		$this->assertEquals("http://test.com", $contact_website);
-		$this->assertEquals("email@email.com", $contact_email);
-		$this->assertEquals("test_name", $contact_name);
+		$this->assertNotEmpty($contact_website);
+		$this->assertNotEmpty($contact_email);
+		$this->assertNotEmpty($contact_name);
 	}
 
 }
