@@ -91,6 +91,8 @@ pipeline {
             // Keep the images as it would reap the rewards from the speed increase from not having to download them again
             sh 'docker container prune -f'
             sh 'docker volume prune -f'
+            // remove images that were build, we rebuild anyway so it won't save time. '<none>:<none>' images
+            sh 'docker rmi $(docker images -f "dangling=true" -q | tr "\n" " ")'
 
             sh "curl \
                 -X POST \
