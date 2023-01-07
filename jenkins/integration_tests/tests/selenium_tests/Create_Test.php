@@ -83,7 +83,7 @@ class Create_Test extends WordpressTableBase {
 		$this->driver->findElement(WebDriverBy::id("cf7_field_name"))->sendKeys("your-email");
 		$this->driver->findElement(WebDriverBy::id("odoo_field_name"))->sendKeys("email")->submit();
 
-		$text_table_elements = $this->get_table_row_text(1);
+		$text_table_elements = $this->get_table_row_text(0);
 
 		$this->assertContains("test_form_name", $text_table_elements);
 		$this->assertContains("your-email", $text_table_elements);
@@ -98,7 +98,7 @@ class Create_Test extends WordpressTableBase {
 		$this->driver->findElement(WebDriverBy::id("constant_value"))->sendKeys("http://test.com");
 		$this->driver->findElement(WebDriverBy::id("odoo_field_name"))->sendKeys("website")->submit();
 
-		$text_table_elements = $this->get_table_row_text(2);
+		$text_table_elements = $this->get_table_row_text(0);
 
 		$this->assertContains("test_form_name", $text_table_elements);
 		$this->assertContains("http://test.com", $text_table_elements);

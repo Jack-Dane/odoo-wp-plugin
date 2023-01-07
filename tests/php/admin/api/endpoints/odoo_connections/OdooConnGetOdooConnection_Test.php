@@ -15,9 +15,9 @@ class OdooConnGetOdooConnection_Test extends TestCase {
 
 	public function test_ok () {
 		$wpdb = \Mockery::mock("WPDB");
-		$wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection", [])
-			->once()->andReturn("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection");
-		$wpdb->shouldReceive("get_results")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection")
+		$wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection ORDER BY wp_odoo_conn_connection.id DESC", [])
+			->once()->andReturn("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection ORDER BY wp_odoo_conn_connection.id DESC");
+		$wpdb->shouldReceive("get_results")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection ORDER BY wp_odoo_conn_connection.id DESC")
 			->once()->andReturn(
 				array(array("id"=>3, "name"=>"Odoo Connection", "username"=>"jackd98", "url"=>"localhost:8069", "database_name"=>"odoo_db"))
 			);

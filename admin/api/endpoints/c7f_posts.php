@@ -9,6 +9,10 @@ class OdooConnGetContact7Form extends OdooConnGetExtendedSchema {
 		parent::__construct($where_condition="post_type='wpcf7_contact_form'");
 	}
 
+	protected function get_public_key () {
+		return "ID";
+	}
+
 	protected function get_columns () {
 		return "ID, post_title";
 	}

@@ -78,6 +78,10 @@ abstract class OdooConnPutBaseSchema extends OdooConnPostPutBaseSchema {
 
 abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema {
 
+	protected function get_public_key () {
+		return "id";
+	}
+
 	protected function foreign_keys () {
 		return [];
 	}
@@ -99,7 +103,11 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema {
 	}
 
 	protected function prepare_query ($query, $data, $argument_array) {
-		global $wpdb;
+		global $wpdb, $table_prefix;
+
+		// show newly created records first
+		$query .= " ORDER BY " . $table_prefix . $this->get_table_name() . "."
+			. $this->get_public_key() . " DESC";
 		
 		if (isset($data["limit"])) {
 			$query .= " LIMIT %d";
