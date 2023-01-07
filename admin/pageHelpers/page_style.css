@@ -26,6 +26,14 @@
     background-color: #f3f3f3;
 }
 
+.database-table th > input, .database-table td > input, .database-table td > select {
+    font-size: 1em;
+}
+
+.database-table th > span, .database-table td > span {
+    font-size: 1em;
+}
+
 .table-buttons { 
     clear: both;
 }
@@ -54,7 +62,7 @@
 
 .submit-database input:not([type=checkbox]) {
     width: 100%;
-    margin-bottom: 1em;
+    margin-bottom: .5em;
 }
 
 .submit-database input[type=Submit] {
@@ -68,13 +76,13 @@
 
 #form-data > select {
     width: 48%;
-    margin-bottom: 1em;
+    margin-bottom: .5em;
 }
 
 #form-data > label {
     display: inline-block;
     width: 50%;
-    margin-bottom: 1em;
+    margin-bottom: .5em;
 }
 
 .input-wrapper {
@@ -83,4 +91,8 @@
     padding-left: 0px;
     padding-right: 0px;
     margin: 0px;
+}
+
+#form-data > select, #form-data > input[type=text] {
+    font-size: 1em;
 }
