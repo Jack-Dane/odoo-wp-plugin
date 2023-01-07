@@ -8,8 +8,6 @@ Version: 0.0.1
 
 require("vendor/autoload.php");
 
-require("packages/ripcord/ripcord.php");
-
 require("encryption.php");
 
 require("odoo_connector/odoo_connector.php" );
