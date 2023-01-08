@@ -7,7 +7,7 @@ require_once("admin/api/schema.php");
 require_once("admin/api/endpoints/odoo_forms.php");
 
 use \PHPUnit\Framework\TestCase;
-use odoo_conn\admin\api\endpoints\OdooConnPostOdooForm;
+use function odoo_conn\admin\api\endpoints\odoo_conn_create_odoo_form;
 
 class OdooConnPostOdooForm_Test extends TestCase {
 
@@ -31,8 +31,7 @@ class OdooConnPostOdooForm_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odoo_conn_post_odoo_form = new OdooConnPostOdooForm();
-		$response = $odoo_conn_post_odoo_form->request($data);
+		$response = odoo_conn_create_odoo_form($data);
 
 		$this->assertEquals($results, $response);
 	}

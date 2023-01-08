@@ -7,7 +7,7 @@ require_once("admin/api/schema.php");
 require_once("admin/api/endpoints/odoo_form_mappings.php");
 
 use \PHPUnit\Framework\TestCase;
-use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappings;
+use function odoo_conn\admin\api\endpoints\odoo_conn_get_odoo_from_mappings;
 
 class OdooConnGetOdooFormMappings_Test extends TestCase {
 
@@ -28,10 +28,9 @@ class OdooConnGetOdooFormMappings_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odoo_conn_get_odoo_form_mappings = new OdooConnGetOdooFormMappings();	
-		$result = $odoo_conn_get_odoo_form_mappings->request(array());
+		$response = odoo_conn_get_odoo_from_mappings(array());
 
-		$this->assertEquals($query_response, $result);
+		$this->assertEquals($query_response, $response);
 	}
 
 }

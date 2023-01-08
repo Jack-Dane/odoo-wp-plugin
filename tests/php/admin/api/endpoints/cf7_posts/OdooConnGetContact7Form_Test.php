@@ -7,6 +7,7 @@ require_once("admin/api/schema.php");
 require_once("admin/api/endpoints/c7f_posts.php");
 
 use \PHPUnit\Framework\TestCase;
+use function \odoo_conn\admin\api\endpoints\odoo_conn_get_contact_7_forms;
 use OdooConnGetContact7Form;
 
 class OdooConnGetContact7Form_Test extends TestCase {
@@ -22,9 +23,9 @@ class OdooConnGetContact7Form_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$results = \odoo_conn\admin\api\endpoints\odoo_conn_get_contact_7_forms(array());
+		$response = odoo_conn_get_contact_7_forms(array());
 		
-		$this->assertEquals(array(array("ID"=>4, "post_title"=>"Title")), $results);
+		$this->assertEquals(array(array("ID"=>4, "post_title"=>"Title")), $response);
 	}
 }
 

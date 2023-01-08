@@ -45,6 +45,7 @@ class OdooConnPostOdooConnection_Test extends TestCase {
 		$odoo_conn_file_handler_mock = $this->createMock(\odoo_conn\encryption\OdooConnEncryptionHandler::class);
 		$odoo_conn_file_handler_mock->expects($this->once())->method("encrypt")->with($this->equalTo("api_key"))->willReturn("encrypted_api_key");
 
+		// easier to call class directly to mock the encryption file handler
 		$odoo_conn_post_odoo_connection = new OdooConnPostOdooConnection($odoo_conn_file_handler_mock);
 		$response = $odoo_conn_post_odoo_connection->request($data);
 

@@ -4,10 +4,10 @@ namespace odoo_conn\tests\admin\api\endpoints\odoo_form_mappings\OdooConnDeleteO
 
 require_once(__DIR__ . "/../common.php");
 require_once("admin/api/schema.php");
-require_once("admin/api/endpoints/odoo_connections.php");
+require_once("admin/api/endpoints/odoo_form_mappings.php");
 
 use \PHPUnit\Framework\TestCase;
-use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooFormMappings;
+use function odoo_conn\admin\api\endpoints\odoo_conn_delete_odoo_form_mapping;
 
 class OdooConnDeleteOdooFormMappings_Test extends TestCase {
 
@@ -20,11 +20,10 @@ class OdooConnDeleteOdooFormMappings_Test extends TestCase {
 		$GLOBALS["wpdb"] = $wpdb;
 		$GLOBALS["table_prefix"] = "wp_";
 
-		$odoo_conn_delete_odoo_from_mappings = new OdooConnDeleteOdooFormMappings();
-		$results = $odoo_conn_delete_odoo_from_mappings->request($data);
+		$response = odoo_conn_delete_odoo_form_mapping($data);
 
 		$this->assertEquals(
-			array("DELETE" => 5, "table" => "wp_odoo_conn_form_mapping"), $results
+			array("DELETE" => 5, "table" => "wp_odoo_conn_form_mapping"), $response
 		);
 	}
 
