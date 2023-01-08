@@ -46,7 +46,10 @@ function formMappingSubmit() {
 			'content-type': 'application/json',
 			'X-WP-Nonce': wpApiSettings.nonce
 		}
+	}).then(function () {
+		tableDisplay.displayTable();
 	});
+	return false;
 }
 
 jQuery("#value_type").click(function () {

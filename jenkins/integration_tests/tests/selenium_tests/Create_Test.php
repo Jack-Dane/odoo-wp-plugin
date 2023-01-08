@@ -76,7 +76,6 @@ class Create_Test extends WordpressTableBase {
 		$this->assertContains("your-name", $text_table_elements);
 		$this->assertContains("name", $text_table_elements);
 
-		$this->wait_for_element(WebDriverBy::id("create-data"))->click();
 		$this->wait_for_element(
 			WebDriverBy::xpath("//option[text() = 'test_form_name']")
 		)->click();
@@ -90,7 +89,6 @@ class Create_Test extends WordpressTableBase {
 		$this->assertContains("email", $text_table_elements);
 
 		// test creating a constant value form mapping
-		$this->wait_for_element(WebDriverBy::id("create-data"))->click();
 		$this->wait_for_element(
 			WebDriverBy::xpath("//option[text() = 'test_form_name']")
 		)->click();

@@ -27,7 +27,10 @@ function submitOdooForm () {
 			'content-type': 'application/json',
 			'X-WP-Nonce': wpApiSettings.nonce
 		}
+	}).then(function () {
+		tableDisplay.displayTable();
 	});
+	return false;
 }
 
 async function setSelectData () {

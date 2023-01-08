@@ -13,7 +13,7 @@ function odoo_form_page () {
 	<h1>Odoo Forms</h1>
 	
 	<a href="#" id="create-data" class="create-database-record button-primary" value="Create a new Form">Create a new Form</a>
-	<form method="POST" onsubmit="submitOdooForm();" id="form-data" class="submit-database" style="display: none;">
+	<form method="POST" onsubmit="return submitOdooForm();" id="form-data" class="submit-database" style="display: none;">
 		<label for="odoo_connection_id">Odoo Connection</label>
 		<select id="odoo_connection_id" name="odoo_connection_id" /><br/>
 		<input type="text" name="odoo_model" id="odoo_model" placeholder="Odoo Model" /><br/>
