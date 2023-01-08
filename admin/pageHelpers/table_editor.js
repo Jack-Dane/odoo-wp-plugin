@@ -14,11 +14,11 @@ function getUpdateData (id) {
 	return formData;
 }
 
-async function updateData (id, endpoint) {
+function updateData (id, endpoint) {
 	let updateData = getUpdateData(id);
 	let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
 
-	await fetch(
+	return fetch(
 		wpApiSettings.root + "odoo_conn/v1/" + endpoint + joinParam + new URLSearchParams(
 			updateData
 		), 
@@ -163,9 +163,19 @@ jQuery(document).ready(function () {
 		findElementTableRowEdit(".table-row-close", id).hide();
 		findElementTableRowEdit(".table-row-edit", id).show();
 		let endpoint = jQuery(this).data("endpoint");
-		await updateData(id, endpoint);
-		closeFields(id);
-		tableDisplay.displayTable();
+		updateData(id, endpoint).then(function (response) {
+			closeFields(id);
+			tableDisplay.displayTable();
+			
+			if (response.status != 200) {
+				jsonPromise = Promise.resolve(response.json());
+
+				jsonPromise.then(function (jsonResponse) {
+					// get the error message from the failed response
+					alert(jsonResponse["message"]);
+				});
+			}
+		});
 	});
 
 	jQuery(".database-table").on("click", ".table-row-delete", async function() {

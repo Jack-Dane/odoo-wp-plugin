@@ -7,6 +7,10 @@ namespace odoo_conn\admin\api\endpoints {
 		return;
 	}
 
+	function __($string) {
+		return $string;
+	}
+
 }
 
 ?>

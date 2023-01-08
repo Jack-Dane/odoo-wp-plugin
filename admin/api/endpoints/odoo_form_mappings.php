@@ -3,6 +3,9 @@
 namespace odoo_conn\admin\api\endpoints;
 
 
+class FieldNameConstantValueException extends \Exception {}
+
+
 trait OdooConnFormMappingTableName {
 
 	protected function get_table_name () {
@@ -86,7 +89,9 @@ class OdooConnPutOdooFormMappings extends OdooConnPutBaseSchema {
 		}
 
 		if ( isset( $parsed_data["constant_value"] ) && isset( $parsed_data["cf7_field_name"] ) ) {
-			throw new \Exception("Can't pass both a constant value and a cf7 field name as arguments");
+			throw new FieldNameConstantValueException(
+				"Can't pass both a constant value and a cf7 field name as arguments"
+			);
 		}
 
 		return $parsed_data + array(
@@ -205,7 +210,15 @@ function odoo_conn_create_odoo_form_mapping_arguments () {
 function odoo_conn_update_odoo_form_mapping ($data) {
 	$id = $data["id"];
 	$put_odoo_form_mappings = new OdooConnPutOdooFormMappings($id);
-	$response = $put_odoo_form_mappings->request($data);
+	try {
+		$response = $put_odoo_form_mappings->request($data);
+	} catch (FieldNameConstantValueException $e) {
+		return new \WP_Error(
+			"field_name_constant_value_failed",
+			__("Both cf7 field name and constant value passed, only one is expected"),
+			array("status" => 400)
+		);
+	}
 	return $response;
 }
 
