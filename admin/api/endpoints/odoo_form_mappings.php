@@ -57,6 +57,20 @@ class OdooConnPostOdooFormMappings extends OdooConnPostBaseSchema {
 	
 	use OdooConnFormMappingTableName;
 
+	public function request ($data) {
+		if ($this->is_field_set($data, "constant_value") && $this->is_field_set($data, "cf7_field_name")) {
+			throw new FieldNameConstantValueException(
+				"Can't pass both a constant value and a cf7 field name as arguments"
+			);
+		}
+
+		return parent::request($data);
+	}
+
+	private function is_field_set ($data, $field_name) {
+		return isset($data[$field_name]) && $data[$field_name] != "";
+	}
+
 	protected function parse_data ($data) {
 		return array(
 			"odoo_form_id" => $data["odoo_form_id"],
@@ -195,7 +209,15 @@ function odoo_conn_get_odoo_form_mapping_arguments () {
 
 function odoo_conn_create_odoo_form_mapping ($data) {
 	$post_odoo_form_mappings = new OdooConnPostOdooFormMappings();
-	$response = $post_odoo_form_mappings->request($data);
+	try {
+		$response = $post_odoo_form_mappings->request($data);
+	} catch (FieldNameConstantValueException $e) {
+		return new \WP_Error(
+			"field_name_constant_value_failed",
+			__("Both cf7 field name and constant value passed, only one is expected"),
+			array("status" => 400)
+		);	
+	}
 	return $response;
 }
 

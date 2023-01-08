@@ -17,6 +17,7 @@ function formMappingSubmit() {
 	let formData = getFormData();
 
 	if (formData.get("value_type") === "true") {
+		formData.set("cf7_field_name", "");
 		if (formData.get("constant_value") == "" ) {
 			alert("You have not filled in a constant value");
 			return false;
@@ -24,6 +25,7 @@ function formMappingSubmit() {
 	}
 
 	if (formData.get("value_type") === "false") {
+		formData.set("constant_value", "");
 		if (formData.get("cf7_field_name") == "") {
 			alert("You have not filled in a Odoo Field Name");
 			return false;

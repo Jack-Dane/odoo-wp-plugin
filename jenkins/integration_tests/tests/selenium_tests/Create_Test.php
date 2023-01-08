@@ -79,9 +79,11 @@ class Create_Test extends WordpressTableBase {
 		$this->wait_for_element(
 			WebDriverBy::xpath("//option[text() = 'test_form_name']")
 		)->click();
-		$this->driver->findElement(WebDriverBy::id("cf7_field_name"))->sendKeys("your-email");
-		$this->driver->findElement(WebDriverBy::id("odoo_field_name"))->sendKeys("email")->submit();
-
+		$this->driver->findElement(WebDriverBy::id("cf7_field_name"))->clear()->sendKeys("your-email");
+		$this->driver->findElement(WebDriverBy::id("odoo_field_name"))->clear()->sendKeys("email")->submit();
+		
+		// wait for the next row to be created
+		$this->get_table_row_text(1);
 		$text_table_elements = $this->get_table_row_text(0);
 
 		$this->assertContains("test_form_name", $text_table_elements);
@@ -93,9 +95,11 @@ class Create_Test extends WordpressTableBase {
 			WebDriverBy::xpath("//option[text() = 'test_form_name']")
 		)->click();
 		$this->driver->findElement(WebDriverBy::id("value_type"))->click();
-		$this->driver->findElement(WebDriverBy::id("constant_value"))->sendKeys("http://test.com");
-		$this->driver->findElement(WebDriverBy::id("odoo_field_name"))->sendKeys("website")->submit();
+		$this->driver->findElement(WebDriverBy::id("constant_value"))->clear()->sendKeys("http://test.com");
+		$this->driver->findElement(WebDriverBy::id("odoo_field_name"))->clear()->sendKeys("website")->submit();
 
+		// wait for the next row to be created
+		$this->get_table_row_text(2);
 		$text_table_elements = $this->get_table_row_text(0);
 
 		$this->assertContains("test_form_name", $text_table_elements);
