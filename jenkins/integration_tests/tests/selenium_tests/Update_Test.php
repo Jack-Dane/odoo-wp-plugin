@@ -17,7 +17,7 @@ class Update_Test extends WordpressTableBase {
 	public function test_update_form_mapping () {
 		$this->update_row(
 			"http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping", 
-			array(2)
+			array(0)
 		);
 	}
 
@@ -39,8 +39,9 @@ class Update_Test extends WordpressTableBase {
 			WebDriverBy::xpath("//input[@class = 'table-row-0']")
 		);
 		$expected_values = array();
-		$index = 0;
+		$index = -1;
 		foreach ($input_elements as $input_element) {
+			$index++;
 			if (in_array($index, $ignore_indexs)) {
 				continue;
 			}
@@ -49,7 +50,6 @@ class Update_Test extends WordpressTableBase {
 			$input_element->clear();
 			$input_element->sendKeys($expected_value);
 			array_push($expected_values, $expected_value);
-			$index++;
 		}
 		$this->save_edit();
 
