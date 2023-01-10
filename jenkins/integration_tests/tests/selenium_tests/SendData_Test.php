@@ -3,58 +3,13 @@
 require_once(__DIR__ . "/SeleniumBase.php");
 
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverKeys;
 use Facebook\WebDriver\Exception\ElementClickInterceptedException;
 
 class SendData_Test extends SeleniumBase {
 
-	private function odoo_click_on_app ($app_name) {
-		$this->wait_for_element(WebDriverBy::cssSelector(".oi.oi-apps"))->click();
-		$apps = $this->wait_for_elements(WebDriverBy::cssSelector(".dropdown-item.o_app"));
-		foreach ($apps as $app) {
-			if (trim($app->getText()) == $app_name) {
-				$app->click();
-				break;
-			}
-		}
-		sleep(2);
-	}
-
 	public function test_send_data_to_odoo () {
-		// 1. Odoo
-		// 1.1 install the Odoo database
-		$this->driver->get("http://localhost:8069");
-		$this->wait_for_element(WebDriverBy::name("master_pwd"))->clear()->sendKeys("master_pwd");
-		$this->driver->findElement(WebDriverBy::id("dbname"))->sendKeys("odoo");
-		$this->driver->findElement(WebDriverBy::id("login"))->sendKeys("test@test.com");
-		$this->driver->findElement(WebDriverBy::id("password"))->sendKeys("password")->submit();
-
-		// 1.2 log into Odoo
-		$this->wait_for_element(WebDriverBy::xpath("//input[@id='login']"), 60)->sendKeys(
-			"test@test.com"
-		);
-		$this->driver->findElement(WebDriverBy::xpath("//input[@id='password']"))->sendKeys(
-			"password"
-		)->submit();
-		$this->wait_for_element(WebDriverBy::cssSelector(".oi.oi-apps"), 20);
-
-		// 1.3 install the contacts app
-		$this->driver->get("http://localhost:8069");
-
-		$this->wait_for_element(
-			WebDriverBy::cssSelector(".o_searchview_input")
-		)->sendKeys("contacts")->sendKeys(WebDriverKeys::ENTER);
-		sleep(2);
-		$this->wait_for_element(
-			WebDriverBy::name("button_immediate_install")
-		)->click();
-		// wait for the contacts module to install
-		$this->wait_for_element(
-			WebDriverBy::xpath("//a[text()='Discuss']"), 60
-		);
-
-		// 2. create a new post for to test the form
-		// 2.1 get the short code to display on the post
+		// 1. create a new post for to test the form
+		// 1.1 get the short code to display on the post
 		$this->driver->get("http://localhost:8000/wp-admin/admin.php?page=wpcf7");
 		$contact_form_title = $this->wait_for_element(
 			WebDriverBy::xpath("//a[@class='row-title'][text() = 'Test Contact Form']")
@@ -63,7 +18,7 @@ class SendData_Test extends SeleniumBase {
 			WebDriverBy::id("wpcf7-shortcode")
 		)->getAttribute("value");
 
-		// 2.2 add the new page with the short code
+		// 1.2 add the new page with the short code
 		$this->driver->get("http://localhost:8000/wp-admin/post-new.php");
 		try {
 			$this->driver->findElement(
@@ -90,22 +45,22 @@ class SendData_Test extends SeleniumBase {
 			)
 		)->click();
 
-		// 3. open the post page with the form
+		// 2. open the post page with the form
 		$this->wait_for_element(
 			WebDriverBy::xpath(
 				"//div[@class='components-panel__body post-publish-panel__postpublish-header is-opened']/a"
 			)
 		)->click();
 
-		// 4. fill in the form
+		// 3. fill in the form
 		$this->wait_for_element(WebDriverBy::name("your-name"))->sendKeys("test_name");
 		$this->driver->findElement(
 			WebDriverBy::name("your-email")
 		)->sendKeys("email@email.com")->submit();
 
-		// 5. check the odoo contact exists
+		// 4. check the odoo contact exists
 		$this->driver->get("http://localhost:8069");
-		
+		$this->log_into_odoo();
 		$this->odoo_click_on_app("Contacts");
 
 		$kanban_contact = $this->wait_for_element(

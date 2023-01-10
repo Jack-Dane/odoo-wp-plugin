@@ -48,6 +48,27 @@ class SeleniumBase extends TestCase {
 		return $found_elements;
 	}
 
+	protected function log_into_odoo () {
+		$this->wait_for_element(WebDriverBy::xpath("//input[@id='login']"), 60)->sendKeys(
+			"test@test.com"
+		);
+		$this->driver->findElement(WebDriverBy::xpath("//input[@id='password']"))->sendKeys(
+			"password"
+		)->submit();
+	}
+
+	protected function odoo_click_on_app ($app_name) {
+		$this->wait_for_element(WebDriverBy::cssSelector(".oi.oi-apps"))->click();
+		$apps = $this->wait_for_elements(WebDriverBy::cssSelector(".dropdown-item.o_app"));
+		foreach ($apps as $app) {
+			if (trim($app->getText()) == $app_name) {
+				$app->click();
+				break;
+			}
+		}
+		sleep(2);
+	}
+
 }
 
 
