@@ -14,10 +14,15 @@ class Update_Test extends WordpressTableBase {
 		$this->update_row("http://localhost:8000/wp-admin/admin.php?page=odoo-form", array());
 	}
 
-	public function test_update_form_mapping () {
+	public function test_update_form_mapping_constant_value () {
 		$this->update_row(
-			"http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping", 
-			array(0)
+			"http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping", array(0)
+		);
+	}
+
+	public function test_update_form_mapping_cf7_field_name () {
+		$this->update_row(
+			"http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping", array(2), $row=1
 		);
 	}
 
@@ -28,7 +33,7 @@ class Update_Test extends WordpressTableBase {
 		sleep(2);
 
 		$input_elements = $this->driver->findElements(
-			WebDriverBy::xpath("//input[@class = 'table-row-0']")
+			WebDriverBy::xpath("//input[@class='table-row-0']")
 		);
 
 		$input_elements[0]->sendKeys("Broken");
@@ -42,7 +47,7 @@ class Update_Test extends WordpressTableBase {
 		$this->driver->switchTo()->alert()->accept();
 
 		$input_elements = $this->driver->findElements(
-			WebDriverBy::xpath("//input[@class = 'table-row-0']")
+			WebDriverBy::xpath("//input[@class='table-row-0']")
 		);
 		
 		$text_table_elements = $this->get_table_row_text(0);
@@ -51,21 +56,21 @@ class Update_Test extends WordpressTableBase {
 		}
 	}
 
-	private function save_edit () {
-		$save_button = $this->driver->findElement(WebDriverBy::cssSelector(".table-row-save"));
+	private function save_edit ($row=0) {
+		$save_button = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-save"))[$row];
 		// sometimes not in view
 		$this->driver->executeScript("arguments[0].click();", array($save_button));
 		sleep(2);
 	}
 
-	private function update_row ($edit_endpoint, $ignore_indexs) {
+	private function update_row ($edit_endpoint, $ignore_indexs, $row=0) {
 		$this->driver->get($edit_endpoint);
 
-		$this->wait_for_element(WebDriverBy::cssSelector(".table-row-edit"))->click();
+		$this->wait_for_elements(WebDriverBy::cssSelector(".table-row-edit"))[$row]->click();
 		sleep(2);
 
 		$input_elements = $this->driver->findElements(
-			WebDriverBy::xpath("//input[@class = 'table-row-0']")
+			WebDriverBy::xpath("//input[@class='table-row-" . $row . "']")
 		);
 		$expected_values = array();
 		$index = -1;
@@ -80,9 +85,9 @@ class Update_Test extends WordpressTableBase {
 			$input_element->sendKeys($expected_value);
 			array_push($expected_values, $expected_value);
 		}
-		$this->save_edit();
+		$this->save_edit($row);
 
-		$text_table_elements = $this->get_table_row_text(0);
+		$text_table_elements = $this->get_table_row_text($row);
 
 		foreach ($expected_values as $expected_value) {
 			$this->assertContains($expected_value, $text_table_elements);
