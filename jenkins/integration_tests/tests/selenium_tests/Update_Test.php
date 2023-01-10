@@ -21,6 +21,36 @@ class Update_Test extends WordpressTableBase {
 		);
 	}
 
+	public function test_update_with_both_constant_value_cf7_field_name () {
+		$this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping");
+
+		$this->wait_for_element(WebDriverBy::cssSelector(".table-row-edit"))->click();
+		sleep(2);
+
+		$input_elements = $this->driver->findElements(
+			WebDriverBy::xpath("//input[@class = 'table-row-0']")
+		);
+
+		$input_elements[0]->sendKeys("Broken");
+
+		$this->save_edit();
+
+		$alertText = $this->driver->switchTo()->alert()->getText();
+		$this->assertEquals(
+			"Both cf7 field name and constant value passed, only one is expected", $alertText
+		);
+		$this->driver->switchTo()->alert()->accept();
+
+		$input_elements = $this->driver->findElements(
+			WebDriverBy::xpath("//input[@class = 'table-row-0']")
+		);
+		
+		$text_table_elements = $this->get_table_row_text(0);
+		foreach ($text_table_elements as $text_table_element) {
+			$this->assertNotEquals("broken", $text_table_element);
+		}
+	}
+
 	private function save_edit () {
 		$save_button = $this->driver->findElement(WebDriverBy::cssSelector(".table-row-save"));
 		// sometimes not in view
@@ -30,9 +60,8 @@ class Update_Test extends WordpressTableBase {
 
 	private function update_row ($edit_endpoint, $ignore_indexs) {
 		$this->driver->get($edit_endpoint);
-		sleep(2);
 
-		$this->driver->findElement(WebDriverBy::cssSelector(".table-row-edit"))->click();
+		$this->wait_for_element(WebDriverBy::cssSelector(".table-row-edit"))->click();
 		sleep(2);
 
 		$input_elements = $this->driver->findElements(
