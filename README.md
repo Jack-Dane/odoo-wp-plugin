@@ -10,14 +10,14 @@ This plugin provides admins an interface in which they can create dynamic connec
 
 ## Installation
 
-Due to some difficaulties with XML-RPC support, composer is needed. 
+Due to some difficulties with XML-RPC support, composer is needed. 
 
-1. First you need to clone the repoistory. 
+1. First you need to clone the repository. 
 2. Install the dependencies of the repository using [composer](https://getcomposer.org/). This can be done simply by calling `composer install` when composer is complete. 
 3. Zip the plugin and upload to your wordpress site. 
 
 
-This plugin can be test within a [docker environment](https://hub.docker.com/_/wordpress). 
+This plugin can be tested within a [docker environment](https://hub.docker.com/_/wordpress). 
 
 ## How to use the Wordpress plugin
 
@@ -28,7 +28,7 @@ This plugin can be test within a [docker environment](https://hub.docker.com/_/w
 5. Now map the Contact 7 Form fields to what values they will fill within Odoo using the Odoo Form Mapping. You can also set constant values that the form should fill in within Odoo. 
 6. Submit the form and you should see the new object created in your odoo instance. 
 
-[Youtube video]
+[Video Tutorial](https://www.youtube.com/watch?v=xhAvrEaBXAA)
 
 ## Security
 
@@ -38,7 +38,7 @@ This plugin can be test within a [docker environment](https://hub.docker.com/_/w
 ## Requirements
 
 * PHP 7.3 or greater
-* Ideally Odoo 14 or greater as version before 14 don't support API keys. 
+* Ideally Odoo 14 or greater as versions before 14 don't support API keys. A password should work instead of an API key but is ill-advised. 
 
 ## Try with Docker
 
