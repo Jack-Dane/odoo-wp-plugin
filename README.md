@@ -1,3 +1,5 @@
+![Tests](https://github.com/Jack-Dane/odoo-wp-plugin/actions/workflows/run-tests.yml/badge.svg)
+
 # Odoo Contact Form 7 Connector
 
 Integrate your WordPress Contact 7 Forms to Odoo. You can easily set up the integration yourself to create contacts or leads when a form has been submitted. 
@@ -39,6 +41,9 @@ This plugin can be tested within a [docker environment](https://hub.docker.com/_
 
 * PHP 7.3 or greater
 * Ideally Odoo 14 or greater as versions before 14 don't support API keys. A password should work instead of an API key but is ill-advised. 
+
+# Contributing
+* Run `runE2ETests.sh` before making a pull request. 
 
 ## Try with Docker
 
