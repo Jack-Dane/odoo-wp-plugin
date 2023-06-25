@@ -20,26 +20,36 @@ class SendData_Test extends SeleniumBase {
 
 		// 1.2 add the new page with the short code
 		$this->driver->get("http://localhost:8000/wp-admin/post-new.php");
-		try {
-			$this->driver->findElement(
-				WebDriverBy::cssSelector(".block-editor-default-block-appender__content")
-			)->click();
-		} catch (ElementClickInterceptedException $e) {
-			$this->driver->findElement(
-				WebDriverBy::xpath("//button[@aria-label='Close dialog']")
-			)->click();
-			sleep(1);
-			$this->driver->findElement(
-				WebDriverBy::cssSelector(".block-editor-default-block-appender__content")
-			)->click();
+		$count = 0;
+		while ($count < 3) {
+		    $this->wait_for_element(
+                WebDriverBy::xpath(
+                    "//button[contains(@class, 'components-guide__forward-button')]"
+                )
+		    )->click();
+		    $count += 1;
 		}
-		$this->driver->getKeyboard()->sendKeys($short_code);
+		$this->driver->findElement(
+		    WebDriverBy::xpath(
+		        "//button[@class='components-button components-guide__finish-button']"
+		    )
+		)->click();
+		$this->wait_for_element(
+		    WebDriverBy::xpath(
+		        "//p[@aria-label='Add default block']"
+		    )
+		)->click();
+		$this->wait_for_element(
+		    WebDriverBy::xpath(
+		        "//p[@data-title='Paragraph']"
+		    )
+		)->sendKeys($short_code);
 		$this->driver->findElement(
 			WebDriverBy::cssSelector(
 				".editor-post-publish-panel__toggle.editor-post-publish-button__button"
 			)
 		)->click();
-		$this->driver->findElement(
+		$this->wait_for_element(
 			WebDriverBy::cssSelector(
 				".editor-post-publish-button.editor-post-publish-button__button"
 			)

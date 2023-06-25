@@ -1,7 +1,7 @@
 version: '3.1'
 
 networks:
-  integration_tests_default:
+  end_to_end_tests_default:
     external: true
 
 services:
@@ -15,12 +15,7 @@ services:
     environment:
       - HOST=odoo_db
     networks: 
-      - integration_tests_default
-    deploy:
-      resources:
-        limits:
-          cpus: '0.6'
-          memory: 300M
+      - end_to_end_tests_default
 
   odoo_db:
     image: postgres:13
@@ -29,9 +24,4 @@ services:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
     networks: 
-      - integration_tests_default
-    deploy:
-      resources:
-        limits:
-          cpus: '0.6'
-          memory: 300M
+      - end_to_end_tests_default
