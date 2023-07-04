@@ -18,14 +18,9 @@ services:
       - wp_data:/var/www/html
       - type: bind
         source: ../../
-        target: /var/www/html/wp-content/plugins/odoo_conn
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 200M
+        target: /var/www/html/wp-content/plugins/odoo
     # install composer before starting the apache server
-    command: '/bin/sh -c "cd /var/www/html/wp-content/plugins/odoo_conn; composer install --no-cache; cd /var/www/html/; docker-entrypoint.sh apache2-foreground"'
+    command: '/bin/sh -c "cd /var/www/html/wp-content/plugins/odoo; composer install --no-cache; cd /var/www/html/; docker-entrypoint.sh apache2-foreground"'
 
   test_db:
     restart: always
@@ -35,11 +30,6 @@ services:
       MYSQL_USER: odoo_conn_test_user
       MYSQL_PASSWORD: password
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 250M
 
   test_wpcli:
     user: xfs
@@ -47,7 +37,7 @@ services:
     depends_on:
       - test_wordpress
       - test_db
-    command: '/bin/bash /var/www/html/wp-content/plugins/odoo_conn/tests/end_to_end_tests/startup.sh'
+    command: '/bin/bash /var/www/html/wp-content/plugins/odoo/tests/end_to_end_tests/startup.sh'
     environment:
       WORDPRESS_DB_HOST: test_db
       WORDPRESS_DB_USER: odoo_conn_test_user
@@ -57,12 +47,7 @@ services:
       - wp_data:/var/www/html
       - type: bind
         source: ../../
-        target: /var/www/html/wp-content/plugins/odoo_conn
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 60M
+        target: /var/www/html/wp-content/plugins/odoo
 
 volumes:
   wp_data:

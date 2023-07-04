@@ -15,4 +15,4 @@ do
 done
 
 wp plugin install contact-form-7 --activate
-wp plugin activate odoo_conn
+wp plugin activate odoo
