@@ -3,7 +3,7 @@ require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
 function odoo_form_mapping_page () {
 	wp_register_script(
-    	"odoo-form-mapping", plugins_url("/odoo_conn/admin/pages/odoo_form_mapping.js"), array("jquery"), "1.0.0", true
+    	"odoo-form-mapping", plugins_url("odoo_form_mapping.js", __FILE__), array("jquery"), "1.0.0", true
     );
     wp_enqueue_script( "odoo-form-mapping" );
 ?>
