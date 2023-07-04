@@ -7,7 +7,7 @@ function callback_for_setting_up_scripts() {
     $root = esc_url_raw(rest_url());
     $nonce = wp_create_nonce("wp_rest");
     wp_register_script(
-        "table-display", plugins_url("/odoo_conn/admin/pageHelpers/table_display.js"), array("jquery"), "1.0.0", true
+        "table-display", plugins_url("table_display.js", __FILE__), array("jquery"), "1.0.0", true
     );
     wp_localize_script("table-display", "wpApiSettings", array(
         "root" => $root, "nonce" => $nonce
@@ -15,7 +15,7 @@ function callback_for_setting_up_scripts() {
     wp_enqueue_script("table-display");
 
     wp_register_script( 
-        "table-editor", plugins_url("/odoo_conn/admin/pageHelpers/table_editor.js"), array("jquery"), "1.0.0", true 
+        "table-editor", plugins_url("table_editor.js", __FILE__), array("jquery"), "1.0.0", true
     );
     wp_localize_script("table-editor", "wpApiSettings", array(
         "root" => $root, "nonce" => $nonce
@@ -23,14 +23,14 @@ function callback_for_setting_up_scripts() {
     wp_enqueue_script("table-editor");
 
     wp_register_script(
-        "form-creator", plugins_url("/odoo_conn/admin/pageHelpers/form_creator_show.js"), array("jquery"), "1.0.0", true 
+        "form-creator", plugins_url("form_creator_show.js", __FILE__), array("jquery"), "1.0.0", true
     );
     wp_localize_script("table-editor", "wpApiSettings", array(
         "root" => $root, "nonce" => $nonce
     ));
     wp_enqueue_script("form-creator");
 
-    wp_enqueue_style("odoo-page-style", plugins_url("/odoo_conn/admin/pageHelpers/page_style.css"));
+    wp_enqueue_style("odoo-page-style", plugins_url("page_style.css", __FILE__));
 }
 
 ?>
