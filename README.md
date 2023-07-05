@@ -1,4 +1,7 @@
 ![Tests](https://github.com/Jack-Dane/odoo-wp-plugin/actions/workflows/run-tests.yml/badge.svg)
+![PHP](https://img.shields.io/badge/php-%3E%3D7.3-6495ED)
+![Static Badge](https://img.shields.io/badge/odoo-%3E%3D14.0-9c5789)
+
 
 # Odoo Contact Form 7 Connector
 
