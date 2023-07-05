@@ -4,7 +4,7 @@ namespace odoo_conn\tests\OdooConnEncryptionHandler_Test;
 
 use \PHPUnit\Framework\TestCase;
 
-require_once("encryption.php");
+require_once(__DIR__ . "/../../../encryption.php");
 
 class OdooConnEncryptionHandler_get_encryption_key_Test extends TestCase {
 

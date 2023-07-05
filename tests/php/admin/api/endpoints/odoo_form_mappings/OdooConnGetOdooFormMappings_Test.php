@@ -3,8 +3,8 @@
 namespace odoo_conn\tests\admin\api\endpoints\odoo_form_mappings\OdooConnGetOdooFormMappings;
 
 require_once(__DIR__ . "/../common.php");
-require_once("admin/api/schema.php");
-require_once("admin/api/endpoints/odoo_form_mappings.php");
+require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");
 
 use \PHPUnit\Framework\TestCase;
 use function odoo_conn\admin\api\endpoints\odoo_conn_get_odoo_from_mappings;

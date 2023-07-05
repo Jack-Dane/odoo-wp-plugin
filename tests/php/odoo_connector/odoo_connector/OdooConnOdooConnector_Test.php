@@ -2,7 +2,7 @@
 
 namespace odoo_conn\tests\odoo_connector\odoo_connector\OdooConnOdooConnector_Test;
 
-require_once("odoo_connector/odoo_connector.php");
+require_once(__DIR__ . "/../../../../odoo_connector/odoo_connector.php");
 
 use \PHPUnit\Framework\TestCase;
 use \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;

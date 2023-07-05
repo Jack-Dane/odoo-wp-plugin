@@ -7,7 +7,7 @@ use \PHPUnit\Framework\TestCase;
 
 define("ABSPATH", "vfs://root/");
 
-require_once("encryption.php");
+require_once(__DIR__ . "/../../../encryption.php");
 
 class OdooConnEncryptionFileHandler_write_to_file_Test extends TestCase {
 
