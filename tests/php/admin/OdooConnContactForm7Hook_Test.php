@@ -3,8 +3,7 @@
 namespace odoo_conn\admin\php\cf7hook {
 
 	function add_action () {
-		// wordpress function that is called on file import
-		return;
+		// WordPress function that is called on file import
 	}
 
 }
@@ -79,19 +78,31 @@ namespace odoo_conn\tests\admin\php\OdooConnContactForm7Hook_Test {
 					[
 						new FieldMappingMock("your-name", "", "name"),
 						new FieldMappingMock("your-email", "", "email"),
-						new FieldMappingMock("", "webform", "source")
+						new FieldMappingMock("", "webform", "source"),
+                        new FieldMappingMock("multi", "", "multiple")
 					]
 				);
 			$this->odoo_conn_contact_form_7_hook->shouldReceive("create_odoo_connection")
 				->with("username", "decrypted_api_key", "odoo", "http://127.0.0.1")
 				->andReturn($this->odoo_connector);
 			$this->odoo_connector->shouldReceive("create_object")
-				->with("res.partner", array(array(
-					"name"=>"jack", "email"=>"email@email.com", "source"=>"webform"
-				))
+				->with("res.partner", array(
+                    array(
+                        "name" => "jack",
+                        "email" => "email@email.com",
+                        "source" => "webform",
+                        "multiple" => "option1, option2"
+                    ))
 			);
 			$this->wpcf7_submission->shouldReceive("get_posted_data")->with()->andReturn(
-				array("your-name"=>"jack", "your-email"=>"email@email.com")
+				array(
+                    "your-name"=>"jack",
+                    "your-email"=>"email@email.com",
+                    "multi" => array(
+                        "option1",
+                        "option2"
+                    )
+                )
 			);
 
 			$response = $this->odoo_conn_contact_form_7_hook->send_odoo_data("wpcf");
