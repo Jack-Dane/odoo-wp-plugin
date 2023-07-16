@@ -2,21 +2,23 @@
 
 require_once("dependency_check.php");
 
-function odoo_conn_activation_function () {
-	require_once(ABSPATH . "wp-admin/includes/upgrade.php");
+function odoo_conn_activation_function()
+{
+    require_once(ABSPATH . "wp-admin/includes/upgrade.php");
 
-	create_odoo_connections_table();
-	create_odoo_form_table();
-	create_odoo_form_field_mapping();
+    create_odoo_connections_table();
+    create_odoo_form_table();
+    create_odoo_form_field_mapping();
 }
 
-function create_odoo_connections_table () {
-	global $wpdb, $table_prefix;
+function create_odoo_connections_table()
+{
+    global $wpdb, $table_prefix;
 
-	$table_name = $table_prefix . "odoo_conn_connection";
-	$charset_collate = $wpdb->get_charset_collate();
+    $table_name = $table_prefix . "odoo_conn_connection";
+    $charset_collate = $wpdb->get_charset_collate();
 
-	$sql = "
+    $sql = "
 	CREATE TABLE `$table_name` (
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(30) NOT NULL,
@@ -28,20 +30,21 @@ function create_odoo_connections_table () {
 	) $charset_collate;
 	";
 
-	dbDelta($sql);
+    dbDelta($sql);
 }
 
-function create_odoo_form_table () {
-	global $wpdb, $table_prefix;
+function create_odoo_form_table()
+{
+    global $wpdb, $table_prefix;
 
-	$table_name = $table_prefix . "odoo_conn_form";
-	$odoo_conn_table = $table_prefix . "odoo_conn_connection";
-	// contact form 7 stores forms in the generic wordpress posts
-	// to know if it is a contact 7 form "post": post_type = wpcf7_contact_form
-	$contact_7_form_table = $table_prefix . "posts";
-	$charset_collate = $wpdb->get_charset_collate();
+    $table_name = $table_prefix . "odoo_conn_form";
+    $odoo_conn_table = $table_prefix . "odoo_conn_connection";
+    // contact form 7 stores forms in the generic wordpress posts
+    // to know if it is a contact 7 form "post": post_type = wpcf7_contact_form
+    $contact_7_form_table = $table_prefix . "posts";
+    $charset_collate = $wpdb->get_charset_collate();
 
-	$sql = "
+    $sql = "
 	CREATE TABLE `$table_name` (
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`odoo_connection_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -54,17 +57,18 @@ function create_odoo_form_table () {
 	) $charset_collate;
 	";
 
-	dbDelta($sql);
+    dbDelta($sql);
 }
 
-function create_odoo_form_field_mapping () {
-	global $wpdb, $table_prefix;
+function create_odoo_form_field_mapping()
+{
+    global $wpdb, $table_prefix;
 
-	$table_name = $table_prefix . "odoo_conn_form_mapping";
-	$odoo_form_table = $table_prefix . "odoo_conn_form";
-	$charset_collate = $wpdb->get_charset_collate();
+    $table_name = $table_prefix . "odoo_conn_form_mapping";
+    $odoo_form_table = $table_prefix . "odoo_conn_form";
+    $charset_collate = $wpdb->get_charset_collate();
 
-	$sql = "
+    $sql = "
 	CREATE TABLE `$table_name` (
 	`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`odoo_form_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -76,7 +80,7 @@ function create_odoo_form_field_mapping () {
 	) $charset_collate;
 	";
 
-	dbDelta($sql);
+    dbDelta($sql);
 }
 
 ?>

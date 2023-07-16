@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require("api/main.php");
 

@@ -14,7 +14,7 @@ services:
       - "8069:8069"
     environment:
       - HOST=odoo_db
-    networks: 
+    networks:
       - end_to_end_tests_default
 
   odoo_db:
@@ -23,5 +23,5 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
-    networks: 
+    networks:
       - end_to_end_tests_default

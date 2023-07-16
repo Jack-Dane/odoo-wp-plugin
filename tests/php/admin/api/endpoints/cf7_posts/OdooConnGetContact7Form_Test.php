@@ -10,23 +10,25 @@ use \PHPUnit\Framework\TestCase;
 use function \odoo_conn\admin\api\endpoints\odoo_conn_get_contact_7_forms;
 use OdooConnGetContact7Form;
 
-class OdooConnGetContact7Form_Test extends TestCase {
+class OdooConnGetContact7Form_Test extends TestCase
+{
 
-	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-	public function test_ok () {
-		$wpdb = \Mockery::mock("WPDB");
-		$wpdb->shouldReceive("prepare")->with("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC", [])
-			->once()->andReturn("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC");
-		$wpdb->shouldReceive("get_results")->with("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC")
-			->once()->andReturn(array(array("ID"=>4, "post_title"=>"Title")));
-		$GLOBALS["wpdb"] = $wpdb;
-		$GLOBALS["table_prefix"] = "wp_";
+    public function test_ok()
+    {
+        $wpdb = \Mockery::mock("WPDB");
+        $wpdb->shouldReceive("prepare")->with("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC", [])
+            ->once()->andReturn("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC");
+        $wpdb->shouldReceive("get_results")->with("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC")
+            ->once()->andReturn(array(array("ID" => 4, "post_title" => "Title")));
+        $GLOBALS["wpdb"] = $wpdb;
+        $GLOBALS["table_prefix"] = "wp_";
 
-		$response = odoo_conn_get_contact_7_forms(array());
-		
-		$this->assertEquals(array(array("ID"=>4, "post_title"=>"Title")), $response);
-	}
+        $response = odoo_conn_get_contact_7_forms(array());
+
+        $this->assertEquals(array(array("ID" => 4, "post_title" => "Title")), $response);
+    }
 }
 
 ?>

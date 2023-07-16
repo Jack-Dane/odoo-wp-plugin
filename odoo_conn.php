@@ -11,15 +11,15 @@ require("vendor/autoload.php");
 
 require("encryption.php");
 
-require("odoo_connector/odoo_connector.php" );
+require("odoo_connector/odoo_connector.php");
 
 require("dependency_check.php");
 
-register_activation_hook( __FILE__, "\\odoo_conn\\dependency_check\\odoo_conn_contact_7_plugin_active" );
+register_activation_hook(__FILE__, "\\odoo_conn\\dependency_check\\odoo_conn_contact_7_plugin_active");
 
 require("activation.php");
 
-register_activation_hook(__FILE__,  "odoo_conn_activation_function");
+register_activation_hook(__FILE__, "odoo_conn_activation_function");
 
 require("admin/main.php");
 

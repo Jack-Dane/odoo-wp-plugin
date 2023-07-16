@@ -14,7 +14,8 @@ A clear and concise description of what the bug is.
 A clear and concise description of what you expected to happen.
 
 **Platform versions:**
- - Odoo Version: 
- - Odoo Platform [eg. Odoo.sh, Odoo online, Odoo community]: 
- - WP Version: 
- - PHP Version:
+
+- Odoo Version:
+- Odoo Platform [eg. Odoo.sh, Odoo online, Odoo community]:
+- WP Version:
+- PHP Version:

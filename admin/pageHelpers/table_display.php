@@ -1,9 +1,10 @@
 <?php
 
 // register styles & scripts used
-add_action( "admin_enqueue_scripts", __NAMESPACE__ . "callback_for_setting_up_scripts" );
+add_action("admin_enqueue_scripts", __NAMESPACE__ . "callback_for_setting_up_scripts");
 
-function callback_for_setting_up_scripts() {
+function callback_for_setting_up_scripts()
+{
     $root = esc_url_raw(rest_url());
     $nonce = wp_create_nonce("wp_rest");
     wp_register_script(
@@ -14,7 +15,7 @@ function callback_for_setting_up_scripts() {
     ));
     wp_enqueue_script("table-display");
 
-    wp_register_script( 
+    wp_register_script(
         "table-editor", plugins_url("table_editor.js", __FILE__), array("jquery"), "1.0.0", true
     );
     wp_localize_script("table-editor", "wpApiSettings", array(

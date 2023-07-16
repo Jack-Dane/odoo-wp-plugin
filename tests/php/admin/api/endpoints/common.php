@@ -2,14 +2,14 @@
 
 namespace odoo_conn\admin\api\endpoints {
 
-	function add_action () {
-		// wordpress function that is called on file import
-		return;
-	}
+    function add_action()
+    {
+    }
 
-	function __($string) {
-		return $string;
-	}
+    function __($string)
+    {
+        return $string;
+    }
 
 }
 
