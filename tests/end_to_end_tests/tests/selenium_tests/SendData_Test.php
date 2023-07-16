@@ -74,22 +74,30 @@ class SendData_Test extends SeleniumBase {
 		$this->odoo_click_on_app("Contacts");
 
 		$kanban_contact = $this->wait_for_element(
-			WebDriverBy::xpath("//span[text() = 'test_name']")
+			WebDriverBy::xpath("//span[text()='test_name']")
 		);
 		$kanban_contact->click();
 		$contact_name = $this->wait_for_element(
 			WebDriverBy::xpath("//span[@class='text-truncate']")
 		);
-		$contact_email = $this->driver->findElement(
+		$this->driver->findElement(
 			WebDriverBy::xpath("//a[@href='mailto:email@email.com']")
 		);
-		$contact_website = $this->driver->findElements(
+		$this->driver->findElement(
 			WebDriverBy::xpath("//a[@href='http://test.com']")
 		);
 
-		$this->assertNotEmpty($contact_website);
-		$this->assertNotEmpty($contact_email);
 		$this->assertNotEmpty($contact_name);
+
+        $this->driver->findElement(
+            WebDriverBy::name("internal_notes")
+        )->click();
+        $comment = $this->wait_for_element(
+            WebDriverBy::xpath("//div[@id='comment']/p")
+        );
+        $this->assertEquals(
+            "choice1", $comment->getText()
+        );
 	}
 
 }

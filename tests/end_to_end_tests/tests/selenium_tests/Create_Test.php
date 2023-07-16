@@ -75,7 +75,7 @@ class Create_Test extends WordpressTableBase {
 
 		$this->driver->findElement(WebDriverBy::id("title"))->sendKeys("Test Contact Form");
 		$this->driver->findElement(WebDriverBy::id("wpcf7-form"))->clear()->sendKeys(
-			"<label>Your name[text* your-name]</label><label> Your email[email* your-email]</label>[submit \"Submit\"]"
+			"<label>Your name[text* your-name]</label><label> Your email[email* your-email]</label><label> Multi Choice [select multi \"choice1\"]</label>[submit \"Submit\"]"
 		);
 		$this->driver->findElement(WebDriverBy::cssSelector("input[name='wpcf7-save']"))->submit();
 
@@ -133,6 +133,20 @@ class Create_Test extends WordpressTableBase {
 		$this->assertContains("your-email", $text_table_elements);
 		$this->assertContains("email", $text_table_elements);
 
+        $this->wait_for_element(
+            WebDriverBy::xpath("//option[text() = 'test_form_name']")
+        )->click();
+        $this->driver->findElement(WebDriverBy::id("cf7_field_name"))->clear()->sendKeys("multi");
+        $this->driver->findElement(WebDriverBy::id("odoo_field_name"))->clear()->sendKeys("comment")->submit();
+
+        // wait for the next row to be created
+        $this->get_table_row_text(2);
+        $text_table_elements = $this->get_table_row_text(0);
+
+        $this->assertContains("test_form_name", $text_table_elements);
+        $this->assertContains("multi", $text_table_elements);
+        $this->assertContains("comment", $text_table_elements);
+
 		// test creating a constant value form mapping
 		$this->wait_for_element(
 			WebDriverBy::xpath("//option[text() = 'test_form_name']")
@@ -142,12 +156,12 @@ class Create_Test extends WordpressTableBase {
 		$this->driver->findElement(WebDriverBy::id("odoo_field_name"))->clear()->sendKeys("website")->submit();
 
 		// wait for the next row to be created
-		$this->get_table_row_text(2);
+		$this->get_table_row_text(3);
 		$text_table_elements = $this->get_table_row_text(0);
 
 		$this->assertContains("test_form_name", $text_table_elements);
 		$this->assertContains("http://test.com", $text_table_elements);
-		$this->assertContains("website", $text_table_elements);		
+		$this->assertContains("website", $text_table_elements);
 	}
 
 }
