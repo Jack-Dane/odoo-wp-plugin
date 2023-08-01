@@ -7,6 +7,9 @@ use \PhpXmlRpc\Value;
 use \PhpXmlRpc\Client;
 
 
+class OdooConnException extends \Exception {}
+
+
 class OdooConnOdooConnector
 {
 
@@ -36,8 +39,18 @@ class OdooConnOdooConnector
         return new Value($value, $type);
     }
 
-    private function set_user_id()
-    {
+    public function test_connection() {
+        $this->set_user_id();
+
+        if ($this->uid === false) {
+            throw new OdooConnException(
+                "Username or API Key is incorrect"
+            );
+        }
+        return is_int($this->uid);
+    }
+
+    private function authenticate() {
         $common_client = $this->create_client($this->url . "/xmlrpc/2/common");
         $version_request = $this->create_request("version", array());
         $version_response = $common_client->send($version_request);
@@ -50,7 +63,30 @@ class OdooConnOdooConnector
                 $version_response->value()
             )
         );
-        $authentication_response = $common_client->send($authentication_request);
+        return $common_client->send($authentication_request);
+    }
+
+    private function set_user_id()
+    {
+        $authentication_response = $this->authenticate();
+
+        if ($authentication_response->faultCode()) {
+            $database_error = preg_match(
+                "/failed: FATAL:  database (?-s:.)+ does not exist/",
+                $authentication_response->faultString()
+            );
+
+            $fault_string = $authentication_response->faultString();
+            if ($database_error) {
+                $fault_string = "Database name '{$this->database}' does not exist in Odoo instance";
+            }
+
+            throw new OdooConnException(
+                $fault_string,
+                $authentication_response->faultCode()
+            );
+        }
+
         $this->uid = $authentication_response->value()->scalarval();
     }
 

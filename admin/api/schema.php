@@ -135,8 +135,7 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
             }
         }
 
-        $safe_query = $wpdb->prepare($query, $argument_array);
-        return $safe_query;
+        return $wpdb->prepare($query, $argument_array);
     }
 
     public function request($data)
@@ -150,8 +149,7 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
         $joined_query = $this->join_query($query);
         $safe_query = $this->prepare_query($joined_query, $data, $argument_array);
 
-        $results = $wpdb->get_results($safe_query);
-        return $results;
+        return $wpdb->get_results($safe_query);
     }
 
 }
@@ -160,15 +158,18 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
 abstract class OdooConnGetExtendedSchema extends OdooConnGetBaseSchema
 {
 
-    public function __construct($where_condition)
+    public function __construct($where_value)
     {
-        $this->where_condition = $where_condition;
+        $this->where_value = $where_value;
     }
+
+    protected abstract function where_query();
 
     protected function prepare_query($query, $data, $argument_array)
     {
-        if ($this->where_condition) {
-            $query .= " WHERE " . $this->where_condition;
+        if ($this->where_value) {
+            $query .= " WHERE {$this->where_query()}";
+            array_push($argument_array, $this->where_value);
         }
 
         return parent::prepare_query($query, $data, $argument_array);

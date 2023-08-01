@@ -4,6 +4,9 @@ namespace odoo_conn\admin\api\endpoints;
 
 use \odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use \odoo_conn\encryption\OdooConnEncryptionHandler;
+use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
+use \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;
+use WP_Error;
 
 
 trait OdooConnOdooConnectionTableName
@@ -41,6 +44,28 @@ class OdooConnGetOdooConnection extends OdooConnGetBaseSchema
 
     use OdooConnOdooConnectionTableName;
     use OdooConnOdooConnectionColumns;
+}
+
+class OdooConnGetOdooConnectionSingle extends OdooConnGetExtendedSchema
+{
+
+    use OdooConnOdooConnectionTableName;
+
+    function __construct($id)
+    {
+        parent::__construct($id);
+    }
+
+    function request($data)
+    {
+        $connections = parent::request($data);
+        return !$connections ? null : $connections[0];
+    }
+
+    protected function where_query()
+    {
+        return "id=%d";
+    }
 }
 
 
@@ -219,15 +244,83 @@ function odoo_conn_update_odoo_connection_schema()
     return odoo_conn_base_odoo_connections_schema(odoo_conn_base_odoo_connections_schema_properties());
 }
 
-function odoo_conn_update_odoo_connection_arguments()
+function odoo_conn_odoo_connection_id_argument()
 {
     return array(
-            "id" => array(
-                "type" => "integer",
-                "description" => esc_html__("Primary key for an Odoo Connection"),
-                "required" => true,
-            ),
-        ) + odoo_conn_base_odoo_connections_arguments();
+        "id" => array(
+            "type" => "integer",
+            "description" => esc_html__("Primary key for an Odoo Connection"),
+            "required" => true,
+        )
+    );
+}
+
+function odoo_conn_test_odoo_connection($data)
+{
+    $id = $data["id"];
+    $connection_getter = new OdooConnGetOdooConnectionSingle($id);
+
+    $connection = $connection_getter->request($data);
+    if (!$connection) {
+        return new WP_Error(
+            "no_connection",
+            "No connection for that Id",
+            array("status" => 404)
+        );
+    }
+
+    $encryption_file_handler = new OdooConnEncryptionFileHandler();
+    $encryption_handler = new OdooConnEncryptionHandler($encryption_file_handler);
+    $decrypted_api_key = $encryption_handler->decrypt($connection->api_key);
+
+    $odoo_connector = new OdooConnOdooConnector(
+        $connection->username,
+        $decrypted_api_key,
+        $connection->database_name,
+        $connection->url
+    );
+
+    $success = true;
+    try {
+        $odoo_connector->test_connection();
+    } catch (OdooConnException $e) {
+        return array(
+            "success" => false,
+            "error_string" => $e->getMessage(),
+            "error_code" => $e->getCode()
+        );
+    }
+
+    return array("success" => $success);
+}
+
+function odoo_conn_test_odoo_connection_schema_properties()
+{
+    return array(
+        "success" => array(
+            "type" => "boolean",
+            "description" => esc_html__("If the connection test was successful"),
+        ),
+        "error_code" => array(
+            "type" => "integer",
+            "description" => esc_html__("Error Code when there is an error connecting to Odoo"),
+        ),
+        "error_string" => array(
+            "type" => "string",
+            "description" => esc_html__("Error String when there is an error connecting to Odoo"),
+        )
+    );
+}
+
+
+function odoo_conn_test_odoo_connection_schema()
+{
+    return odoo_conn_base_odoo_connections_schema(odoo_conn_test_odoo_connection_schema_properties());
+}
+
+function odoo_conn_update_odoo_connection_arguments()
+{
+    return odoo_conn_odoo_connection_id_argument() + odoo_conn_base_odoo_connections_arguments();
 }
 
 function odoo_conn_delete_odoo_connection($data)
@@ -286,6 +379,16 @@ add_action("rest_api_init", function () {
             "permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
         ),
         "schema" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_connection_schema",
+    ));
+
+    register_rest_route("odoo_conn/v1", "/get-odoo-connection", array(
+        array(
+            "methods" => "GET",
+            "callback" => __NAMESPACE__ . "\\odoo_conn_test_odoo_connection",
+            "args" => odoo_conn_odoo_connection_id_argument(),
+            "permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
+        ),
+        "schema" => __NAMESPACE__ . "\\odoo_conn_test_odoo_connection_schema"
     ));
 });
 
