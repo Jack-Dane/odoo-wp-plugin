@@ -51,12 +51,7 @@ class OdooConnGetOdooConnectionSingle extends OdooConnGetExtendedSchema
 
     use OdooConnOdooConnectionTableName;
 
-    function __construct($id)
-    {
-        parent::__construct($id);
-    }
-
-    function request($data)
+    public function request($data)
     {
         $connections = parent::request($data);
         return !$connections ? null : $connections[0];
@@ -65,6 +60,40 @@ class OdooConnGetOdooConnectionSingle extends OdooConnGetExtendedSchema
     protected function where_query()
     {
         return "id=%d";
+    }
+}
+
+
+class OdooConnTestOdooConnection extends OdooConnGetOdooConnectionSingle
+{
+    public function request($data)
+    {
+        $connection = parent::request($data);
+        if (!$connection) {
+            return new WP_Error(
+                "no_connection",
+                "No connection for that Id",
+                array("status" => 404)
+            );
+        }
+
+        return $connection;
+    }
+
+    public function test_connection($odoo_connector)
+    {
+        try {
+            $success = $odoo_connector->test_connection();
+        } catch (OdooConnException $e) {
+            return array(
+                "success" => false,
+                "error_string" => $e->getMessage(),
+                "error_code" => $e->getCode()
+            );
+        }
+        return array(
+            "success" => $success
+        );
     }
 }
 
@@ -258,16 +287,8 @@ function odoo_conn_odoo_connection_id_argument()
 function odoo_conn_test_odoo_connection($data)
 {
     $id = $data["id"];
-    $connection_getter = new OdooConnGetOdooConnectionSingle($id);
-
-    $connection = $connection_getter->request($data);
-    if (!$connection) {
-        return new WP_Error(
-            "no_connection",
-            "No connection for that Id",
-            array("status" => 404)
-        );
-    }
+    $connection_tester = new OdooConnTestOdooConnection($id);
+    $connection = $connection_tester->request($data);
 
     $encryption_file_handler = new OdooConnEncryptionFileHandler();
     $encryption_handler = new OdooConnEncryptionHandler($encryption_file_handler);
@@ -280,18 +301,7 @@ function odoo_conn_test_odoo_connection($data)
         $connection->url
     );
 
-    $success = true;
-    try {
-        $odoo_connector->test_connection();
-    } catch (OdooConnException $e) {
-        return array(
-            "success" => false,
-            "error_string" => $e->getMessage(),
-            "error_code" => $e->getCode()
-        );
-    }
-
-    return array("success" => $success);
+    return $connection_tester->test_connection($odoo_connector);
 }
 
 function odoo_conn_test_odoo_connection_schema_properties()

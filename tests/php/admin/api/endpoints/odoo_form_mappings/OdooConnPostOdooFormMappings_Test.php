@@ -2,7 +2,6 @@
 
 namespace odoo_conn\tests\admin\api\endpoints\odoo_form_mappings\OdooConnPostOdooFormMappings;
 
-require_once(__DIR__ . "/common.php");
 require_once(__DIR__ . "/../common.php");
 require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
 require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");

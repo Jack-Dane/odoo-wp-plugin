@@ -71,12 +71,11 @@ class OdooConnOdooConnector
         $authentication_response = $this->authenticate();
 
         if ($authentication_response->faultCode()) {
+            $fault_string = $authentication_response->faultString();
             $database_error = preg_match(
-                "/failed: FATAL:  database (?-s:.)+ does not exist/",
-                $authentication_response->faultString()
+                "/failed: FATAL:  database (?-s:.)+ does not exist/", $fault_string
             );
 
-            $fault_string = $authentication_response->faultString();
             if ($database_error) {
                 $fault_string = "Database name '{$this->database}' does not exist in Odoo instance";
             }
