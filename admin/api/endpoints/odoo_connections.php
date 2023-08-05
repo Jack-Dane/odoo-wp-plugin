@@ -391,7 +391,7 @@ add_action("rest_api_init", function () {
         "schema" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_connection_schema",
     ));
 
-    register_rest_route("odoo_conn/v1", "/get-odoo-connection", array(
+    register_rest_route("odoo_conn/v1", "/test-odoo-connection", array(
         array(
             "methods" => "GET",
             "callback" => __NAMESPACE__ . "\\odoo_conn_test_odoo_connection",
