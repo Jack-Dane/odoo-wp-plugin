@@ -45,9 +45,11 @@ class TableButtonBase {
             case "delete":
                 button = new DeleteButton(index, endpoint);
                 break;
-        }
-        if (button == null) {
-            throw new Error("Could not create button, " + buttonType + " doesn't exist");
+            case "test":
+                button = new TestButton(index, endpoint);
+                break;
+            default:
+                throw new Error("Could not create button, " + buttonType + " doesn't exist");
         }
         return button.createElement();
     }
@@ -95,6 +97,15 @@ class DeleteButton extends TableButtonBase {
     constructor(index, endpoint) {
         super(index, endpoint, "Delete", "table-row-delete");
     }
+
+}
+
+class TestButton extends TableButtonBase {
+
+    constructor(index, endpoint) {
+        super(index, endpoint, "Test", "table-row-test");
+    }
+
 }
 
 
@@ -202,6 +213,16 @@ class TableData {
 }
 
 
+class ConnectionTableData extends TableData {
+
+    constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint, testDataEndpoint) {
+        super(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint);
+        this.testDataEndpoint = testDataEndpoint;
+    }
+
+}
+
+
 class TableDisplay {
 
     constructor(tableData) {
@@ -294,20 +315,7 @@ class TableDisplay {
             let tableRow = jQuery("<tr></tr>");
             let tableData = jQuery("<td></td>");
 
-            tableData.append(TableButtonBase.createButton(
-                "edit", index, self.tableData.updateDataEndpoint
-            ));
-            tableData.append(TableButtonBase.createButton(
-                "save", index, self.tableData.updateDataEndpoint
-            ));
-            tableData.append(TableButtonBase.createButton(
-                "close", index, self.tableData.updateDataEndpoint
-            ));
-            let _delete = TableButtonBase.createButton(
-                "delete", index, self.tableData.deleteDataEndpoint
-            );
-            _delete.data("row-id", dataRow["id"]);
-            tableData.append(_delete);
+            self.addTableButtons(tableData, index, dataRow);
 
             tableRow.append(tableData);
 
@@ -341,6 +349,23 @@ class TableDisplay {
             tBody.append(tableRow);
         });
         self.table.append(tBody);
+    }
+
+    addTableButtons(tableData, index, dataRow) {
+        tableData.append(TableButtonBase.createButton(
+            "edit", index, this.tableData.updateDataEndpoint
+        ));
+        tableData.append(TableButtonBase.createButton(
+            "save", index, this.tableData.updateDataEndpoint
+        ));
+        tableData.append(TableButtonBase.createButton(
+            "close", index, this.tableData.updateDataEndpoint
+        ));
+        let _delete = TableButtonBase.createButton(
+            "delete", index, this.tableData.deleteDataEndpoint
+        );
+        _delete.data("row-id", dataRow["id"]);
+        tableData.append(_delete);
     }
 
     #addNextButton() {
@@ -473,12 +498,22 @@ class OdooForms extends TableDisplay {
 class OdooConnections extends TableDisplay {
 
     constructor() {
-        let tableData = new TableData(
+        let tableData = new ConnectionTableData(
             "get-odoo-connections",
             "update-odoo-connection",
-            "delete-odoo-connection"
+            "delete-odoo-connection",
+            "test-odoo-connection"
         );
         super(tableData);
+    }
+
+    addTableButtons(tableData, index, dataRow) {
+        super.addTableButtons(tableData, index, dataRow);
+        let test = TableButtonBase.createButton(
+            "test", index, this.tableData.testDataEndpoint
+        );
+        test.data("row-id", dataRow["id"]);
+        tableData.append(test);
     }
 
     getUserFriendlyColumnNames() {

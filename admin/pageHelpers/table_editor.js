@@ -51,6 +51,26 @@ async function deleteRow(id, endpoint) {
     );
 }
 
+async function testRow(id, endpoint) {
+    let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
+    return await fetch(
+        wpApiSettings.root + "odoo_conn/v1/" + endpoint + joinParam + new URLSearchParams(
+            {
+                id: id
+            }
+        ), {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "content-type": "application/json",
+                "X-WP-Nonce": wpApiSettings.nonce
+            }
+        }
+    ).then(function (response){
+        return response.json();
+    });
+}
+
 async function getForeignKeyData(foreignKeyData) {
     return await fetch(
         wpApiSettings.root + "odoo_conn/v1/" + foreignKeyData,
@@ -142,6 +162,7 @@ jQuery(document).ready(function () {
     jQuery(".database-table").on("click", ".table-row-edit", function () {
         let id = jQuery(this).data("row-class");
         jQuery(this).hide();
+        findElementTableRowEdit(".table-row-test", id).hide();
         findElementTableRowEdit(".table-row-save", id).show();
         findElementTableRowEdit(".table-row-close", id).show();
         openFieldsForEdit(id);
@@ -152,6 +173,7 @@ jQuery(document).ready(function () {
         jQuery(this).hide();
         findElementTableRowEdit(".table-row-save", id).hide();
         findElementTableRowEdit(".table-row-edit", id).show();
+        findElementTableRowEdit(".table-row-test", id).show();
         closeFields(id);
         tableDisplay.displayTable();
     });
@@ -182,6 +204,15 @@ jQuery(document).ready(function () {
         let deleteEndpoint = jQuery(this).data("endpoint");
         await deleteRow(rowId, deleteEndpoint);
         tableDisplay.displayTable();
+    });
+
+    jQuery(".database-table").on("click", ".table-row-test", async function () {
+        let rowId = jQuery(this).data("row-id");
+        let testEndpoint = jQuery(this).data("endpoint");
+        let success = JSON.stringify(
+            await testRow(rowId, testEndpoint)
+        );
+        alert(success);
     });
 });
 
