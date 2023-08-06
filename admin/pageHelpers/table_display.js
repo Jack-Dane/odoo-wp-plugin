@@ -5,6 +5,7 @@ class TableButtonBase {
         this.endpoint = endpoint;
         this.text = text;
         this.tableRowClass = tableRowClass;
+        this.buttonElement = null;
     }
 
     createElement() {
@@ -16,6 +17,7 @@ class TableButtonBase {
             buttonElement.css("display", "none");
         }
         buttonElement.addClass(this.classes.join(" "));
+        this.buttonElement = buttonElement;
         return buttonElement;
     }
 
@@ -29,6 +31,8 @@ class TableButtonBase {
             this.tableRowClass
         ];
     }
+
+    click() { }
 
     static createButton(buttonType, index, endpoint) {
         let button = null;
@@ -51,7 +55,16 @@ class TableButtonBase {
             default:
                 throw new Error("Could not create button, " + buttonType + " doesn't exist");
         }
-        return button.createElement();
+        button.createElement();
+        return button;
+    }
+
+    hide() {
+        this.buttonElement.hide();
+    }
+
+    show () {
+        this.buttonElement.show();
     }
 
 }
@@ -76,6 +89,37 @@ class SaveButton extends TableButtonBase {
         return false;
     }
 
+    async save(id) {
+        let updateData = getUpdateData(id);
+        let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
+
+        await fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + this.endpoint + joinParam + new URLSearchParams(
+                updateData
+            ),
+            {
+                method: "PUT",
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-WP-Nonce': wpApiSettings.nonce
+                }
+            }
+        ).then(function (response) {
+            closeFields(id);
+            tableDisplay.displayTable();
+
+            if (response.status != 200) {
+                let jsonPromise = Promise.resolve(response.json());
+
+                jsonPromise.then(function (jsonResponse) {
+                    // get the error message from the failed response
+                    alert(jsonResponse["message"]);
+                });
+            }
+        });
+    }
+
 }
 
 
@@ -98,12 +142,51 @@ class DeleteButton extends TableButtonBase {
         super(index, endpoint, "Delete", "table-row-delete");
     }
 
+    async delete(id) {
+        let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
+        await fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + this.endpoint + joinParam + new URLSearchParams(
+                {
+                    id: id
+                }
+            ),
+            {
+                method: "DELETE",
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-WP-Nonce': wpApiSettings.nonce
+                }
+            }
+        );
+    }
+
 }
 
 class TestButton extends TableButtonBase {
 
     constructor(index, endpoint) {
         super(index, endpoint, "Test", "table-row-test");
+    }
+
+    async test(id) {
+        let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
+        return await fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + this.endpoint + joinParam + new URLSearchParams(
+                {
+                    id: id
+                }
+            ), {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "content-type": "application/json",
+                    "X-WP-Nonce": wpApiSettings.nonce
+                }
+            }
+        ).then(function (response){
+            return response.json();
+        });
     }
 
 }
@@ -177,6 +260,80 @@ class NextPaginationButton extends PaginationButton {
 }
 
 
+class TableRow {
+
+    constructor(index, id, tableData) {
+        this.index = index;
+        this.id = id;
+        this.tableData = tableData
+
+        this.editButton = null;
+        this.saveButton = null;
+        this.closeButton = null;
+        this.deleteButton = null;
+    }
+
+    createTableButtons() {
+        this.editButton = TableButtonBase.createButton(
+            "edit", this.index, this.tableData.updateDataEndpoint
+        );
+        this.editButton.buttonElement.on("click", this.editClick.bind(this));
+
+        this.saveButton = TableButtonBase.createButton(
+            "save", this.index, this.tableData.updateDataEndpoint
+        );
+        this.saveButton.buttonElement.on("click", this.saveClick.bind(this));
+
+        this.closeButton = TableButtonBase.createButton(
+            "close", this.index, this.tableData.updateDataEndpoint
+        );
+        this.closeButton.buttonElement.on("click", this.closeClick.bind(this));
+
+        this.deleteButton = TableButtonBase.createButton(
+            "delete", this.index, this.tableData.deleteDataEndpoint
+        );
+        this.deleteButton.buttonElement.data("row-id", this.id);
+        this.deleteButton.buttonElement.on("click", this.deleteClick.bind(this));
+
+        return [
+            this.editButton.buttonElement,
+            this.saveButton.buttonElement,
+            this.closeButton.buttonElement,
+            this.deleteButton.buttonElement
+        ];
+    }
+
+    editClick() {
+        this.editButton.hide();
+        this.saveButton.show();
+        this.closeButton.show();
+        this.deleteButton.hide();
+        openFieldsForEdit("table-row-" + this.index);
+    }
+
+    saveClick() {
+        this.saveButton.hide();
+        this.closeButton.hide();
+        this.editButton.show();
+        this.saveButton.save("table-row-" + this.index);
+    }
+
+    closeClick() {
+        this.closeButton.hide();
+        this.saveButton.hide();
+        this.editButton.show();
+        closeFields("table-row-" + this.index);
+        tableDisplay.displayTable();
+    }
+
+    deleteClick() {
+        this.deleteButton.delete(this.id);
+        tableDisplay.displayTable();
+    }
+
+}
+
+
 class TableData {
 
     constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
@@ -184,6 +341,15 @@ class TableData {
         this.updateDataEndpoint = updateDataEndpoint;
         this.deleteDataEndpoint = deleteDataEndpoint;
         this.cacheJsonResponse = null;
+    }
+
+    createTableRowInstance(index, id) {
+        return new TableRow(index, id, this);
+    }
+
+    createTableButtons(index, id) {
+        let tableRow = this.createTableRowInstance(index, id);
+        return tableRow.createTableButtons();
     }
 
     getRows(offset, limit) {
@@ -218,6 +384,49 @@ class ConnectionTableData extends TableData {
     constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint, testDataEndpoint) {
         super(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint);
         this.testDataEndpoint = testDataEndpoint;
+    }
+
+    createTableRowInstance(index, id) {
+        return new ConnectionTableRow(index, id, this);
+    }
+
+}
+
+class ConnectionTableRow extends TableRow {
+
+    constructor(index, id, tableData) {
+        super(index, id, tableData);
+
+        this.testButton = null;
+    }
+
+    createTableButtons() {
+        let tableButtons = super.createTableButtons();
+
+        this.testButton = TableButtonBase.createButton(
+            "test", this.index, this.tableData.testDataEndpoint
+        );
+        this.testButton.buttonElement.on("click", this.testClick.bind(this));
+        tableButtons.push(this.testButton.buttonElement);
+
+        return tableButtons;
+    }
+
+    async testClick() {
+        let success = JSON.stringify(
+            await this.testButton.test(this.id)
+        );
+        alert(success);
+    }
+
+    closeClick() {
+        super.closeClick();
+        this.testButton.show();
+    }
+
+    editClick() {
+        super.editClick();
+        this.testButton.hide();
     }
 
 }
@@ -315,7 +524,13 @@ class TableDisplay {
             let tableRow = jQuery("<tr></tr>");
             let tableData = jQuery("<td></td>");
 
-            self.addTableButtons(tableData, index, dataRow);
+            let tableButtons = self.tableData.createTableButtons(
+                index, dataRow["id"]
+            );
+
+            tableButtons.forEach(function (tableButton) {
+                tableData.append(tableButton);
+            });
 
             tableRow.append(tableData);
 
@@ -349,23 +564,6 @@ class TableDisplay {
             tBody.append(tableRow);
         });
         self.table.append(tBody);
-    }
-
-    addTableButtons(tableData, index, dataRow) {
-        tableData.append(TableButtonBase.createButton(
-            "edit", index, this.tableData.updateDataEndpoint
-        ));
-        tableData.append(TableButtonBase.createButton(
-            "save", index, this.tableData.updateDataEndpoint
-        ));
-        tableData.append(TableButtonBase.createButton(
-            "close", index, this.tableData.updateDataEndpoint
-        ));
-        let _delete = TableButtonBase.createButton(
-            "delete", index, this.tableData.deleteDataEndpoint
-        );
-        _delete.data("row-id", dataRow["id"]);
-        tableData.append(_delete);
     }
 
     #addNextButton() {
@@ -505,15 +703,6 @@ class OdooConnections extends TableDisplay {
             "test-odoo-connection"
         );
         super(tableData);
-    }
-
-    addTableButtons(tableData, index, dataRow) {
-        super.addTableButtons(tableData, index, dataRow);
-        let test = TableButtonBase.createButton(
-            "test", index, this.tableData.testDataEndpoint
-        );
-        test.data("row-id", dataRow["id"]);
-        tableData.append(test);
     }
 
     getUserFriendlyColumnNames() {
