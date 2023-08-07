@@ -192,6 +192,59 @@ class TestButton extends TableButtonBase {
 }
 
 
+class RowField {
+
+    constructor(index, columnName, text, editable) {
+        this.index = index;
+        this.columnName = columnName;
+        this.text = text;
+        this.editable = editable;
+        this.dataElement = null;
+    }
+
+    createField() {
+        this.dataElement = jQuery("<span>" + this.text + "</span>");
+        this.dataElement.addClass("table-row-" + this.index);
+        this.dataElement.data("editable", this.editable);
+        this.dataElement.data("table-field", this.getTableField);
+        return this.dataElement;
+    }
+
+    get getTableField () {
+        return this.columnName;
+    }
+
+}
+
+
+class DropDownRowField extends RowField {
+
+    constructor(index, columnName, text, foreignKeyData, foreignKeyValue) {
+        super(index, columnName, text, true);
+        this.foreignKeyEndpoint = foreignKeyData["endpoint"];
+        this.tableField = foreignKeyData["keyColumn"];
+        this.foreignKeyColumnPrimaryKey = foreignKeyData["primaryKey"];
+        this.foreignKeyColumnName = foreignKeyData["foreignColumnName"];
+        this.foreignKeyValue = foreignKeyValue;
+    }
+
+    createField() {
+        super.createField();
+        this.dataElement.data("foreign-key-endpoint", this.foreignKeyEndpoint);
+        this.dataElement.data("table-field", this.tableField);
+        this.dataElement.data("foreign-key-column-primary-key", this.foreignKeyColumnPrimaryKey);
+        this.dataElement.data("foreign-key-column-name", this.foreignKeyColumnName);
+        this.dataElement.data("foreign-key-value", this.foreignKeyValue);
+        return this.dataElement;
+    }
+
+    get getTableField() {
+        return this.tableField;
+    }
+
+}
+
+
 class PaginationButton {
 
     constructor(currentPageNumber, currentPage) {
@@ -262,7 +315,7 @@ class NextPaginationButton extends PaginationButton {
 
 class TableRow {
 
-    constructor(index, id, tableData) {
+    constructor(index, id, tableData, dataRow, foreignKeys, displayColumns) {
         this.index = index;
         this.id = id;
         this.tableData = tableData
@@ -271,6 +324,11 @@ class TableRow {
         this.saveButton = null;
         this.closeButton = null;
         this.deleteButton = null;
+
+        this.rowFields = [];
+        this.dataRow = dataRow;
+        this.foreignKeys = foreignKeys;
+        this.displayColumns = displayColumns;
     }
 
     createTableButtons() {
@@ -301,6 +359,41 @@ class TableRow {
             this.closeButton.buttonElement,
             this.deleteButton.buttonElement
         ];
+    }
+
+    createRowFields() {
+        let fieldElements = [];
+        for (let columnName in this.dataRow) {
+            if (!this.displayColumns.includes(columnName)) {
+                continue;
+            }
+            let editable = columnName!=="id";
+
+            let fieldObject = null;
+            let fieldText = this.dataRow[columnName];
+            if (columnName in this.foreignKeys) {
+                let foreignKeyData = this.foreignKeys[columnName];
+                fieldObject = new DropDownRowField(
+                    this.index,
+                    columnName,
+                    fieldText,
+                    this.foreignKeys[columnName],
+                    this.dataRow[foreignKeyData["keyColumn"]]
+                );
+            } else {
+                fieldObject = new RowField(
+                    this.index,
+                    columnName,
+                    fieldText,
+                    editable
+                );
+            }
+
+            this.rowFields.push(fieldObject);
+            fieldElements.push(fieldObject.createField());
+        }
+
+        return fieldElements;
     }
 
     editClick() {
@@ -343,13 +436,8 @@ class TableData {
         this.cacheJsonResponse = null;
     }
 
-    createTableRowInstance(index, id) {
-        return new TableRow(index, id, this);
-    }
-
-    createTableButtons(index, id) {
-        let tableRow = this.createTableRowInstance(index, id);
-        return tableRow.createTableButtons();
+    createTableRowInstance(index, id, dataRow, foreignKeys, displayColumns) {
+        return new TableRow(index, id, this, dataRow, foreignKeys, displayColumns);
     }
 
     getRows(offset, limit) {
@@ -386,16 +474,16 @@ class ConnectionTableData extends TableData {
         this.testDataEndpoint = testDataEndpoint;
     }
 
-    createTableRowInstance(index, id) {
-        return new ConnectionTableRow(index, id, this);
+    createTableRowInstance(index, id, dataRow, foreignKeys, displayColumns) {
+        return new ConnectionTableRow(index, id, this, dataRow, foreignKeys, displayColumns);
     }
 
 }
 
 class ConnectionTableRow extends TableRow {
 
-    constructor(index, id, tableData) {
-        super(index, id, tableData);
+    constructor(index, id, tableData, dataRow, foreignKeys, displayColumns) {
+        super(index, id, tableData, dataRow, foreignKeys, displayColumns);
 
         this.testButton = null;
     }
@@ -466,7 +554,7 @@ class TableDisplay {
         await this.tableData.getRows(offset, this.numberOfRows + 1);
 
         this.displayData = this.tableData.cacheJsonResponse
-        if (this.displayData.length == this.numberOfRows + 1) {
+        if (this.displayData.length === this.numberOfRows + 1) {
             this.showNext = true;
             this.displayData.pop();
         }
@@ -522,45 +610,25 @@ class TableDisplay {
         let tBody = jQuery("<tbody></tbody>");
         dataRows.forEach(async function (dataRow, index) {
             let tableRow = jQuery("<tr></tr>");
-            let tableData = jQuery("<td></td>");
+            let tableDataButtons = jQuery("<td></td>");
 
-            let tableButtons = self.tableData.createTableButtons(
-                index, dataRow["id"]
+            let tableRowObject = self.tableData.createTableRowInstance(
+                index, dataRow["id"], dataRow, self.getForeignKeys(), self.getDisplayColumns()
             );
+            let tableButtons = tableRowObject.createTableButtons();
+            let tableFields = tableRowObject.createRowFields();
 
             tableButtons.forEach(function (tableButton) {
-                tableData.append(tableButton);
+                tableDataButtons.append(tableButton);
+            });
+            tableRow.append(tableDataButtons);
+
+            tableFields.forEach(function (tableField) {
+                let tableDataField = jQuery("<td></td>");
+                tableDataField.append(tableField);
+                tableRow.append(tableDataField);
             });
 
-            tableRow.append(tableData);
-
-            for (let columnName in dataRow) {
-                if (!self.getDisplayColumns().includes(columnName)) {
-                    continue;
-                }
-                let editable = columnName == "id" ? false : true;
-
-                let tableRowData = jQuery("<td></td>");
-                let span = jQuery("<span>" + dataRow[columnName] + "</span>");
-                span.addClass("table-row-" + index);
-                span.data("editable", editable);
-
-                if (columnName in self.getForeignKeys()) {
-                    let foreignKeyData = self.getForeignKeys()[columnName];
-
-                    span.data("foreign-key-endpoint", foreignKeyData["endpoint"]);
-                    span.data("table-field", foreignKeyData["keyColumn"]);
-                    span.data("foreign-key-column-primary-key", foreignKeyData["primaryKey"]);
-                    span.data("foreign-key-column-name", foreignKeyData["foreignColumnName"]);
-                    span.data("foreign-key-value", dataRow[foreignKeyData["keyColumn"]]);
-                    // used to determine the current value of the drop down
-                } else {
-                    span.data("table-field", columnName);
-                }
-
-                tableRowData.append(span);
-                tableRow.append(tableRowData);
-            }
             tBody.append(tableRow);
         });
         self.table.append(tBody);
