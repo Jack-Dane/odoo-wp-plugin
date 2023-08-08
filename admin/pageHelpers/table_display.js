@@ -89,8 +89,7 @@ class SaveButton extends TableButtonBase {
         return false;
     }
 
-    async save(id) {
-        let updateData = getUpdateData(id);
+    async save(updateData) {
         let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
 
         await fetch(
@@ -106,7 +105,6 @@ class SaveButton extends TableButtonBase {
                 }
             }
         ).then(function (response) {
-            closeFields(id);
             tableDisplay.displayTable();
 
             if (response.status != 200) {
@@ -144,7 +142,7 @@ class DeleteButton extends TableButtonBase {
 
     async delete(id) {
         let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
-        await fetch(
+        return fetch(
             wpApiSettings.root + "odoo_conn/v1/" + this.endpoint + joinParam + new URLSearchParams(
                 {
                     id: id
@@ -158,7 +156,9 @@ class DeleteButton extends TableButtonBase {
                     'X-WP-Nonce': wpApiSettings.nonce
                 }
             }
-        );
+        ).then(function() {
+            tableDisplay.displayTable();
+        });
     }
 
 }
@@ -214,6 +214,36 @@ class RowField {
         return this.columnName;
     }
 
+    closeField() {
+        if (!this.editable) {
+            return;
+        }
+
+        let tableField = this.dataElement.data("table-field");
+        let span = jQuery("<span></span>");
+        span.data("editable", this.editable);
+        span.data("table-field", tableField);
+        span.text(this.text);
+
+        this.dataElement.replaceWith(span);
+        this.dataElement = span;
+    }
+
+    async openField() {
+        if (!this.editable) {
+            return;
+        }
+
+        let input = jQuery("<input></input>");
+        input.data("editable", this.editable);
+        input.data("table-field", this.getTableField);
+        input.addClass("table-row-" + this.index);
+        input.attr("value", this.text);
+
+        this.dataElement.replaceWith(input);
+        this.dataElement = input;
+    }
+
 }
 
 
@@ -240,6 +270,58 @@ class DropDownRowField extends RowField {
 
     get getTableField() {
         return this.tableField;
+    }
+
+    async #getForeignKeyData(foreignKeyData) {
+        return await fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + foreignKeyData,
+            {
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-WP-Nonce': wpApiSettings.nonce
+                }
+            }
+        ).then(function (response) {
+            return response.json();
+        });
+    }
+
+    async openField() {
+        if (!this.editable) {
+            return;
+        }
+
+        let element = this.dataElement;
+        let foreignKeyData = await this.#getForeignKeyData(
+            element.data("foreign-key-endpoint")
+        );
+
+        let dropDown = jQuery("<select></select>");
+        dropDown.data("editable", this.editable);
+        dropDown.data("table-field", this.getTableField);
+        dropDown.addClass("table-row-" + this.index);
+
+        let selectedValue = element.data("foreign-key-value");
+        foreignKeyData.forEach(function (foreignKeyObject) {
+            let id = foreignKeyObject[element.data(
+                "foreign-key-column-primary-key"
+            )];
+            let name = foreignKeyObject[element.data(
+                "foreign-key-column-name"
+            )];
+
+            let option = jQuery("<option></option>");
+            option.attr("value", id);
+            option.text(name);
+
+            if (selectedValue === id) {
+                option.attr("selected", true);
+            }
+            dropDown.append(option);
+        });
+        element.replaceWith(dropDown);
+        this.dataElement = dropDown;
     }
 
 }
@@ -367,7 +449,6 @@ class TableRow {
             if (!this.displayColumns.includes(columnName)) {
                 continue;
             }
-            let editable = columnName!=="id";
 
             let fieldObject = null;
             let fieldText = this.dataRow[columnName];
@@ -381,6 +462,7 @@ class TableRow {
                     this.dataRow[foreignKeyData["keyColumn"]]
                 );
             } else {
+                let editable = columnName!=="id";
                 fieldObject = new RowField(
                     this.index,
                     columnName,
@@ -401,27 +483,54 @@ class TableRow {
         this.saveButton.show();
         this.closeButton.show();
         this.deleteButton.hide();
-        openFieldsForEdit("table-row-" + this.index);
+        this.#openFields();
     }
 
     saveClick() {
+        let updatedData = this.#getUpdatedData();
         this.saveButton.hide();
         this.closeButton.hide();
         this.editButton.show();
-        this.saveButton.save("table-row-" + this.index);
+        this.saveButton.save(updatedData);
     }
 
     closeClick() {
         this.closeButton.hide();
         this.saveButton.hide();
         this.editButton.show();
-        closeFields("table-row-" + this.index);
+        this.#closeFields();
         tableDisplay.displayTable();
     }
 
     deleteClick() {
         this.deleteButton.delete(this.id);
-        tableDisplay.displayTable();
+    }
+
+    #closeFields() {
+        this.rowFields.forEach(function(field) {
+            field.closeField();
+        });
+    }
+
+    #openFields() {
+        this.rowFields.forEach(function(field) {
+            field.openField();
+        });
+    }
+
+    #getUpdatedData() {
+        let formData = {}
+        this.rowFields.forEach(function (rowField) {
+            let fieldName = rowField.getTableField;
+            let fieldValue;
+            if (rowField.editable) {
+                fieldValue = rowField.dataElement.val();
+            } else {
+                fieldValue = rowField.dataElement.text();
+            }
+            formData[fieldName] = fieldValue;
+        });
+        return formData;
     }
 
 }
