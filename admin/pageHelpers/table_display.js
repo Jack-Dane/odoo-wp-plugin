@@ -1,7 +1,6 @@
 class TableButtonBase {
 
-    constructor(index, endpoint, text, tableRowClass) {
-        this.index = index;
+    constructor(endpoint, text, tableRowClass) {
         this.endpoint = endpoint;
         this.text = text;
         this.tableRowClass = tableRowClass;
@@ -9,14 +8,13 @@ class TableButtonBase {
     }
 
     createElement() {
-        let buttonElement = jQuery("<a href='#'></a>");
-        buttonElement.text(this.text);
+        this.buttonElement = jQuery("<a href='#'></a>");
+        this.buttonElement.text(this.text);
         if (!this.shouldShow) {
-            buttonElement.css("display", "none");
+            this.buttonElement.css("display", "none");
         }
-        buttonElement.addClass(this.classes.join(" "));
-        this.buttonElement = buttonElement;
-        return buttonElement;
+        this.buttonElement.addClass(this.classes.join(" "));
+        return this.buttonElement;
     }
 
     get shouldShow() {
@@ -30,25 +28,23 @@ class TableButtonBase {
         ];
     }
 
-    click() { }
-
-    static createButton(buttonType, index, endpoint) {
+    static createButton(buttonType, endpoint) {
         let button = null;
         switch (buttonType) {
             case "edit":
-                button = new EditButton(index, endpoint);
+                button = new EditButton(endpoint);
                 break;
             case "save":
-                button = new SaveButton(index, endpoint);
+                button = new SaveButton(endpoint);
                 break;
             case "close":
-                button = new CloseButton(index, endpoint);
+                button = new CloseButton(endpoint);
                 break;
             case "delete":
-                button = new DeleteButton(index, endpoint);
+                button = new DeleteButton(endpoint);
                 break;
             case "test":
-                button = new TestButton(index, endpoint);
+                button = new TestButton(endpoint);
                 break;
             default:
                 throw new Error("Could not create button, " + buttonType + " doesn't exist");
@@ -70,8 +66,8 @@ class TableButtonBase {
 
 class EditButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Edit", "table-row-edit");
+    constructor(endpoint) {
+        super(endpoint, "Edit", "table-row-edit");
     }
 
 }
@@ -79,8 +75,8 @@ class EditButton extends TableButtonBase {
 
 class SaveButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Save", "table-row-save");
+    constructor(endpoint) {
+        super(endpoint, "Save", "table-row-save");
     }
 
     get shouldShow() {
@@ -121,8 +117,8 @@ class SaveButton extends TableButtonBase {
 
 class CloseButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Close", "table-row-close");
+    constructor(endpoint) {
+        super(endpoint, "Close", "table-row-close");
     }
 
     get shouldShow() {
@@ -134,8 +130,8 @@ class CloseButton extends TableButtonBase {
 
 class DeleteButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Delete", "table-row-delete");
+    constructor(endpoint) {
+        super(endpoint, "Delete", "table-row-delete");
     }
 
     async delete(id) {
@@ -163,8 +159,8 @@ class DeleteButton extends TableButtonBase {
 
 class TestButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Test", "table-row-test");
+    constructor(endpoint) {
+        super(endpoint, "Test", "table-row-test");
     }
 
     async test(id) {
@@ -192,8 +188,7 @@ class TestButton extends TableButtonBase {
 
 class RowField {
 
-    constructor(index, columnName, text, editable) {
-        this.index = index;
+    constructor(columnName, text, editable) {
         this.columnName = columnName;
         this.text = text;
         this.editable = editable;
@@ -238,8 +233,8 @@ class RowField {
 
 class DropDownRowField extends RowField {
 
-    constructor(index, columnName, text, foreignKeyData, foreignKeyValue) {
-        super(index, columnName, text, true);
+    constructor(columnName, text, foreignKeyData, foreignKeyValue) {
+        super(columnName, text, true);
         this.foreignKeyEndpoint = foreignKeyData["endpoint"];
         this.tableField = foreignKeyData["keyColumn"];
         this.foreignKeyColumnPrimaryKey = foreignKeyData["primaryKey"];
@@ -369,8 +364,7 @@ class NextPaginationButton extends PaginationButton {
 
 class TableRow {
 
-    constructor(index, id, tableData, dataRow, foreignKeys, displayColumns) {
-        this.index = index;
+    constructor(id, tableData, dataRow, foreignKeys, displayColumns) {
         this.id = id;
         this.tableData = tableData
 
@@ -387,22 +381,22 @@ class TableRow {
 
     createTableButtons() {
         this.editButton = TableButtonBase.createButton(
-            "edit", this.index, this.tableData.updateDataEndpoint
+            "edit", this.tableData.updateDataEndpoint
         );
         this.editButton.buttonElement.on("click", this.editClick.bind(this));
 
         this.saveButton = TableButtonBase.createButton(
-            "save", this.index, this.tableData.updateDataEndpoint
+            "save", this.tableData.updateDataEndpoint
         );
         this.saveButton.buttonElement.on("click", this.saveClick.bind(this));
 
         this.closeButton = TableButtonBase.createButton(
-            "close", this.index, this.tableData.updateDataEndpoint
+            "close", this.tableData.updateDataEndpoint
         );
         this.closeButton.buttonElement.on("click", this.closeClick.bind(this));
 
         this.deleteButton = TableButtonBase.createButton(
-            "delete", this.index, this.tableData.deleteDataEndpoint
+            "delete", this.tableData.deleteDataEndpoint
         );
         this.deleteButton.buttonElement.on("click", this.deleteClick.bind(this));
 
@@ -426,7 +420,6 @@ class TableRow {
             if (columnName in this.foreignKeys) {
                 let foreignKeyData = this.foreignKeys[columnName];
                 fieldObject = new DropDownRowField(
-                    this.index,
                     columnName,
                     fieldText,
                     this.foreignKeys[columnName],
@@ -435,7 +428,6 @@ class TableRow {
             } else {
                 let editable = columnName!=="id";
                 fieldObject = new RowField(
-                    this.index,
                     columnName,
                     fieldText,
                     editable
@@ -470,7 +462,7 @@ class TableRow {
         this.saveButton.hide();
         this.editButton.show();
         this.#closeFields();
-        tableDisplay.displayTable();
+        // tableDisplay.displayTable();
     }
 
     deleteClick() {
@@ -516,8 +508,8 @@ class TableData {
         this.cacheJsonResponse = null;
     }
 
-    createTableRowInstance(index, id, dataRow, foreignKeys, displayColumns) {
-        return new TableRow(index, id, this, dataRow, foreignKeys, displayColumns);
+    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
+        return new TableRow(id, this, dataRow, foreignKeys, displayColumns);
     }
 
     getRows(offset, limit) {
@@ -554,16 +546,16 @@ class ConnectionTableData extends TableData {
         this.testDataEndpoint = testDataEndpoint;
     }
 
-    createTableRowInstance(index, id, dataRow, foreignKeys, displayColumns) {
-        return new ConnectionTableRow(index, id, this, dataRow, foreignKeys, displayColumns);
+    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
+        return new ConnectionTableRow(id, this, dataRow, foreignKeys, displayColumns);
     }
 
 }
 
 class ConnectionTableRow extends TableRow {
 
-    constructor(index, id, tableData, dataRow, foreignKeys, displayColumns) {
-        super(index, id, tableData, dataRow, foreignKeys, displayColumns);
+    constructor(id, tableData, dataRow, foreignKeys, displayColumns) {
+        super(id, tableData, dataRow, foreignKeys, displayColumns);
 
         this.testButton = null;
     }
@@ -572,7 +564,7 @@ class ConnectionTableRow extends TableRow {
         let tableButtons = super.createTableButtons();
 
         this.testButton = TableButtonBase.createButton(
-            "test", this.index, this.tableData.testDataEndpoint
+            "test", this.tableData.testDataEndpoint
         );
         this.testButton.buttonElement.on("click", this.testClick.bind(this));
         tableButtons.push(this.testButton.buttonElement);
@@ -688,12 +680,12 @@ class TableDisplay {
         let dataRows = this.displayData;
         let self = this;
         let tBody = jQuery("<tbody></tbody>");
-        dataRows.forEach(async function (dataRow, index) {
+        dataRows.forEach(async function (dataRow) {
             let tableRow = jQuery("<tr></tr>");
             let tableDataButtons = jQuery("<td></td>");
 
             let tableRowObject = self.tableData.createTableRowInstance(
-                index, dataRow["id"], dataRow, self.getForeignKeys(), self.getDisplayColumns()
+                dataRow["id"], dataRow, self.getForeignKeys(), self.getDisplayColumns()
             );
             let tableButtons = tableRowObject.createTableButtons();
             let tableFields = tableRowObject.createRowFields();
