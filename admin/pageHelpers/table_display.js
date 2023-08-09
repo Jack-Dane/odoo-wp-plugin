@@ -10,8 +10,6 @@ class TableButtonBase {
 
     createElement() {
         let buttonElement = jQuery("<a href='#'></a>");
-        buttonElement.data("endpoint", this.endpoint);
-        buttonElement.data("row-class", "table-row-" + this.index);
         buttonElement.text(this.text);
         if (!this.shouldShow) {
             buttonElement.css("display", "none");
@@ -204,9 +202,6 @@ class RowField {
 
     createField() {
         this.dataElement = jQuery("<span>" + this.text + "</span>");
-        this.dataElement.addClass("table-row-" + this.index);
-        this.dataElement.data("editable", this.editable);
-        this.dataElement.data("table-field", this.getTableField);
         return this.dataElement;
     }
 
@@ -219,10 +214,7 @@ class RowField {
             return;
         }
 
-        let tableField = this.dataElement.data("table-field");
         let span = jQuery("<span></span>");
-        span.data("editable", this.editable);
-        span.data("table-field", tableField);
         span.text(this.text);
 
         this.dataElement.replaceWith(span);
@@ -235,9 +227,6 @@ class RowField {
         }
 
         let input = jQuery("<input></input>");
-        input.data("editable", this.editable);
-        input.data("table-field", this.getTableField);
-        input.addClass("table-row-" + this.index);
         input.attr("value", this.text);
 
         this.dataElement.replaceWith(input);
@@ -256,16 +245,6 @@ class DropDownRowField extends RowField {
         this.foreignKeyColumnPrimaryKey = foreignKeyData["primaryKey"];
         this.foreignKeyColumnName = foreignKeyData["foreignColumnName"];
         this.foreignKeyValue = foreignKeyValue;
-    }
-
-    createField() {
-        super.createField();
-        this.dataElement.data("foreign-key-endpoint", this.foreignKeyEndpoint);
-        this.dataElement.data("table-field", this.tableField);
-        this.dataElement.data("foreign-key-column-primary-key", this.foreignKeyColumnPrimaryKey);
-        this.dataElement.data("foreign-key-column-name", this.foreignKeyColumnName);
-        this.dataElement.data("foreign-key-value", this.foreignKeyValue);
-        return this.dataElement;
     }
 
     get getTableField() {
@@ -292,24 +271,16 @@ class DropDownRowField extends RowField {
             return;
         }
 
-        let element = this.dataElement;
         let foreignKeyData = await this.#getForeignKeyData(
-            element.data("foreign-key-endpoint")
+            this.foreignKeyEndpoint
         );
 
         let dropDown = jQuery("<select></select>");
-        dropDown.data("editable", this.editable);
-        dropDown.data("table-field", this.getTableField);
-        dropDown.addClass("table-row-" + this.index);
 
-        let selectedValue = element.data("foreign-key-value");
+        let selectedValue = this.foreignKeyValue;
         foreignKeyData.forEach(function (foreignKeyObject) {
-            let id = foreignKeyObject[element.data(
-                "foreign-key-column-primary-key"
-            )];
-            let name = foreignKeyObject[element.data(
-                "foreign-key-column-name"
-            )];
+            let id = foreignKeyObject[this.foreignKeyColumnPrimaryKey];
+            let name = foreignKeyObject[this.foreignKeyColumnName];
 
             let option = jQuery("<option></option>");
             option.attr("value", id);
@@ -319,8 +290,9 @@ class DropDownRowField extends RowField {
                 option.attr("selected", true);
             }
             dropDown.append(option);
-        });
-        element.replaceWith(dropDown);
+        }.bind(this));
+
+        this.dataElement.replaceWith(dropDown);
         this.dataElement = dropDown;
     }
 
@@ -432,7 +404,6 @@ class TableRow {
         this.deleteButton = TableButtonBase.createButton(
             "delete", this.index, this.tableData.deleteDataEndpoint
         );
-        this.deleteButton.buttonElement.data("row-id", this.id);
         this.deleteButton.buttonElement.on("click", this.deleteClick.bind(this));
 
         return [
