@@ -21,6 +21,12 @@ require("activation.php");
 
 register_activation_hook(__FILE__, "odoo_conn_activation_function");
 
+require("deactivation.php");
+
+register_deactivation_hook(__FILE__, "odoo_conn_deactivation_function");
+
+require("loaded.php");
+
 require("admin/main.php");
 
 ?>
