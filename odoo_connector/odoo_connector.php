@@ -7,7 +7,9 @@ use \PhpXmlRpc\Value;
 use \PhpXmlRpc\Client;
 
 
-class OdooConnException extends \Exception {}
+class OdooConnException extends \Exception
+{
+}
 
 
 class OdooConnOdooConnector
@@ -39,9 +41,8 @@ class OdooConnOdooConnector
         return new Value($value, $type);
     }
 
-    public function test_connection() {
-        $this->set_user_id();
-
+    private function check_connection_ok()
+    {
         if ($this->uid === false) {
             throw new OdooConnException(
                 "Username or API Key is incorrect"
@@ -50,7 +51,14 @@ class OdooConnOdooConnector
         return is_int($this->uid);
     }
 
-    private function authenticate() {
+    public function test_connection()
+    {
+        $this->set_user_id();
+        return $this->check_connection_ok();
+    }
+
+    private function authenticate()
+    {
         $common_client = $this->create_client($this->url . "/xmlrpc/2/common");
         $version_request = $this->create_request("version", array());
         $version_response = $common_client->send($version_request);
@@ -92,10 +100,12 @@ class OdooConnOdooConnector
     public function create_object($model, $field_values)
     {
         $this->set_user_id();
+        $this->check_connection_ok();
+
         $model_client = $this->create_client($this->url . "/xmlrpc/2/object");
         $parsed_field_values = $this->parse_field_values($field_values);
 
-        $model_client->send(
+        $response = $model_client->send(
             $this->create_request(
                 "execute_kw",
                 array(
@@ -108,6 +118,12 @@ class OdooConnOdooConnector
                 )
             )
         );
+
+        if ($response->faultCode()) {
+            throw new OdooConnException(
+                $response->faultString(), $response->faultCode()
+            );
+        }
     }
 
     private function parse_field_values($field_values)

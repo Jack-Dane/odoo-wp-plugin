@@ -3,6 +3,7 @@
 namespace odoo_conn\admin\php\cf7hook;
 
 
+use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
 use \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;
 use \odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use \odoo_conn\encryption\OdooConnEncryptionHandler;
@@ -51,6 +52,25 @@ class DatabaseHandler
         );
 
         return $forms;
+    }
+
+    public function insert_error($cf7_form_id, $error_message)
+    {
+        global $wpdb;
+
+        $current_datetime = new \DateTime();
+
+        $wpdb->insert(
+            $wpdb->prefix . "odoo_conn_errors",
+            array(
+                "contact_7_id" => $cf7_form_id,
+                "error_message" => $error_message,
+                "time_occurred" => $current_datetime->format("Y-m-d H:i:s")
+            ),
+            array(
+                "%d", "%s", "%s"
+            )
+        );
     }
 
 }
@@ -118,7 +138,20 @@ class OdooConnContactForm7Hook
         $odoo_connector = $this->create_odoo_connection(
             $username, $api_key, $database, $url
         );
-        $odoo_connector->create_object($odoo_model, $odoo_field_data);
+
+        try {
+            $odoo_connector->create_object($odoo_model, $odoo_field_data);
+        } catch (OdooConnException $odoo_conn_exception) {
+            $this->log_error($odoo_conn_exception);
+        }
+
+    }
+
+    private function log_error($odoo_conn_exception)
+    {
+        $this->database_handler->insert_error(
+            $this->contact_form_id, $odoo_conn_exception->getMessage()
+        );
     }
 
     public function create_odoo_connection($username, $api_key, $database, $url)
