@@ -613,7 +613,7 @@ class TableDisplay {
     }
 
     getForeignKeys() {
-        return [];
+        return {};
     }
 
     async getRows() {
@@ -732,137 +732,6 @@ class TableDisplay {
 
     #removePreviousButton() {
         jQuery("#previous-button").remove();
-    }
-
-}
-
-
-class FormMappings extends TableDisplay {
-
-    constructor() {
-        let tableData = new TableData(
-            "get-odoo-form-mappings",
-            "update-odoo-form-mapping",
-            "delete-odoo-form-mapping"
-        );
-        super(tableData);
-    }
-
-    getUserFriendlyColumnNames() {
-        return [
-            "Id",
-            "Odoo Form Id",
-            "Contact Form 7 Field Name",
-            "Odoo Field Name",
-            "Constant Value"
-        ];
-    }
-
-    getDisplayColumns() {
-        return [
-            "id",
-            "odoo_form_name",
-            "cf7_field_name",
-            "odoo_field_name",
-            "constant_value"
-        ];
-    }
-
-    getForeignKeys() {
-        return {
-            "odoo_form_name": {
-                "keyColumn": "odoo_form_id",
-                "endpoint": "get-odoo-forms",
-                "primaryKey": "id",
-                "foreignColumnName": "name"
-            }
-        }
-    }
-
-}
-
-
-class OdooForms extends TableDisplay {
-
-    constructor() {
-        let tableData = new TableData(
-            "get-odoo-forms",
-            "update-odoo-form",
-            "delete-odoo-form"
-        );
-        super(tableData);
-    }
-
-    getUserFriendlyColumnNames() {
-        return [
-            "Id",
-            "Odoo Connection",
-            "Odoo Model",
-            "Name",
-            "Contact 7 Form"
-        ];
-    }
-
-    getDisplayColumns() {
-        return [
-            "id",
-            "odoo_connection_name",
-            "odoo_model",
-            "name",
-            "contact_7_title"
-        ];
-    }
-
-    getForeignKeys() {
-        return {
-            "odoo_connection_name": {
-                "keyColumn": "odoo_connection_id",
-                "endpoint": "get-odoo-connections",
-                "primaryKey": "id",
-                "foreignColumnName": "name"
-            },
-            "contact_7_title": {
-                "keyColumn": "contact_7_id",
-                "endpoint": "get-contact-7-forms",
-                "primaryKey": "ID",
-                "foreignColumnName": "post_title"
-            }
-        }
-    }
-
-}
-
-
-class OdooConnections extends TableDisplay {
-
-    constructor() {
-        let tableData = new ConnectionTableData(
-            "get-odoo-connections",
-            "update-odoo-connection",
-            "delete-odoo-connection",
-            "test-odoo-connection"
-        );
-        super(tableData);
-    }
-
-    getUserFriendlyColumnNames() {
-        return [
-            "Id",
-            "Name",
-            "Username",
-            "URL",
-            "Database Name"
-        ];
-    }
-
-    getDisplayColumns() {
-        return [
-            "id",
-            "name",
-            "username",
-            "url",
-            "database_name"
-        ];
     }
 
 }

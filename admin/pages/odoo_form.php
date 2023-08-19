@@ -1,6 +1,6 @@
 <?php
 
-function odoo_form_page()
+function odoo_conn_odoo_form_page()
 {
     wp_register_script(
         "odoo-form", plugins_url("odoo_form.js", __FILE__), array("jquery"), "1.0.0", true

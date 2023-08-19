@@ -1,6 +1,6 @@
 <?php
 
-function odoo_connection_page()
+function odoo_conn_odoo_connection_page()
 {
     wp_register_script(
         "odoo-connection", plugins_url("odoo_connection.js", __FILE__), array("jquery"), "1.0.0", true

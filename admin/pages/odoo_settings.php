@@ -1,6 +1,6 @@
 <?php
 
-function odoo_settings()
+function odoo_conn_odoo_settings()
 {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

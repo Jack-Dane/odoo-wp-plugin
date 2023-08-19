@@ -227,7 +227,6 @@ function odoo_conn_get_odoo_connections_schema()
             ),
         )
     );
-    return $schema;
 }
 
 function odoo_conn_get_odoo_connections_arguments()
