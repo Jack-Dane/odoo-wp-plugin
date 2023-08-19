@@ -1,10 +1,9 @@
 class OdooErrors extends TableDisplay {
 
     constructor() {
-        let tableData = new TableData(
+        let tableData = new OdooErrorTableData(
             "get-odoo-errors",
-            "",
-            ""
+            "delete-odoo-error"
         );
         super(tableData);
     }

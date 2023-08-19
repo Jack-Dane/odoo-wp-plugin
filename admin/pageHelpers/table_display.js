@@ -57,7 +57,7 @@ class TableButtonBase {
         this.buttonElement.hide();
     }
 
-    show () {
+    show() {
         this.buttonElement.show();
     }
 
@@ -150,7 +150,7 @@ class DeleteButton extends TableButtonBase {
                     'X-WP-Nonce': wpApiSettings.nonce
                 }
             }
-        ).then(function() {
+        ).then(function () {
             tableDisplay.displayTable();
         });
     }
@@ -178,7 +178,7 @@ class TestButton extends TableButtonBase {
                     "X-WP-Nonce": wpApiSettings.nonce
                 }
             }
-        ).then(function (response){
+        ).then(function (response) {
             return response.json();
         });
     }
@@ -200,7 +200,7 @@ class RowField {
         return this.dataElement;
     }
 
-    get getTableField () {
+    get getTableField() {
         return this.columnName;
     }
 
@@ -362,48 +362,26 @@ class NextPaginationButton extends PaginationButton {
 }
 
 
-class TableRow {
+class BaseTableRow {
 
     constructor(id, tableData, dataRow, foreignKeys, displayColumns) {
         this.id = id;
-        this.tableData = tableData
-
-        this.editButton = null;
-        this.saveButton = null;
-        this.closeButton = null;
-        this.deleteButton = null;
-
-        this.rowFields = [];
+        this.tableData = tableData;
         this.dataRow = dataRow;
         this.foreignKeys = foreignKeys;
         this.displayColumns = displayColumns;
+        this.rowFields = [];
+
+        this.deleteButton = null;
     }
 
-    createTableButtons() {
-        this.editButton = TableButtonBase.createButton(
-            "edit", this.tableData.updateDataEndpoint
-        );
-        this.editButton.buttonElement.on("click", this.editClick.bind(this));
-
-        this.saveButton = TableButtonBase.createButton(
-            "save", this.tableData.updateDataEndpoint
-        );
-        this.saveButton.buttonElement.on("click", this.saveClick.bind(this));
-
-        this.closeButton = TableButtonBase.createButton(
-            "close", this.tableData.updateDataEndpoint
-        );
-        this.closeButton.buttonElement.on("click", this.closeClick.bind(this));
-
+    createTableButtons () {
         this.deleteButton = TableButtonBase.createButton(
             "delete", this.tableData.deleteDataEndpoint
         );
         this.deleteButton.buttonElement.on("click", this.deleteClick.bind(this));
 
         return [
-            this.editButton.buttonElement,
-            this.saveButton.buttonElement,
-            this.closeButton.buttonElement,
             this.deleteButton.buttonElement
         ];
     }
@@ -426,7 +404,7 @@ class TableRow {
                     this.dataRow[foreignKeyData["keyColumn"]]
                 );
             } else {
-                let editable = columnName!=="id";
+                let editable = columnName !== "id";
                 fieldObject = new RowField(
                     columnName,
                     fieldText,
@@ -439,6 +417,48 @@ class TableRow {
         }
 
         return fieldElements;
+    }
+
+    deleteClick() {
+        this.deleteButton.delete(this.id);
+    }
+
+}
+
+
+class TableRow extends BaseTableRow {
+
+    constructor(id, tableData, dataRow, foreignKeys, displayColumns) {
+        super(id, tableData, dataRow, foreignKeys, displayColumns);
+
+        this.editButton = null;
+        this.saveButton = null;
+        this.closeButton = null;
+    }
+
+    createTableButtons() {
+        let buttonElements = super.createTableButtons();
+
+        this.editButton = TableButtonBase.createButton(
+            "edit", this.tableData.updateDataEndpoint
+        );
+        this.editButton.buttonElement.on("click", this.editClick.bind(this));
+
+        this.saveButton = TableButtonBase.createButton(
+            "save", this.tableData.updateDataEndpoint
+        );
+        this.saveButton.buttonElement.on("click", this.saveClick.bind(this));
+
+        this.closeButton = TableButtonBase.createButton(
+            "close", this.tableData.updateDataEndpoint
+        );
+        this.closeButton.buttonElement.on("click", this.closeClick.bind(this));
+
+        return buttonElements.concat([
+            this.editButton.buttonElement,
+            this.saveButton.buttonElement,
+            this.closeButton.buttonElement
+        ]);
     }
 
     editClick() {
@@ -462,21 +482,16 @@ class TableRow {
         this.saveButton.hide();
         this.editButton.show();
         this.#closeFields();
-        // tableDisplay.displayTable();
-    }
-
-    deleteClick() {
-        this.deleteButton.delete(this.id);
     }
 
     #closeFields() {
-        this.rowFields.forEach(function(field) {
+        this.rowFields.forEach(function (field) {
             field.closeField();
         });
     }
 
     #openFields() {
-        this.rowFields.forEach(function(field) {
+        this.rowFields.forEach(function (field) {
             field.openField();
         });
     }
@@ -499,17 +514,12 @@ class TableRow {
 }
 
 
-class TableData {
+class BaseTableData {
 
-    constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
+    constructor(getDataEndpoint, deleteDataEndpoint) {
         this.getDataEndpoint = getDataEndpoint;
-        this.updateDataEndpoint = updateDataEndpoint;
         this.deleteDataEndpoint = deleteDataEndpoint;
         this.cacheJsonResponse = null;
-    }
-
-    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
-        return new TableRow(id, this, dataRow, foreignKeys, displayColumns);
     }
 
     getRows(offset, limit) {
@@ -539,6 +549,20 @@ class TableData {
 }
 
 
+class TableData extends BaseTableData {
+
+    constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
+        super(getDataEndpoint, deleteDataEndpoint);
+        this.updateDataEndpoint = updateDataEndpoint;
+    }
+
+    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
+        return new TableRow(id, this, dataRow, foreignKeys, displayColumns);
+    }
+
+}
+
+
 class ConnectionTableData extends TableData {
 
     constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint, testDataEndpoint) {
@@ -551,6 +575,7 @@ class ConnectionTableData extends TableData {
     }
 
 }
+
 
 class ConnectionTableRow extends TableRow {
 
@@ -587,6 +612,19 @@ class ConnectionTableRow extends TableRow {
     editClick() {
         super.editClick();
         this.testButton.hide();
+    }
+
+}
+
+
+class OdooErrorTableData extends BaseTableData {
+
+    constructor(getDataEndpoint, deleteDataEndpoint) {
+        super(getDataEndpoint, deleteDataEndpoint);
+    }
+
+    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
+        return new BaseTableRow(id, this, dataRow, foreignKeys, displayColumns);
     }
 
 }
