@@ -52,7 +52,11 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
         )->once()->andReturn(
             $models_client
         );
-        $models_client->shouldReceive("send")->with($this->model_request)->once();
+        $response = \Mockery::mock();
+        $models_client->shouldReceive("send")->with($this->model_request)->once()->andReturn(
+            $response
+        );
+        $response->shouldReceive("faultCode")->andReturn(0);
 
         $this->odoo_connector->create_object(
             "res.partner",
@@ -65,6 +69,47 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
         );
 
         $this->assertEquals(2, $this->odoo_connector->uid);
+    }
+
+    public function test_bad_send_response()
+    {
+        $this->authentication_response->shouldReceive("value")->andReturn($this->value_mock);
+        $this->authentication_response->shouldReceive("faultCode")->andReturn(0);
+
+        $models_client = \Mockery::mock();
+        $this->odoo_connector->shouldReceive("create_client")->with(
+            "test_url/xmlrpc/2/object"
+        )->once()->andReturn(
+            $models_client
+        );
+        $response = \Mockery::mock();
+        $models_client->shouldReceive("send")->with($this->model_request)->once()->andReturn(
+            $response
+        );
+        $response->shouldReceive("faultCode")->andReturn(2);
+        $response->shouldReceive("faultString")->andReturn("No such model res.partner");
+
+        $raised_exception = false;
+        try {
+            $this->odoo_connector->create_object(
+                "res.partner",
+                array(
+                    array(
+                        "name" => "Jack",
+                        "email" => "test@test.com"
+                    )
+                )
+            );
+        } catch (OdooConnException $exception) {
+            $this->assertEquals(
+                2, $exception->getCode()
+            );
+            $this->assertEquals(
+                "No such model res.partner", $exception->getMessage()
+            );
+            $raised_exception = true;
+        }
+        $this->assertTrue($raised_exception);
     }
 
     public function test_failed_to_authenticate()

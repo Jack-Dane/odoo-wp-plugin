@@ -12,8 +12,10 @@ namespace odoo_conn\admin\php\cf7hook {
 namespace odoo_conn\tests\admin\php\OdooConnContactForm7Hook_Test {
 
     require_once(__DIR__ . "/../../../admin/cf7hook.php");
+    require_once(__DIR__ . "/../../../odoo_connector/odoo_connector.php");
 
     use \odoo_conn\admin\php\cf7hook\OdooConnContactForm7Hook;
+    use \odoo_conn\odoo_connector\odoo_connector\OdooConnException;
     use \PHPUnit\Framework\TestCase;
 
     class FormMock
@@ -92,6 +94,7 @@ namespace odoo_conn\tests\admin\php\OdooConnContactForm7Hook_Test {
                         new FieldMappingMock("multi", "", "multiple")
                     ]
                 );
+            $this->database_handler->expects("insert_error")->never();
             $this->odoo_conn_contact_form_7_hook->shouldReceive("create_odoo_connection")
                 ->with("username", "decrypted_api_key", "odoo", "http://127.0.0.1")
                 ->andReturn($this->odoo_connector);
@@ -128,6 +131,7 @@ namespace odoo_conn\tests\admin\php\OdooConnContactForm7Hook_Test {
                 ->andReturn(new ConnectionMock("username", "api_key", "odoo", "http://127.0.0.1"));
             $this->database_handler->shouldReceive("get_field_mappings_from_database")->with(3)
                 ->andReturn([]);
+            $this->database_handler->expects("insert_error")->never();
             $this->odoo_conn_contact_form_7_hook->shouldReceive("create_odoo_connection")
                 ->never();
             $this->odoo_connector->shouldReceive("create_object")->never();
@@ -135,6 +139,54 @@ namespace odoo_conn\tests\admin\php\OdooConnContactForm7Hook_Test {
             $this->getFunctionMock("\\odoo_conn\\admin\\php\\cf7hook", "error_log")
                 ->expects($this->once())
                 ->with("Not sending data as there isn't any form field mappings.");
+
+            $response = $this->odoo_conn_contact_form_7_hook->send_odoo_data("wpcf");
+
+            $this->assertEquals("wpcf", $response);
+        }
+
+        public function test_error_reported()
+        {
+            $this->database_handler->shouldReceive("get_forms_from_database")->with(1)
+                ->andReturn([new FormMock(3, 4, "res.partner")]);
+            $this->database_handler->shouldReceive("get_connection_from_database")->with(4)
+                ->andReturn(new ConnectionMock("username", "api_key", "odoo", "http://127.0.0.1"));
+            $this->database_handler->shouldReceive("get_field_mappings_from_database")->with(3)
+                ->andReturn(
+                    [
+                        new FieldMappingMock("your-name", "", "name"),
+                        new FieldMappingMock("your-email", "", "email"),
+                        new FieldMappingMock("", "webform", "source"),
+                        new FieldMappingMock("multi", "", "multiple")
+                    ]
+                );
+            $this->database_handler->shouldReceive("insert_error")
+                ->with(1, "New error to be logged");
+            $this->odoo_conn_contact_form_7_hook->shouldReceive("create_odoo_connection")
+                ->with("username", "decrypted_api_key", "odoo", "http://127.0.0.1")
+                ->andReturn($this->odoo_connector);
+            $this->odoo_connector->shouldReceive("create_object")
+                ->with("res.partner", array(
+                        array(
+                            "name" => "jack",
+                            "email" => "email@email.com",
+                            "source" => "webform",
+                            "multiple" => "option1, option2"
+                        )
+                    )
+                )->andThrow(new OdooConnException(
+                    "New error to be logged", 5
+                ));
+            $this->wpcf7_submission->shouldReceive("get_posted_data")->with()->andReturn(
+                array(
+                    "your-name" => "jack",
+                    "your-email" => "email@email.com",
+                    "multi" => array(
+                        "option1",
+                        "option2"
+                    )
+                )
+            );
 
             $response = $this->odoo_conn_contact_form_7_hook->send_odoo_data("wpcf");
 
