@@ -7,7 +7,7 @@ use Facebook\WebDriver\WebDriverBy;
 class Delete_Test extends WordpressTableBase
 {
 
-    public function test_delete_conections()
+    public function test_delete()
     {
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-connection");
         sleep(2);
