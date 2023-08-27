@@ -4,7 +4,7 @@ docker compose -f tests/end_to_end_tests/compose.yaml rm -f
 docker compose -f tests/end_to_end_tests/compose.yaml up --force-recreate --build --wait
 
 echo "Waiting for WP containers to start"
-sleep 60
+sleep 30
 
 echo "Starting PHP container"
 dockerPHPImageId=$(docker build -f tests/end_to_end_tests/php-composer-dockerfile . -q)

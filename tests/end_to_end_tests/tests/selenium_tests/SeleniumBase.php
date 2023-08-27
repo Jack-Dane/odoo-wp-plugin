@@ -95,7 +95,10 @@ class WordpressTableBase extends SeleniumBase
 
     private function wait_for_table_row($row_id)
     {
-        return $this->wait_for_elements(WebDriverBy::cssSelector(".table-row-" . $row_id));
+        $row_id += 1;  // xpath indices start at 1
+        return $this->wait_for_elements(
+            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr[{$row_id}]/td")
+        );
     }
 
 }

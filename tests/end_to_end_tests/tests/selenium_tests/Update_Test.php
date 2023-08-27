@@ -39,7 +39,7 @@ class Update_Test extends WordpressTableBase
         sleep(2);
 
         $input_elements = $this->driver->findElements(
-            WebDriverBy::xpath("//input[@class='table-row-0']")
+            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr/td/input")
         );
 
         $input_elements[0]->sendKeys("Broken");
@@ -53,7 +53,7 @@ class Update_Test extends WordpressTableBase
         $this->driver->switchTo()->alert()->accept();
 
         $input_elements = $this->driver->findElements(
-            WebDriverBy::xpath("//input[@class='table-row-0']")
+            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr/td/input")
         );
 
         $text_table_elements = $this->get_table_row_text(0);
@@ -78,7 +78,7 @@ class Update_Test extends WordpressTableBase
         sleep(2);
 
         $input_elements = $this->driver->findElements(
-            WebDriverBy::xpath("//input[@class='table-row-" . $row . "']")
+            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr/td/input")
         );
         $expected_values = array();
         $index = -1;
