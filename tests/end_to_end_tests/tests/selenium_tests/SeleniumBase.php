@@ -4,6 +4,7 @@ use \PHPUnit\Framework\TestCase;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\Exception\NoSuchAlertException;
 
 class SeleniumBase extends TestCase
 {
@@ -77,6 +78,19 @@ class SeleniumBase extends TestCase
         sleep(2);
     }
 
+    protected function wait_for_alert()
+    {
+        $tries = 0;
+        do {
+            try {
+                return $this->driver->switchTo()->alert()->getText();
+            } catch (NoSuchAlertException $e) {
+                $tries += 1;
+            }
+        } while ($tries < 10);
+        throw $e;
+    }
+
 }
 
 
@@ -95,7 +109,10 @@ class WordpressTableBase extends SeleniumBase
 
     private function wait_for_table_row($row_id)
     {
-        return $this->wait_for_elements(WebDriverBy::cssSelector(".table-row-" . $row_id));
+        $row_id += 1;  // xpath indices start at 1
+        return $this->wait_for_elements(
+            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr[{$row_id}]/td")
+        );
     }
 
 }

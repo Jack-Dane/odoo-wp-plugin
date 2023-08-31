@@ -4,7 +4,7 @@ namespace odoo_conn\tests\admin\api\endpoints\odoo_connections\OdooConnPostOdooC
 
 require_once(__DIR__ . "/../common.php");
 require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/c7f_posts.php");
+require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_connections.php");
 require_once(__DIR__ . "/../../../../../../encryption.php");
 
 use \PHPUnit\Framework\TestCase;

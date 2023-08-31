@@ -1,3 +1,54 @@
+class OdooForms extends TableDisplay {
+
+    constructor() {
+        let tableData = new TableData(
+            "get-odoo-forms",
+            "update-odoo-form",
+            "delete-odoo-form"
+        );
+        super(tableData);
+    }
+
+    getUserFriendlyColumnNames() {
+        return [
+            "Id",
+            "Odoo Connection",
+            "Odoo Model",
+            "Name",
+            "Contact 7 Form"
+        ];
+    }
+
+    getDisplayColumns() {
+        return [
+            "id",
+            "odoo_connection_name",
+            "odoo_model",
+            "name",
+            "contact_7_title"
+        ];
+    }
+
+    getForeignKeys() {
+        return {
+            "odoo_connection_name": {
+                "keyColumn": "odoo_connection_id",
+                "endpoint": "get-odoo-connections",
+                "primaryKey": "id",
+                "foreignColumnName": "name"
+            },
+            "contact_7_title": {
+                "keyColumn": "contact_7_id",
+                "endpoint": "get-contact-7-forms",
+                "primaryKey": "ID",
+                "foreignColumnName": "post_title"
+            }
+        }
+    }
+
+}
+
+
 let tableDisplay = new OdooForms();
 tableDisplay.displayTable();
 

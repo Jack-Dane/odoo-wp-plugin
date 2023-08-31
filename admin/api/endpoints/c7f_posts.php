@@ -8,7 +8,7 @@ class OdooConnGetContact7Form extends OdooConnGetExtendedSchema
 
     public function __construct()
     {
-        parent::__construct($where_condition = "post_type='wpcf7_contact_form'");
+        parent::__construct("wpcf7_contact_form");
     }
 
     protected function get_public_key()
@@ -26,6 +26,10 @@ class OdooConnGetContact7Form extends OdooConnGetExtendedSchema
         return "posts";
     }
 
+    protected function where_query()
+    {
+        return "post_type=%s";
+    }
 }
 
 function odoo_conn_get_contact_7_forms($data)

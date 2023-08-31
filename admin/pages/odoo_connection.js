@@ -1,3 +1,38 @@
+class OdooConnections extends TableDisplay {
+
+    constructor() {
+        let tableData = new ConnectionTableData(
+            "get-odoo-connections",
+            "update-odoo-connection",
+            "delete-odoo-connection",
+            "test-odoo-connection"
+        );
+        super(tableData);
+    }
+
+    getUserFriendlyColumnNames() {
+        return [
+            "Id",
+            "Name",
+            "Username",
+            "URL",
+            "Database Name"
+        ];
+    }
+
+    getDisplayColumns() {
+        return [
+            "id",
+            "name",
+            "username",
+            "url",
+            "database_name"
+        ];
+    }
+
+}
+
+
 var tableDisplay = new OdooConnections();
 tableDisplay.displayTable();
 

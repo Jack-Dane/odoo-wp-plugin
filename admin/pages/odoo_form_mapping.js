@@ -1,3 +1,48 @@
+class FormMappings extends TableDisplay {
+
+    constructor() {
+        let tableData = new TableData(
+            "get-odoo-form-mappings",
+            "update-odoo-form-mapping",
+            "delete-odoo-form-mapping"
+        );
+        super(tableData);
+    }
+
+    getUserFriendlyColumnNames() {
+        return [
+            "Id",
+            "Odoo Form Id",
+            "Contact Form 7 Field Name",
+            "Odoo Field Name",
+            "Constant Value"
+        ];
+    }
+
+    getDisplayColumns() {
+        return [
+            "id",
+            "odoo_form_name",
+            "cf7_field_name",
+            "odoo_field_name",
+            "constant_value"
+        ];
+    }
+
+    getForeignKeys() {
+        return {
+            "odoo_form_name": {
+                "keyColumn": "odoo_form_id",
+                "endpoint": "get-odoo-forms",
+                "primaryKey": "id",
+                "foreignColumnName": "name"
+            }
+        }
+    }
+
+}
+
+
 let tableDisplay = new FormMappings();
 tableDisplay.displayTable();
 

@@ -7,7 +7,8 @@ The Selenium tests should be run in the following order for them to work:
 
 1. Create_Test.php
 2. SendData_Test.php
-3. Update_Test.php
-4. Delete_Test.php
+3. Error_Test.php
+4. Update_Test.php
+5. Delete_Test.php
 
-Otherwise the update tests won't have data to update etc. 
+Otherwise, the update tests won't have any data to update etc. 

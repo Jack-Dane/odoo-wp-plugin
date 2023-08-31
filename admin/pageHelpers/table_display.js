@@ -1,22 +1,20 @@
 class TableButtonBase {
 
-    constructor(index, endpoint, text, tableRowClass) {
-        this.index = index;
+    constructor(endpoint, text, tableRowClass) {
         this.endpoint = endpoint;
         this.text = text;
         this.tableRowClass = tableRowClass;
+        this.buttonElement = null;
     }
 
     createElement() {
-        let buttonElement = jQuery("<a href='#'></a>");
-        buttonElement.data("endpoint", this.endpoint);
-        buttonElement.data("row-class", "table-row-" + this.index);
-        buttonElement.text(this.text);
+        this.buttonElement = jQuery("<a href='#'></a>");
+        this.buttonElement.text(this.text);
         if (!this.shouldShow) {
-            buttonElement.css("display", "none");
+            this.buttonElement.css("display", "none");
         }
-        buttonElement.addClass(this.classes.join(" "));
-        return buttonElement;
+        this.buttonElement.addClass(this.classes.join(" "));
+        return this.buttonElement;
     }
 
     get shouldShow() {
@@ -30,26 +28,37 @@ class TableButtonBase {
         ];
     }
 
-    static createButton(buttonType, index, endpoint) {
+    static createButton(buttonType, endpoint) {
         let button = null;
         switch (buttonType) {
             case "edit":
-                button = new EditButton(index, endpoint);
+                button = new EditButton(endpoint);
                 break;
             case "save":
-                button = new SaveButton(index, endpoint);
+                button = new SaveButton(endpoint);
                 break;
             case "close":
-                button = new CloseButton(index, endpoint);
+                button = new CloseButton(endpoint);
                 break;
             case "delete":
-                button = new DeleteButton(index, endpoint);
+                button = new DeleteButton(endpoint);
                 break;
+            case "test":
+                button = new TestButton(endpoint);
+                break;
+            default:
+                throw new Error("Could not create button, " + buttonType + " doesn't exist");
         }
-        if (button == null) {
-            throw new Error("Could not create button, " + buttonType + " doesn't exist");
-        }
-        return button.createElement();
+        button.createElement();
+        return button;
+    }
+
+    hide() {
+        this.buttonElement.hide();
+    }
+
+    show() {
+        this.buttonElement.show();
     }
 
 }
@@ -57,8 +66,8 @@ class TableButtonBase {
 
 class EditButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Edit", "table-row-edit");
+    constructor(endpoint) {
+        super(endpoint, "Edit", "table-row-edit");
     }
 
 }
@@ -66,12 +75,41 @@ class EditButton extends TableButtonBase {
 
 class SaveButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Save", "table-row-save");
+    constructor(endpoint) {
+        super(endpoint, "Save", "table-row-save");
     }
 
     get shouldShow() {
         return false;
+    }
+
+    async save(updateData) {
+        let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
+
+        await fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + this.endpoint + joinParam + new URLSearchParams(
+                updateData
+            ),
+            {
+                method: "PUT",
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-WP-Nonce': wpApiSettings.nonce
+                }
+            }
+        ).then(function (response) {
+            tableDisplay.displayTable();
+
+            if (response.status != 200) {
+                let jsonPromise = Promise.resolve(response.json());
+
+                jsonPromise.then(function (jsonResponse) {
+                    // get the error message from the failed response
+                    alert(jsonResponse["message"]);
+                });
+            }
+        });
     }
 
 }
@@ -79,8 +117,8 @@ class SaveButton extends TableButtonBase {
 
 class CloseButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Close", "table-row-close");
+    constructor(endpoint) {
+        super(endpoint, "Close", "table-row-close");
     }
 
     get shouldShow() {
@@ -92,9 +130,167 @@ class CloseButton extends TableButtonBase {
 
 class DeleteButton extends TableButtonBase {
 
-    constructor(index, endpoint) {
-        super(index, endpoint, "Delete", "table-row-delete");
+    constructor(endpoint) {
+        super(endpoint, "Delete", "table-row-delete");
     }
+
+    async delete(id) {
+        let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
+        return fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + this.endpoint + joinParam + new URLSearchParams(
+                {
+                    id: id
+                }
+            ),
+            {
+                method: "DELETE",
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-WP-Nonce': wpApiSettings.nonce
+                }
+            }
+        ).then(function () {
+            tableDisplay.displayTable();
+        });
+    }
+
+}
+
+class TestButton extends TableButtonBase {
+
+    constructor(endpoint) {
+        super(endpoint, "Test", "table-row-test");
+    }
+
+    async test(id) {
+        let joinParam = wpApiSettings.root.includes("?") ? "&" : "?";
+        return await fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + this.endpoint + joinParam + new URLSearchParams(
+                {
+                    id: id
+                }
+            ), {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "content-type": "application/json",
+                    "X-WP-Nonce": wpApiSettings.nonce
+                }
+            }
+        ).then(function (response) {
+            return response.json();
+        });
+    }
+
+}
+
+
+class RowField {
+
+    constructor(columnName, text, editable) {
+        this.columnName = columnName;
+        this.text = text;
+        this.editable = editable;
+        this.dataElement = null;
+    }
+
+    createField() {
+        this.dataElement = jQuery("<span>" + this.text + "</span>");
+        return this.dataElement;
+    }
+
+    get getTableField() {
+        return this.columnName;
+    }
+
+    closeField() {
+        if (!this.editable) {
+            return;
+        }
+
+        let span = jQuery("<span></span>");
+        span.text(this.text);
+
+        this.dataElement.replaceWith(span);
+        this.dataElement = span;
+    }
+
+    async openField() {
+        if (!this.editable) {
+            return;
+        }
+
+        let input = jQuery("<input></input>");
+        input.attr("value", this.text);
+
+        this.dataElement.replaceWith(input);
+        this.dataElement = input;
+    }
+
+}
+
+
+class DropDownRowField extends RowField {
+
+    constructor(columnName, text, foreignKeyData, foreignKeyValue) {
+        super(columnName, text, true);
+        this.foreignKeyEndpoint = foreignKeyData["endpoint"];
+        this.tableField = foreignKeyData["keyColumn"];
+        this.foreignKeyColumnPrimaryKey = foreignKeyData["primaryKey"];
+        this.foreignKeyColumnName = foreignKeyData["foreignColumnName"];
+        this.foreignKeyValue = foreignKeyValue;
+    }
+
+    get getTableField() {
+        return this.tableField;
+    }
+
+    async #getForeignKeyData(foreignKeyData) {
+        return await fetch(
+            wpApiSettings.root + "odoo_conn/v1/" + foreignKeyData,
+            {
+                credentials: 'include',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-WP-Nonce': wpApiSettings.nonce
+                }
+            }
+        ).then(function (response) {
+            return response.json();
+        });
+    }
+
+    async openField() {
+        if (!this.editable) {
+            return;
+        }
+
+        let foreignKeyData = await this.#getForeignKeyData(
+            this.foreignKeyEndpoint
+        );
+
+        let dropDown = jQuery("<select></select>");
+
+        let selectedValue = this.foreignKeyValue;
+        foreignKeyData.forEach(function (foreignKeyObject) {
+            let id = foreignKeyObject[this.foreignKeyColumnPrimaryKey];
+            let name = foreignKeyObject[this.foreignKeyColumnName];
+
+            let option = jQuery("<option></option>");
+            option.attr("value", id);
+            option.text(name);
+
+            if (selectedValue === id) {
+                option.attr("selected", true);
+            }
+            dropDown.append(option);
+        }.bind(this));
+
+        this.dataElement.replaceWith(dropDown);
+        this.dataElement = dropDown;
+    }
+
 }
 
 
@@ -166,11 +362,162 @@ class NextPaginationButton extends PaginationButton {
 }
 
 
-class TableData {
+class BaseTableRow {
 
-    constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
+    constructor(id, tableData, dataRow, foreignKeys, displayColumns) {
+        this.id = id;
+        this.tableData = tableData;
+        this.dataRow = dataRow;
+        this.foreignKeys = foreignKeys;
+        this.displayColumns = displayColumns;
+        this.rowFields = [];
+
+        this.deleteButton = null;
+    }
+
+    createTableButtons () {
+        this.deleteButton = TableButtonBase.createButton(
+            "delete", this.tableData.deleteDataEndpoint
+        );
+        this.deleteButton.buttonElement.on("click", this.deleteClick.bind(this));
+
+        return [
+            this.deleteButton.buttonElement
+        ];
+    }
+
+    createRowFields() {
+        let fieldElements = [];
+        for (let columnName in this.dataRow) {
+            if (!this.displayColumns.includes(columnName)) {
+                continue;
+            }
+
+            let fieldObject = null;
+            let fieldText = this.dataRow[columnName];
+            if (columnName in this.foreignKeys) {
+                let foreignKeyData = this.foreignKeys[columnName];
+                fieldObject = new DropDownRowField(
+                    columnName,
+                    fieldText,
+                    this.foreignKeys[columnName],
+                    this.dataRow[foreignKeyData["keyColumn"]]
+                );
+            } else {
+                let editable = columnName !== "id";
+                fieldObject = new RowField(
+                    columnName,
+                    fieldText,
+                    editable
+                );
+            }
+
+            this.rowFields.push(fieldObject);
+            fieldElements.push(fieldObject.createField());
+        }
+
+        return fieldElements;
+    }
+
+    deleteClick() {
+        this.deleteButton.delete(this.id);
+    }
+
+}
+
+
+class TableRow extends BaseTableRow {
+
+    constructor(id, tableData, dataRow, foreignKeys, displayColumns) {
+        super(id, tableData, dataRow, foreignKeys, displayColumns);
+
+        this.editButton = null;
+        this.saveButton = null;
+        this.closeButton = null;
+    }
+
+    createTableButtons() {
+        let buttonElements = super.createTableButtons();
+
+        this.editButton = TableButtonBase.createButton(
+            "edit", this.tableData.updateDataEndpoint
+        );
+        this.editButton.buttonElement.on("click", this.editClick.bind(this));
+
+        this.saveButton = TableButtonBase.createButton(
+            "save", this.tableData.updateDataEndpoint
+        );
+        this.saveButton.buttonElement.on("click", this.saveClick.bind(this));
+
+        this.closeButton = TableButtonBase.createButton(
+            "close", this.tableData.updateDataEndpoint
+        );
+        this.closeButton.buttonElement.on("click", this.closeClick.bind(this));
+
+        return buttonElements.concat([
+            this.editButton.buttonElement,
+            this.saveButton.buttonElement,
+            this.closeButton.buttonElement
+        ]);
+    }
+
+    editClick() {
+        this.editButton.hide();
+        this.saveButton.show();
+        this.closeButton.show();
+        this.deleteButton.hide();
+        this.#openFields();
+    }
+
+    saveClick() {
+        let updatedData = this.#getUpdatedData();
+        this.saveButton.hide();
+        this.closeButton.hide();
+        this.editButton.show();
+        this.saveButton.save(updatedData);
+    }
+
+    closeClick() {
+        this.closeButton.hide();
+        this.saveButton.hide();
+        this.editButton.show();
+        this.#closeFields();
+    }
+
+    #closeFields() {
+        this.rowFields.forEach(function (field) {
+            field.closeField();
+        });
+    }
+
+    #openFields() {
+        this.rowFields.forEach(function (field) {
+            field.openField();
+        });
+    }
+
+    #getUpdatedData() {
+        let formData = {}
+        this.rowFields.forEach(function (rowField) {
+            let fieldName = rowField.getTableField;
+            let fieldValue;
+            if (rowField.editable) {
+                fieldValue = rowField.dataElement.val();
+            } else {
+                fieldValue = rowField.dataElement.text();
+            }
+            formData[fieldName] = fieldValue;
+        });
+        return formData;
+    }
+
+}
+
+
+class BaseTableData {
+
+    constructor(getDataEndpoint, deleteDataEndpoint) {
         this.getDataEndpoint = getDataEndpoint;
-        this.updateDataEndpoint = updateDataEndpoint;
         this.deleteDataEndpoint = deleteDataEndpoint;
         this.cacheJsonResponse = null;
     }
@@ -202,6 +549,87 @@ class TableData {
 }
 
 
+class TableData extends BaseTableData {
+
+    constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint) {
+        super(getDataEndpoint, deleteDataEndpoint);
+        this.updateDataEndpoint = updateDataEndpoint;
+    }
+
+    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
+        return new TableRow(id, this, dataRow, foreignKeys, displayColumns);
+    }
+
+}
+
+
+class ConnectionTableData extends TableData {
+
+    constructor(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint, testDataEndpoint) {
+        super(getDataEndpoint, updateDataEndpoint, deleteDataEndpoint);
+        this.testDataEndpoint = testDataEndpoint;
+    }
+
+    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
+        return new ConnectionTableRow(id, this, dataRow, foreignKeys, displayColumns);
+    }
+
+}
+
+
+class ConnectionTableRow extends TableRow {
+
+    constructor(id, tableData, dataRow, foreignKeys, displayColumns) {
+        super(id, tableData, dataRow, foreignKeys, displayColumns);
+
+        this.testButton = null;
+    }
+
+    createTableButtons() {
+        let tableButtons = super.createTableButtons();
+
+        this.testButton = TableButtonBase.createButton(
+            "test", this.tableData.testDataEndpoint
+        );
+        this.testButton.buttonElement.on("click", this.testClick.bind(this));
+        tableButtons.push(this.testButton.buttonElement);
+
+        return tableButtons;
+    }
+
+    async testClick() {
+        let success = JSON.stringify(
+            await this.testButton.test(this.id)
+        );
+        alert(success);
+    }
+
+    closeClick() {
+        super.closeClick();
+        this.testButton.show();
+    }
+
+    editClick() {
+        super.editClick();
+        this.testButton.hide();
+    }
+
+}
+
+
+class OdooErrorTableData extends BaseTableData {
+
+    constructor(getDataEndpoint, deleteDataEndpoint) {
+        super(getDataEndpoint, deleteDataEndpoint);
+    }
+
+    createTableRowInstance(id, dataRow, foreignKeys, displayColumns) {
+        return new BaseTableRow(id, this, dataRow, foreignKeys, displayColumns);
+    }
+
+}
+
+
 class TableDisplay {
 
     constructor(tableData) {
@@ -223,7 +651,7 @@ class TableDisplay {
     }
 
     getForeignKeys() {
-        return [];
+        return {};
     }
 
     async getRows() {
@@ -236,7 +664,7 @@ class TableDisplay {
         await this.tableData.getRows(offset, this.numberOfRows + 1);
 
         this.displayData = this.tableData.cacheJsonResponse
-        if (this.displayData.length == this.numberOfRows + 1) {
+        if (this.displayData.length === this.numberOfRows + 1) {
             this.showNext = true;
             this.displayData.pop();
         }
@@ -290,54 +718,27 @@ class TableDisplay {
         let dataRows = this.displayData;
         let self = this;
         let tBody = jQuery("<tbody></tbody>");
-        dataRows.forEach(async function (dataRow, index) {
+        dataRows.forEach(async function (dataRow) {
             let tableRow = jQuery("<tr></tr>");
-            let tableData = jQuery("<td></td>");
+            let tableDataButtons = jQuery("<td></td>");
 
-            tableData.append(TableButtonBase.createButton(
-                "edit", index, self.tableData.updateDataEndpoint
-            ));
-            tableData.append(TableButtonBase.createButton(
-                "save", index, self.tableData.updateDataEndpoint
-            ));
-            tableData.append(TableButtonBase.createButton(
-                "close", index, self.tableData.updateDataEndpoint
-            ));
-            let _delete = TableButtonBase.createButton(
-                "delete", index, self.tableData.deleteDataEndpoint
+            let tableRowObject = self.tableData.createTableRowInstance(
+                dataRow["id"], dataRow, self.getForeignKeys(), self.getDisplayColumns()
             );
-            _delete.data("row-id", dataRow["id"]);
-            tableData.append(_delete);
+            let tableButtons = tableRowObject.createTableButtons();
+            let tableFields = tableRowObject.createRowFields();
 
-            tableRow.append(tableData);
+            tableButtons.forEach(function (tableButton) {
+                tableDataButtons.append(tableButton);
+            });
+            tableRow.append(tableDataButtons);
 
-            for (let columnName in dataRow) {
-                if (!self.getDisplayColumns().includes(columnName)) {
-                    continue;
-                }
-                let editable = columnName == "id" ? false : true;
+            tableFields.forEach(function (tableField) {
+                let tableDataField = jQuery("<td></td>");
+                tableDataField.append(tableField);
+                tableRow.append(tableDataField);
+            });
 
-                let tableRowData = jQuery("<td></td>");
-                let span = jQuery("<span>" + dataRow[columnName] + "</span>");
-                span.addClass("table-row-" + index);
-                span.data("editable", editable);
-
-                if (columnName in self.getForeignKeys()) {
-                    let foreignKeyData = self.getForeignKeys()[columnName];
-
-                    span.data("foreign-key-endpoint", foreignKeyData["endpoint"]);
-                    span.data("table-field", foreignKeyData["keyColumn"]);
-                    span.data("foreign-key-column-primary-key", foreignKeyData["primaryKey"]);
-                    span.data("foreign-key-column-name", foreignKeyData["foreignColumnName"]);
-                    span.data("foreign-key-value", dataRow[foreignKeyData["keyColumn"]]);
-                    // used to determine the current value of the drop down
-                } else {
-                    span.data("table-field", columnName);
-                }
-
-                tableRowData.append(span);
-                tableRow.append(tableRowData);
-            }
             tBody.append(tableRow);
         });
         self.table.append(tBody);
@@ -369,136 +770,6 @@ class TableDisplay {
 
     #removePreviousButton() {
         jQuery("#previous-button").remove();
-    }
-
-}
-
-
-class FormMappings extends TableDisplay {
-
-    constructor() {
-        let tableData = new TableData(
-            "get-odoo-form-mappings",
-            "update-odoo-form-mapping",
-            "delete-odoo-form-mapping"
-        );
-        super(tableData);
-    }
-
-    getUserFriendlyColumnNames() {
-        return [
-            "Id",
-            "Odoo Form Id",
-            "Contact Form 7 Field Name",
-            "Odoo Field Name",
-            "Constant Value"
-        ];
-    }
-
-    getDisplayColumns() {
-        return [
-            "id",
-            "odoo_form_name",
-            "cf7_field_name",
-            "odoo_field_name",
-            "constant_value"
-        ];
-    }
-
-    getForeignKeys() {
-        return {
-            "odoo_form_name": {
-                "keyColumn": "odoo_form_id",
-                "endpoint": "get-odoo-forms",
-                "primaryKey": "id",
-                "foreignColumnName": "name"
-            }
-        }
-    }
-
-}
-
-
-class OdooForms extends TableDisplay {
-
-    constructor() {
-        let tableData = new TableData(
-            "get-odoo-forms",
-            "update-odoo-form",
-            "delete-odoo-form"
-        );
-        super(tableData);
-    }
-
-    getUserFriendlyColumnNames() {
-        return [
-            "Id",
-            "Odoo Connection",
-            "Odoo Model",
-            "Name",
-            "Contact 7 Form"
-        ];
-    }
-
-    getDisplayColumns() {
-        return [
-            "id",
-            "odoo_connection_name",
-            "odoo_model",
-            "name",
-            "contact_7_title"
-        ];
-    }
-
-    getForeignKeys() {
-        return {
-            "odoo_connection_name": {
-                "keyColumn": "odoo_connection_id",
-                "endpoint": "get-odoo-connections",
-                "primaryKey": "id",
-                "foreignColumnName": "name"
-            },
-            "contact_7_title": {
-                "keyColumn": "contact_7_id",
-                "endpoint": "get-contact-7-forms",
-                "primaryKey": "ID",
-                "foreignColumnName": "post_title"
-            }
-        }
-    }
-
-}
-
-
-class OdooConnections extends TableDisplay {
-
-    constructor() {
-        let tableData = new TableData(
-            "get-odoo-connections",
-            "update-odoo-connection",
-            "delete-odoo-connection"
-        );
-        super(tableData);
-    }
-
-    getUserFriendlyColumnNames() {
-        return [
-            "Id",
-            "Name",
-            "Username",
-            "URL",
-            "Database Name"
-        ];
-    }
-
-    getDisplayColumns() {
-        return [
-            "id",
-            "name",
-            "username",
-            "url",
-            "database_name"
-        ];
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__ . "/../pageHelpers/table_display.php");
 
-function odoo_form_mapping_page()
+function odoo_conn_odoo_form_mapping_page()
 {
     wp_register_script(
         "odoo-form-mapping", plugins_url("odoo_form_mapping.js", __FILE__), array("jquery"), "1.0.0", true
