@@ -54,9 +54,15 @@ This plugin can be tested within a [docker environment](https://hub.docker.com/_
 * Ideally Odoo 14 or greater as versions before 14 don't support API keys. A password should work instead of an API key
   but is ill-advised.
 
+## Troubleshooting
+* There is a test button for each connection row. Press this to make a test connection to check authentication before 
+assuming the connection details are correct.
+* Errors that have caused a form to not submit to Odoo will be shown in the "Odoo Submit Errors" tab. 
+
 # Contributing
 
 * Run `runE2ETests.sh` before making a pull request.
+* Assume that this will be run on a Linux machine and has docker installed. 
 
 ## Try with Docker
 
