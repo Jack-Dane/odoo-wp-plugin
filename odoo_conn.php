@@ -7,6 +7,8 @@ Version: 0.0.3
 Requires PHP: 7.3
 */
 
+add_option("odoo_conn_db_version");
+
 require("vendor/autoload.php");
 
 require("encryption.php");
