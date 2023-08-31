@@ -19,11 +19,14 @@ trait OdooConnOdooErrorsColumns
 
     protected function get_columns()
     {
+        global $table_prefix;
+
         $columns = [
-            "id",
-            "contact_7_id",
-            "time_occurred",
-            "error_message",
+            $table_prefix . "odoo_conn_errors.id",
+            $table_prefix . "odoo_conn_errors.contact_7_id as 'contact_7_id'",
+            $table_prefix . "posts.post_title as 'contact_7_title'",
+            $table_prefix . "odoo_conn_errors.time_occurred",
+            $table_prefix . "odoo_conn_errors.error_message",
         ];
 
         return implode(", ", $columns);
@@ -37,6 +40,19 @@ class OdooConnGetOdooErrors extends OdooConnGetBaseSchema
 
     use OdooConnOdooErrorsTableName;
     use OdooConnOdooErrorsColumns;
+
+    protected function foreign_keys()
+    {
+        global $table_prefix;
+
+        return [
+            "contact_7_id" => [
+                "table_name" => $table_prefix . "posts",
+                "column_name" => "ID"
+            ]
+        ];
+    }
+
 }
 
 
