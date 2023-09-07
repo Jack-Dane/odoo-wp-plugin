@@ -28,7 +28,10 @@ jobs:
         run: composer install --no-dev
 
       - name: "Zip release"
-        run: cd ../ && ls && zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+        run: cd ../ && zip -x ${{ github.event.repository.name }}/.github/\* -x ${{ github.event.repository.name }}/.git/\*
+          -x ${{ github.event.repository.name }}/tests/\* -x ${{ github.event.repository.name }}/runE2ETests.sh 
+          -x ${{ github.event.repository.name }}/compose.yaml -x ${{ github.event.repository.name }}/.gitignore 
+          -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: "Create Release"
         id: create_release
