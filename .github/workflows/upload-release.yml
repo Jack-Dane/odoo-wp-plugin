@@ -6,6 +6,8 @@ on:
       version:
         description: "Release Version Number"
         required: true
+      release-description:
+        description: "Release Description"
 
 concurrency:
   group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
@@ -41,6 +43,7 @@ jobs:
         with:
           tag_name: ${{ inputs.version }}
           release_name: Release ${{ inputs.version }}
+          body: ${{ inputs.release-description }}
           draft: false
           prerelease: false
 
