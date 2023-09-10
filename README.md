@@ -17,6 +17,10 @@ without needing to code anything.
 
 ## Installation
 
+You can download the latest version of the plugin via the [releases page](https://github.com/Jack-Dane/odoo-wp-plugin/releases). 
+
+### Install from source code
+
 Due to some difficulties with XML-RPC support, composer is needed.
 
 1. First you need to clone the repository.
