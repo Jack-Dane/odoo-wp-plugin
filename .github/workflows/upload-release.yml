@@ -18,6 +18,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: "Waiting for Tests to finish"
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: run-tests
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 5
+          allowed-conclusions: success
+
       - name: "Checkout"
         uses: actions/checkout@v3
 
