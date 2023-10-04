@@ -16,7 +16,7 @@ function odoo_conn_create_odoo_errors()
     global $wpdb, $table_prefix;
 
     $table_name = $table_prefix . "odoo_conn_errors";
-    $contact_7_form_table = $table_prefix . "posts";
+    $contact_7_form_table = $wpdb->posts;
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "

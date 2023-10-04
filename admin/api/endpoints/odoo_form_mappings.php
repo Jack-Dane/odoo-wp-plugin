@@ -13,7 +13,9 @@ trait OdooConnFormMappingTableName
 
     protected function get_table_name()
     {
-        return "odoo_conn_form_mapping";
+        global $table_prefix;
+
+        return $table_prefix. "odoo_conn_form_mapping";
     }
 
 }

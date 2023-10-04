@@ -8,7 +8,9 @@ trait OdooConnOdooErrorsTableName
 
     protected function get_table_name()
     {
-        return "odoo_conn_errors";
+        global $table_prefix;
+
+        return $table_prefix . "odoo_conn_errors";
     }
 
 }
@@ -19,12 +21,12 @@ trait OdooConnOdooErrorsColumns
 
     protected function get_columns()
     {
-        global $table_prefix;
+        global $wpdb, $table_prefix;
 
         $columns = [
             $table_prefix . "odoo_conn_errors.id",
             $table_prefix . "odoo_conn_errors.contact_7_id as 'contact_7_id'",
-            $table_prefix . "posts.post_title as 'contact_7_title'",
+            $wpdb->posts . ".post_title as 'contact_7_title'",
             $table_prefix . "odoo_conn_errors.time_occurred",
             $table_prefix . "odoo_conn_errors.error_message",
         ];
@@ -43,11 +45,11 @@ class OdooConnGetOdooErrors extends OdooConnGetBaseSchema
 
     protected function foreign_keys()
     {
-        global $table_prefix;
+        global $wpdb;
 
         return [
             "contact_7_id" => [
-                "table_name" => $table_prefix . "posts",
+                "table_name" => $wpdb->posts,
                 "column_name" => "ID"
             ]
         ];

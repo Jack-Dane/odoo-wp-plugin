@@ -14,7 +14,9 @@ trait OdooConnOdooConnectionTableName
 
     protected function get_table_name()
     {
-        return "odoo_conn_connection";
+        global $table_prefix;
+
+        return $table_prefix . "odoo_conn_connection";
     }
 
 }

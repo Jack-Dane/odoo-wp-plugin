@@ -17,6 +17,7 @@ class OdooConnGetOdooErrors_Test extends TestCase
     public function test_ok()
     {
         $wpdb = \Mockery::mock("WPDB");
+        $wpdb->posts = "wp_posts";
         $wpdb->shouldReceive("prepare")->with(
             "SELECT wp_odoo_conn_errors.id, wp_odoo_conn_errors.contact_7_id as 'contact_7_id', wp_posts.post_title as 'contact_7_title', wp_odoo_conn_errors.time_occurred, wp_odoo_conn_errors.error_message"
             . " FROM wp_odoo_conn_errors JOIN wp_posts ON wp_odoo_conn_errors.contact_7_id=wp_posts.ID ORDER BY wp_odoo_conn_errors.id DESC", []
