@@ -42,9 +42,9 @@ abstract class OdooConnPostBaseSchema extends OdooConnPostPutBaseSchema
 
     public function request($data)
     {
-        global $wpdb, $table_prefix;
+        global $wpdb;
 
-        $table_name = $table_prefix . $this->get_table_name();
+        $table_name = $this->get_table_name();
         $wpdb->insert(
             $table_name,
             $this->parse_data($data),
@@ -70,9 +70,9 @@ abstract class OdooConnPutBaseSchema extends OdooConnPostPutBaseSchema
 
     public function request($data)
     {
-        global $wpdb, $table_prefix;
+        global $wpdb;
 
-        $table_name = $table_prefix . $this->get_table_name();
+        $table_name = $this->get_table_name();
         $wpdb->update(
             $table_name,
             $this->update_data($data),
@@ -100,11 +100,9 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
 
     private function join_query($query)
     {
-        global $wpdb, $table_prefix;
-
         foreach ($this->foreign_keys() as $foreign_key_column => $foreign_key_data) {
             $query .= " JOIN " . $foreign_key_data["table_name"];
-            $query .= " ON " . $table_prefix . $this->get_table_name() . "." . $foreign_key_column;
+            $query .= " ON " . $this->get_table_name() . "." . $foreign_key_column;
             $query .= "=" . $foreign_key_data["table_name"] . "." . $foreign_key_data["column_name"];
         }
 
@@ -118,10 +116,10 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
 
     protected function prepare_query($query, $data, $argument_array)
     {
-        global $wpdb, $table_prefix;
+        global $wpdb;
 
         // show newly created records first
-        $query .= " ORDER BY " . $table_prefix . $this->get_table_name() . "."
+        $query .= " ORDER BY " . $this->get_table_name() . "."
             . $this->get_public_key() . " DESC";
 
         if (isset($data["limit"])) {
@@ -140,10 +138,9 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
 
     public function request($data)
     {
-        global $wpdb, $table_prefix;
+        global $wpdb;
 
-        $table_name = $table_prefix . $this->get_table_name();
-        $query = "SELECT {$this->get_columns()} FROM {$table_name}";
+        $query = "SELECT {$this->get_columns()} FROM {$this->get_table_name()}";
         $argument_array = array();
 
         $joined_query = $this->join_query($query);
@@ -187,12 +184,12 @@ abstract class OdooConnDeleteBaseSchema extends OdooConnBaseSchema
 
         $id = $data["id"];
         $wpdb->delete(
-            $table_prefix . $this->get_table_name(), array("id" => $id), array("%d")
+            $this->get_table_name(), array("id" => $id), array("%d")
         );
 
         return [
             "DELETE" => $id,
-            "table" => $table_prefix . $this->get_table_name(),
+            "table" => $this->get_table_name(),
         ];
     }
 

@@ -23,7 +23,9 @@ class OdooConnGetContact7Form extends OdooConnGetExtendedSchema
 
     protected function get_table_name()
     {
-        return "posts";
+        global $wpdb;
+
+        return $wpdb->posts;
     }
 
     protected function where_query()

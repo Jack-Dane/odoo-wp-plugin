@@ -8,7 +8,9 @@ trait OdooConnOdooFormTableName
 
     protected function get_table_name()
     {
-        return "odoo_conn_form";
+        global $table_prefix;
+
+        return $table_prefix . "odoo_conn_form";
     }
 
 }
@@ -19,7 +21,7 @@ trait OdooConnOdooFormColumns
 
     protected function get_columns()
     {
-        global $table_prefix;
+        global $wpdb, $table_prefix;
 
         $columns = [
             $table_prefix . "odoo_conn_form.id",
@@ -28,7 +30,7 @@ trait OdooConnOdooFormColumns
             $table_prefix . "odoo_conn_form.odoo_model",
             $table_prefix . "odoo_conn_form.name",
             $table_prefix . "odoo_conn_form.contact_7_id as 'contact_7_id'",
-            $table_prefix . "posts.post_title as 'contact_7_title'"
+            $wpdb->posts . ".post_title as 'contact_7_title'"
         ];
 
         return implode(", ", $columns);
@@ -45,7 +47,7 @@ class OdooConnGetOdooForm extends OdooConnGetBaseSchema
 
     protected function foreign_keys()
     {
-        global $table_prefix;
+        global $wpdb, $table_prefix;
 
         return [
             "odoo_connection_id" => [
@@ -53,7 +55,7 @@ class OdooConnGetOdooForm extends OdooConnGetBaseSchema
                 "column_name" => "id"
             ],
             "contact_7_id" => [
-                "table_name" => $table_prefix . "posts",
+                "table_name" => $wpdb->posts,
                 "column_name" => "ID"
             ]
         ];

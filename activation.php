@@ -41,7 +41,7 @@ function odoo_conn_create_odoo_form_table()
     $odoo_conn_table = $table_prefix . "odoo_conn_connection";
     // contact form 7 stores forms in the generic wordpress posts
     // to know if it is a contact 7 form "post": post_type = wpcf7_contact_form
-    $contact_7_form_table = $table_prefix . "posts";
+    $contact_7_form_table = $wpdb->posts;
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "

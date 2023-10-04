@@ -18,6 +18,7 @@ class OdooConnGetContact7Form_Test extends TestCase
     public function test_ok()
     {
         $wpdb = \Mockery::mock("WPDB");
+        $wpdb->posts = "wp_posts";
         $wpdb->shouldReceive("prepare")->with(
             "SELECT ID, post_title FROM wp_posts WHERE post_type=%s ORDER BY wp_posts.ID DESC",
             ["wpcf7_contact_form"]
