@@ -46,6 +46,11 @@ This plugin can be tested within a [docker environment](https://hub.docker.com/_
 
 [Video Tutorial](https://www.youtube.com/watch?v=xhAvrEaBXAA)
 
+
+## Examples
+
+See [examples](examples) for examples of supported Odoo field types and how to use them. 
+
 ## Security
 
 * API keys are encrypted in the system using Sodium symmetric key encryption.
