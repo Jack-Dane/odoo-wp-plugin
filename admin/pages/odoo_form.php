@@ -1,5 +1,26 @@
 <?php
 
+require_once(__DIR__ . "/../api/endpoints/odoo_forms.php");
+
+use odoo_conn\admin\api\endpoints\OdooConnGetOdooForm;
+
+class OdooConnOdooFormListTable extends OdooConnCustomTableDisplay
+{
+
+    function get_columns()
+    {
+        return array(
+            "cb" => '<input type="checkbox" />',
+            "odoo_connection_id" => "Odoo Connection ID",
+            "odoo_model" => "Odoo Model",
+            "name" => "Name",
+            "contact_7_id" => "Contact 7 ID"
+        );
+    }
+
+}
+
+
 function odoo_conn_odoo_form_page()
 {
     wp_register_script(
@@ -26,11 +47,17 @@ function odoo_conn_odoo_form_page()
             <input type="Submit" name="submit" class="button-primary"/>
         </form>
 
-        <table class="database-table"></table>
-        <div id="pageination-display"></div>
-
     </div>
     <?php
+
+    echo "<div class='wrap'>";
+    $odoo_connection = new OdooConnGetOdooForm(ARRAY_A);
+    $table_display = new OdooConnOdooFormListTable($odoo_connection);
+
+    echo "<form method='post'>";
+    $table_display->prepare_items();
+    $table_display->display();
+    echo "</div>";
 }
 
 ?>

@@ -88,6 +88,13 @@ abstract class OdooConnPutBaseSchema extends OdooConnPostPutBaseSchema
 abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
 {
 
+    protected string $output_type = OBJECT;
+
+    public function __construct($output = OBJECT)
+    {
+        $this->output_type = $output;
+    }
+
     protected function get_public_key()
     {
         return "id";
@@ -146,7 +153,16 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
         $joined_query = $this->join_query($query);
         $safe_query = $this->prepare_query($joined_query, $data, $argument_array);
 
-        return $wpdb->get_results($safe_query);
+        return $wpdb->get_results($safe_query, $this->output_type);
+    }
+
+    public function count_records()
+    {
+        global $wpdb;
+
+        $query = "SELECT COUNT(*) as 'count' FROM {$this->get_table_name()}";
+
+        return $wpdb->get_results($query)[0]->count;
     }
 
 }

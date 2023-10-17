@@ -1,5 +1,25 @@
 <?php
-require_once(__DIR__ . "/../pageHelpers/table_display.php");
+
+require_once(__DIR__ . "/../api/endpoints/odoo_form_mappings.php");
+
+use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappings;
+
+
+class OdooConnOdooFormMappingListTable extends OdooConnCustomTableDisplay
+{
+
+    function get_columns()
+    {
+        return array(
+            "cb" => '<input type="checkbox" />',
+            "odoo_form_id" => "Odoo Form ID",
+            "cf7_field_name" => "CF7 Field Name",
+            "odoo_field_name" => "Odoo Field Name",
+            "constant_value" => "Constant Value"
+        );
+    }
+
+}
 
 function odoo_conn_odoo_form_mapping_page()
 {
@@ -28,11 +48,17 @@ function odoo_conn_odoo_form_mapping_page()
             <input type="Submit" name="submit" class="button-primary"/>
         </form>
 
-        <table class="database-table"></table>
-        <div id="pageination-display"></div>
-
     </div>
     <?php
+
+    echo "<div class='wrap'>";
+    $odoo_connection = new OdooConnGetOdooFormMappings(ARRAY_A);
+    $table_display = new OdooConnOdooFormMappingListTable($odoo_connection);
+
+    echo "<form method='post'>";
+    $table_display->prepare_items();
+    $table_display->display();
+    echo "</div>";
 }
 
 ?>
