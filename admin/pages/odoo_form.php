@@ -10,11 +10,11 @@ class OdooConnOdooFormListTable extends OdooConnCustomTableDisplay
     function get_columns()
     {
         return array(
-            "cb" => '<input type="checkbox" />',
-            "odoo_connection_id" => "Odoo Connection ID",
+            "cb" => "<input type='checkbox' />",
+            "odoo_connection_name" => "Odoo Connection",
             "odoo_model" => "Odoo Model",
             "name" => "Name",
-            "contact_7_id" => "Contact 7 ID"
+            "contact_7_title" => "Contact 7 Form"
         );
     }
 

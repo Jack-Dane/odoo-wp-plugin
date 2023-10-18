@@ -11,8 +11,8 @@ class OdooConnOdooErrorsListTable extends OdooConnCustomTableDisplay
     function get_columns()
     {
         return array(
-            "cb" => '<input type="checkbox" />',
-            "contact_7_id" => "Contact 7 Id",
+            "cb" => "<input type='checkbox' />",
+            "contact_7_title" => "Contact 7 Form",
             "time_occurred" => "Time of Error",
             "error_message" => "Error Message"
         );

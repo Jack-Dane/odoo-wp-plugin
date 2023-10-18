@@ -11,8 +11,8 @@ class OdooConnOdooFormMappingListTable extends OdooConnCustomTableDisplay
     function get_columns()
     {
         return array(
-            "cb" => '<input type="checkbox" />',
-            "odoo_form_id" => "Odoo Form ID",
+            "cb" => "<input type='checkbox' />",
+            "odoo_form_name" => "Odoo Form",
             "cf7_field_name" => "CF7 Field Name",
             "odoo_field_name" => "Odoo Field Name",
             "constant_value" => "Constant Value"
