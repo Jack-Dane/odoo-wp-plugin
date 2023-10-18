@@ -3,6 +3,7 @@
 require_once(__DIR__ . "/../api/endpoints/odoo_connections.php");
 
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooConnection;
+use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooConnection;
 
 class OdooConnOdooConnectionListTable extends OdooConnCustomTableDisplay
 {
@@ -48,13 +49,18 @@ function odoo_conn_odoo_connection_page()
     <?php
 
     echo "<div class='wrap'>";
-    $odoo_connection = new OdooConnGetOdooConnection(ARRAY_A);
-    $table_display = new OdooConnOdooConnectionListTable($odoo_connection);
+    $odoo_connection_get_backend = new OdooConnGetOdooConnection(ARRAY_A);
+    $odoo_connection_delete_backend = new OdooConnDeleteOdooConnection();
+
+    $table_display = new OdooConnOdooConnectionListTable(
+        $odoo_connection_get_backend, $odoo_connection_delete_backend
+    );
+    $table_display->check_bulk_action();
 
     echo "<form method='post'>";
     $table_display->prepare_items();
     $table_display->display();
-    echo "</div>";
+    echo "</form></div>";
 }
 
 ?>

@@ -196,7 +196,7 @@ abstract class OdooConnDeleteBaseSchema extends OdooConnBaseSchema
 
     public function request($data)
     {
-        global $wpdb, $table_prefix;
+        global $wpdb;
 
         $id = $data["id"];
         $wpdb->delete(

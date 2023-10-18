@@ -3,6 +3,7 @@
 require_once(__DIR__ . "/../api/endpoints/odoo_errors.php");
 
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooErrors;
+use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooErrors;
 
 
 class OdooConnOdooErrorsListTable extends OdooConnCustomTableDisplay
@@ -38,13 +39,15 @@ function odoo_conn_odoo_errors_page()
     <?php
 
     echo "<div class='wrap'>";
-    $odoo_connection = new OdooConnGetOdooErrors(ARRAY_A);
-    $table_display = new OdooConnOdooErrorsListTable($odoo_connection);
+    $odoo_errors_get_backend = new OdooConnGetOdooErrors(ARRAY_A);
+    $odoo_errors_delete_backend = new OdooConnDeleteOdooErrors();
+    $table_display = new OdooConnOdooErrorsListTable($odoo_errors_get_backend, $odoo_errors_delete_backend);
+    $table_display->check_bulk_action();
 
     echo "<form method='post'>";
     $table_display->prepare_items();
     $table_display->display();
-    echo "</div>";
+    echo "</form></div>";
 }
 
 ?>

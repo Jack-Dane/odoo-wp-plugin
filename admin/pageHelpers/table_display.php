@@ -34,15 +34,40 @@ function odoo_conn_page_scripts_callback()
 class OdooConnCustomTableDisplay extends WP_List_Table
 {
 
-    protected $table_backend;
+    protected $get_backend;
+    protected $delete_backend;
 
     private int $per_page = 10;
 
-    public function __construct($table_backend, $args = array())
+    public function __construct($get_backend, $delete_backend, $args = array())
     {
         parent::__construct($args);
 
-        $this->table_backend = $table_backend;
+        $this->get_backend = $get_backend;
+        $this->delete_backend = $delete_backend;
+    }
+
+    public function get_bulk_actions()
+    {
+        return array(
+            "delete_bulk" => "Delete"
+        );
+    }
+
+    public function check_bulk_action()
+    {
+        $current_action = $this->current_action();
+        if ($current_action === "delete_bulk") {
+            $ids = $_REQUEST["element"];
+
+            foreach ($ids as $id) {
+                $this->delete_backend->request(
+                    array(
+                        "id" => $id
+                    )
+                );
+            }
+        }
     }
 
     private function get_table_data()
@@ -54,11 +79,12 @@ class OdooConnCustomTableDisplay extends WP_List_Table
             "limit" => $this->per_page
         ];
 
-        return $this->table_backend->request($filter_data);
+        return $this->get_backend->request($filter_data);
     }
 
-    private function total_records() {
-        return $this->table_backend->count_records();
+    private function total_records()
+    {
+        return $this->get_backend->count_records();
     }
 
     public function prepare_items()
@@ -74,8 +100,8 @@ class OdooConnCustomTableDisplay extends WP_List_Table
 
         $this->set_pagination_args(array(
             'total_items' => $total_records,
-            'per_page'    => $this->per_page,
-            'total_pages' => ceil( $total_records / $this->per_page )
+            'per_page' => $this->per_page,
+            'total_pages' => ceil($total_records / $this->per_page)
         ));
 
         $this->items = $table_data;

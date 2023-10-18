@@ -3,6 +3,7 @@
 require_once(__DIR__ . "/../api/endpoints/odoo_forms.php");
 
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooForm;
+use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooForm;
 
 class OdooConnOdooFormListTable extends OdooConnCustomTableDisplay
 {
@@ -51,13 +52,15 @@ function odoo_conn_odoo_form_page()
     <?php
 
     echo "<div class='wrap'>";
-    $odoo_connection = new OdooConnGetOdooForm(ARRAY_A);
-    $table_display = new OdooConnOdooFormListTable($odoo_connection);
+    $odoo_form_get_backend = new OdooConnGetOdooForm(ARRAY_A);
+    $odoo_form_delete_backend = new OdooConnDeleteOdooForm();
+    $table_display = new OdooConnOdooFormListTable($odoo_form_get_backend, $odoo_form_delete_backend);
+    $table_display->check_bulk_action();
 
     echo "<form method='post'>";
     $table_display->prepare_items();
     $table_display->display();
-    echo "</div>";
+    echo "</form></div>";
 }
 
 ?>

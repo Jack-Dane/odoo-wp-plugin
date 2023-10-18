@@ -3,6 +3,7 @@
 require_once(__DIR__ . "/../api/endpoints/odoo_form_mappings.php");
 
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappings;
+use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooFormMappings;
 
 
 class OdooConnOdooFormMappingListTable extends OdooConnCustomTableDisplay
@@ -52,8 +53,12 @@ function odoo_conn_odoo_form_mapping_page()
     <?php
 
     echo "<div class='wrap'>";
-    $odoo_connection = new OdooConnGetOdooFormMappings(ARRAY_A);
-    $table_display = new OdooConnOdooFormMappingListTable($odoo_connection);
+    $odoo_form_mapping_get_backend = new OdooConnGetOdooFormMappings(ARRAY_A);
+    $odoo_form_mapping_delete_backend = new OdooConnDeleteOdooFormMappings();
+    $table_display = new OdooConnOdooFormMappingListTable(
+            $odoo_form_mapping_get_backend, $odoo_form_mapping_delete_backend
+    );
+    $table_display->check_bulk_action();
 
     echo "<form method='post'>";
     $table_display->prepare_items();
