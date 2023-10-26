@@ -101,7 +101,7 @@ class SaveButton extends TableButtonBase {
         ).then(function (response) {
             tableDisplay.displayTable();
 
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 let jsonPromise = Promise.resolve(response.json());
 
                 jsonPromise.then(function (jsonResponse) {
@@ -221,7 +221,7 @@ class RowField {
             return;
         }
 
-        let input = jQuery("<input></input>");
+        let input = jQuery("<input>");
         input.attr("value", this.text);
 
         this.dataElement.replaceWith(input);
@@ -481,6 +481,7 @@ class TableRow extends BaseTableRow {
         this.closeButton.hide();
         this.saveButton.hide();
         this.editButton.show();
+        this.deleteButton.show();
         this.#closeFields();
     }
 
@@ -745,7 +746,7 @@ class TableDisplay {
     }
 
     #addNextButton() {
-        if (jQuery("#next-button").length != 0) {
+        if (jQuery("#next-button").length !== 0) {
             // button is already on the screen
             return;
         }
@@ -759,7 +760,7 @@ class TableDisplay {
     }
 
     #addPreviousButton() {
-        if (jQuery("#previous-button").length != 0) {
+        if (jQuery("#previous-button").length !== 0) {
             // button is already on the screen
             return;
         }
