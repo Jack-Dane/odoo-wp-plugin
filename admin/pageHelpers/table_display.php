@@ -19,14 +19,6 @@ function odoo_conn_page_scripts_callback()
     ));
     wp_enqueue_script("table-display");
 
-    wp_register_script(
-        "form-creator", plugins_url("form_creator_show.js", __FILE__), array("jquery"), "1.0.0", true
-    );
-    wp_localize_script("table-editor", "wpApiSettings", array(
-        "root" => $root, "nonce" => $nonce
-    ));
-    wp_enqueue_script("form-creator");
-
     wp_enqueue_style("odoo-page-style", plugins_url("page_style.css", __FILE__));
 }
 

@@ -1,10 +1,11 @@
 <?php
 
 include("pageHelpers/table_display.php");
-include("pages/odoo_form.php");
-include("pages/odoo_connection.php");
-include("pages/odoo_form_mapping.php");
-include("pages/odoo_errors.php");
+include("pages/page_router.php");
+include("pages/forms/odoo_form.php");
+include("pages/connections/odoo_connection.php");
+include("pages/form_mappings/odoo_form_mapping.php");
+include("pages/errors/odoo_errors.php");
 include("pages/odoo_settings.php");
 
 function add_top_menu_page()
