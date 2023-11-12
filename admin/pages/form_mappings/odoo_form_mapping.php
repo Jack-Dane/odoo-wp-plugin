@@ -9,7 +9,7 @@ use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappingSingle;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooFormMappings;
 
 
-class OdooConnOdooFormMappingListTable extends OdooConnCustomTableDisplay
+class OdooConnOdooFormMappingListTableEditable extends OdooConnCustomTableEditableDisplay
 {
 
     public function column_odoo_form_name($item)
@@ -47,7 +47,7 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
 
     protected function create_table_display()
     {
-        return new OdooConnOdooFormMappingListTable(
+        return new OdooConnOdooFormMappingListTableEditable(
             $this->get_backend, $this->delete_backend
         );
     }

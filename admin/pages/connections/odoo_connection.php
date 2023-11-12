@@ -11,10 +11,15 @@ use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use odoo_conn\encryption\OdooConnEncryptionHandler;
 
 
-class OdooConnOdooConnectionListTable extends OdooConnCustomTableDisplay
+class OdooConnOdooConnectionListTableEditable extends OdooConnCustomTableEditableDisplay
 {
 
-    function get_columns()
+    public function column_name($item)
+    {
+        return $item["name"] . " " . $this->row_actions($this->row_action_buttons($item));
+    }
+
+    public function get_columns()
     {
         return array(
             "cb" => '<input type="checkbox" />',
@@ -57,7 +62,7 @@ class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate
 
     protected function create_table_display()
     {
-        return new OdooConnOdooConnectionListTable(
+        return new OdooConnOdooConnectionListTableEditable(
             $this->get_backend, $this->delete_backend
         );
     }

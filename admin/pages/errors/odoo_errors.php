@@ -6,10 +6,15 @@ use odoo_conn\admin\api\endpoints\OdooConnGetOdooErrors;
 use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooErrors;
 
 
-class OdooConnOdooErrorsListTable extends OdooConnCustomTableDisplay
+class OdooConnOdooErrorsListTableEditable extends OdooConnCustomTableDeletableDisplay
 {
 
-    function get_columns()
+    public function column_contact_7_title($item)
+    {
+        return $item["contact_7_title"] . " " . $this->row_actions($this->row_action_buttons($item));
+    }
+
+    public function get_columns()
     {
         return array(
             "cb" => "<input type='checkbox' />",
@@ -24,16 +29,22 @@ class OdooConnOdooErrorsListTable extends OdooConnCustomTableDisplay
 
 class OdooConnOdooErrorRouter extends OdooConnPageRouter {
 
+    public function __construct()
+    {
+        $this->get_backend = new OdooConnGetOdooErrors(ARRAY_A);
+        $this->delete_backend = new OdooConnDeleteOdooErrors();
+    }
+
     protected function create_table_display()
     {
-        $odoo_errors_get_backend = new OdooConnGetOdooErrors(ARRAY_A);
-        $odoo_errors_delete_backend = new OdooConnDeleteOdooErrors();
-        return new OdooConnOdooErrorsListTable($odoo_errors_get_backend, $odoo_errors_delete_backend);
+        return new OdooConnOdooErrorsListTableEditable(
+            $this->get_backend, $this->delete_backend
+        );
     }
 
     protected function delete($id)
     {
-        // TODO: Implement delete() method.
+        $this->delete_backend->request(["id" => $id]);
     }
 }
 

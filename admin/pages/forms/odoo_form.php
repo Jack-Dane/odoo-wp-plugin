@@ -9,10 +9,15 @@ use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormSingle;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooForm;
 
 
-class OdooConnOdooFormListTable extends OdooConnCustomTableDisplay
+class OdooConnOdooFormListTableEditable extends OdooConnCustomTableEditableDisplay
 {
 
-    function get_columns()
+    public function column_name($item)
+    {
+        return $item["name"] . " " . $this->row_actions($this->row_action_buttons($item));
+    }
+
+    public function get_columns()
     {
         return array(
             "cb" => "<input type='checkbox' />",
@@ -53,7 +58,7 @@ class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
 
     protected function create_table_display()
     {
-        return new OdooConnOdooFormListTable(
+        return new OdooConnOdooFormListTableEditable(
             $this->get_backend, $this->delete_backend
         );
     }

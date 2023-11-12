@@ -23,8 +23,7 @@ function odoo_conn_page_scripts_callback()
 }
 
 
-class OdooConnCustomTableDisplay extends WP_List_Table
-{
+class OdooConnCustomTableDeletableDisplay extends WP_List_Table {
 
     protected $get_backend;
     protected $delete_backend;
@@ -41,14 +40,8 @@ class OdooConnCustomTableDisplay extends WP_List_Table
     protected function row_action_buttons($item)
     {
         return array(
-            "edit" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=edit'>Edit</a>",
             "delete" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=delete'>Delete</a>"
         );
-    }
-
-    public function column_name($item)
-    {
-        return $item["name"] . " " . $this->row_actions($this->row_action_buttons($item));
     }
 
     public function get_bulk_actions()
@@ -119,6 +112,22 @@ class OdooConnCustomTableDisplay extends WP_List_Table
     public function column_cb($item)
     {
         return "<input type='checkbox' name='element[]' value='{$item['id']}' />";
+    }
+
+}
+
+
+class OdooConnCustomTableEditableDisplay extends OdooConnCustomTableDeletableDisplay
+{
+
+    protected function row_action_buttons($item)
+    {
+        return array_merge(
+            parent::row_action_buttons($item),
+            array(
+                "edit" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=edit'>Edit</a>"
+            )
+        );
     }
 
 }
