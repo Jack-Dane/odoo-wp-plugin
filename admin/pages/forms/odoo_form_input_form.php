@@ -1,5 +1,7 @@
 <form method="POST" action="?page=odoo-form" id="form-data" class="submit-database">
     <input type="hidden" name="id" value="<?= $_REQUEST["id"] ?? "" ?>"/>
+    <input type="hidden" name="odoo_connection_edit_id" id="odoo_connection_edit_id" value="<?= $odoo_conn_data->odoo_connection_id ?? "" ?>"/>
+    <input type="hidden" name="odoo_7_edit_id" id="odoo_7_edit_id" value="<?= $odoo_conn_data->contact_7_id ?? "" ?>"/>
 
     <label for="odoo_connection_id">Odoo Connection</label>
     <select id="odoo_connection_id" name="odoo_connection_id"></select><br/>

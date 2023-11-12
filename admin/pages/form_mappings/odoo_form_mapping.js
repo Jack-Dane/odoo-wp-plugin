@@ -1,10 +1,16 @@
 
 jQuery(document).ready(function () {
+    setConstantValue();
     setSelectData();
 });
 
 jQuery("#value_type").click(function () {
-    let checked = jQuery(this).is(":checked");
+    checkboxEvent();
+});
+
+function checkboxEvent() {
+    let checked = jQuery("#value_type").prop("checked");
+    console.log(checked);
 
     if (checked) {
         jQuery("#cf7_field_name").hide();
@@ -13,7 +19,14 @@ jQuery("#value_type").click(function () {
         jQuery("#constant_value").hide();
         jQuery("#cf7_field_name").show();
     }
-});
+}
+
+function setConstantValue () {
+    let constantValue = jQuery("#constant_value_checkbox").val();
+    jQuery("#value_type").prop("checked", constantValue);
+
+    checkboxEvent();
+}
 
 async function setSelectData() {
     formSelect = jQuery("#odoo_form_id");
@@ -33,12 +46,19 @@ async function setSelectData() {
         return jsonResponse;
     });
 
-    forms.forEach(function (connection) {
+    let existingFormId = jQuery("#odoo_form_edit_id").val();
+    forms.forEach(function (form) {
         let option = jQuery(
             "<option></option>", {
-                "value": connection["id"],
-                "text": connection["name"]
+                "value": form["id"],
+                "text": form["name"]
             }
-        ).appendTo(formSelect);
+        );
+
+        if (existingFormId === form["id"]) {
+            option.attr("selected", "selected")
+        }
+
+        option.appendTo(formSelect);
     });
 }

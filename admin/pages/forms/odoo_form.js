@@ -21,13 +21,20 @@ async function setSelectData() {
         return jsonResponse;
     });
 
+    let existingConnectionId = jQuery("#odoo_connection_edit_id").val();
     connections.forEach(function (connection) {
-        jQuery(
+        let option = jQuery(
             "<option></option>", {
                 "value": connection["id"],
                 "text": connection["name"]
             }
-        ).appendTo(connectionsSelect);
+        );
+
+        if (existingConnectionId === connection["id"]) {
+            option.attr("selected", "selected");
+        }
+
+        option.appendTo(connectionsSelect);
     });
 
     c7FormsSelect = jQuery("#contact_7_id");
@@ -47,12 +54,20 @@ async function setSelectData() {
         return jsonResponse;
     });
 
+    let existingContactFormId = jQuery("#odoo_7_edit_id").val();
     c7Forms.forEach(function (c7Form) {
-        jQuery(
+
+        let option = jQuery(
             "<option></option>", {
                 "value": c7Form["ID"],
                 "text": c7Form["post_title"]
             }
-        ).appendTo(c7FormsSelect);
+        );
+
+        if (existingContactFormId === c7Form["ID"]) {
+            option.attr("selected", "selected");
+        }
+
+        option.appendTo(c7FormsSelect);
     });
 }
