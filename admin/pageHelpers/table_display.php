@@ -28,7 +28,6 @@ class OdooConnCustomTableDisplay extends WP_List_Table
 
     protected $get_backend;
     protected $delete_backend;
-
     private int $per_page = 10;
 
     public function __construct($get_backend, $delete_backend, $args = array())
@@ -37,6 +36,19 @@ class OdooConnCustomTableDisplay extends WP_List_Table
 
         $this->get_backend = $get_backend;
         $this->delete_backend = $delete_backend;
+    }
+
+    protected function row_action_buttons($item)
+    {
+        return array(
+            "edit" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=edit'>Edit</a>",
+            "delete" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=delete'>Delete</a>"
+        );
+    }
+
+    public function column_name($item)
+    {
+        return $item["name"] . " " . $this->row_actions($this->row_action_buttons($item));
     }
 
     public function get_bulk_actions()

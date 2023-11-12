@@ -30,6 +30,11 @@ class OdooConnOdooErrorRouter extends OdooConnPageRouter {
         $odoo_errors_delete_backend = new OdooConnDeleteOdooErrors();
         return new OdooConnOdooErrorsListTable($odoo_errors_get_backend, $odoo_errors_delete_backend);
     }
+
+    protected function delete($id)
+    {
+        // TODO: Implement delete() method.
+    }
 }
 
 

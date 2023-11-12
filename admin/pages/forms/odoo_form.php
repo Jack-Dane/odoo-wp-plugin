@@ -5,6 +5,8 @@ require_once(__DIR__ . "/../../api/endpoints/odoo_forms.php");
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooForm;
 use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooForm;
 use odoo_conn\admin\api\endpoints\OdooConnPostOdooForm;
+use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormSingle;
+use odoo_conn\admin\api\endpoints\OdooConnPutOdooForm;
 
 
 class OdooConnOdooFormListTable extends OdooConnCustomTableDisplay
@@ -14,9 +16,9 @@ class OdooConnOdooFormListTable extends OdooConnCustomTableDisplay
     {
         return array(
             "cb" => "<input type='checkbox' />",
+            "name" => "Name",
             "odoo_connection_name" => "Odoo Connection",
             "odoo_model" => "Odoo Model",
-            "name" => "Name",
             "contact_7_title" => "Contact 7 Form"
         );
     }
@@ -27,8 +29,14 @@ class OdooConnOdooFormListTable extends OdooConnCustomTableDisplay
 class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
 {
 
+    private OdooConnGetOdooForm $get_backend;
+    private OdooConnDeleteOdooForm $delete_backend;
+
     public function __construct($menu_slug)
     {
+        $this->get_backend = new OdooConnGetOdooForm(ARRAY_A);
+        $this->delete_backend = new OdooConnDeleteOdooForm();
+
         parent::__construct($menu_slug);
     }
 
@@ -45,11 +53,29 @@ class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
 
     protected function create_table_display()
     {
-        $odoo_form_get_backend = new OdooConnGetOdooForm(ARRAY_A);
-        $odoo_form_delete_backend = new OdooConnDeleteOdooForm();
         return new OdooConnOdooFormListTable(
-            $odoo_form_get_backend, $odoo_form_delete_backend
+            $this->get_backend, $this->delete_backend
         );
+    }
+
+    protected function display_edit_form($id)
+    {
+        $odoo_conn_get = new OdooConnGetOdooFormSingle($id);
+        $odoo_conn_data = $odoo_conn_get->request([]);
+        
+        include("odoo_form_input_form.php");
+    }
+
+    protected function update_record()
+    {
+        $id = $_REQUEST["id"];
+        $odoo_conn_put = new OdooConnPutOdooForm($id);
+        $odoo_conn_put->request($_REQUEST);
+    }
+
+    protected function delete($id)
+    {
+        $this->delete_backend->request(["id" => $id]);
     }
 }
 

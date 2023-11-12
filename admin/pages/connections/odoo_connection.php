@@ -2,9 +2,11 @@
 
 require_once(__DIR__ . "/../../api/endpoints/odoo_connections.php");
 
+use odoo_conn\admin\api\endpoints\OdooConnGetOdooConnectionSingle;
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooConnection;
 use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooConnection;
 use odoo_conn\admin\api\endpoints\OdooConnPostOdooConnection;
+use odoo_conn\admin\api\endpoints\OdooConnPutOdooConnection;
 use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use odoo_conn\encryption\OdooConnEncryptionHandler;
 
@@ -26,10 +28,17 @@ class OdooConnOdooConnectionListTable extends OdooConnCustomTableDisplay
 }
 
 
-class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate {
+class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate
+{
+
+    private OdooConnGetOdooConnection $get_backend;
+    private OdooConnDeleteOdooConnection $delete_backend;
 
     public function __construct($menu_slug)
     {
+        $this->get_backend = new OdooConnGetOdooConnection(ARRAY_A);
+        $this->delete_backend = new OdooConnDeleteOdooConnection();
+
         parent::__construct($menu_slug);
     }
 
@@ -48,12 +57,29 @@ class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate {
 
     protected function create_table_display()
     {
-        $odoo_connection_get_backend = new OdooConnGetOdooConnection(ARRAY_A);
-        $odoo_connection_delete_backend = new OdooConnDeleteOdooConnection();
-
         return new OdooConnOdooConnectionListTable(
-            $odoo_connection_get_backend, $odoo_connection_delete_backend
+            $this->get_backend, $this->delete_backend
         );
+    }
+
+    protected function display_edit_form($id)
+    {
+        $odoo_conn_get = new OdooConnGetOdooConnectionSingle($id);
+        $odoo_conn_data = $odoo_conn_get->request([]);
+
+        include("odoo_connection_input_form.php");
+    }
+
+    protected function update_record()
+    {
+        $id = $_REQUEST["id"];
+        $odoo_conn_put = new OdooConnPutOdooConnection($id);
+        $odoo_conn_put->request($_REQUEST);
+    }
+
+    protected function delete($id)
+    {
+        $this->delete_backend->request(["id" => $id]);
     }
 }
 

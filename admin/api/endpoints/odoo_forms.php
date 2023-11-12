@@ -64,6 +64,24 @@ class OdooConnGetOdooForm extends OdooConnGetBaseSchema
 }
 
 
+class OdooConnGetOdooFormSingle extends OdooConnGetExtendedSchema
+{
+
+    use OdooConnOdooFormTableName;
+
+    public function request($data)
+    {
+        $connections = parent::request($data);
+        return !$connections ? null : $connections[0];
+    }
+
+    protected function where_query()
+    {
+        return "id=%d";
+    }
+}
+
+
 class OdooConnPostOdooForm extends OdooConnPostBaseSchema
 {
 

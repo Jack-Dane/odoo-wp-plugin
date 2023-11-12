@@ -1,21 +1,27 @@
 <?php
 
-
 abstract class OdooConnPageRouter
 {
 
     public function request()
     {
         $action = $_REQUEST["page_action"];
+        $this->handle_route($action);
 
-        if (!isset($action) || $action == "list") {
+        if (!in_array($action, $this->dont_display_table_actions())) {
             $this->display_table();
-        } else if ($action == "new") {
-            $this->display_input_form();
-        } else if ($action == "edit") {
-            echo "edit";
-        } else {
-            // TODO - 404
+        }
+    }
+
+    protected function dont_display_table_actions()
+    {
+        return [];
+    }
+
+    protected function handle_route($action)
+    {
+        if ($action == "delete") {
+            $this->delete($_REQUEST["id"]);
         }
     }
 
@@ -33,6 +39,8 @@ abstract class OdooConnPageRouter
 
     protected abstract function create_table_display();
 
+    protected abstract function delete($id);
+
 }
 
 
@@ -46,14 +54,38 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
         $this->menu_slug = $menu_slug;
     }
 
+    protected function dont_display_table_actions()
+    {
+        return array_merge(
+            parent::dont_display_table_actions(),
+            [
+                "edit", "new"
+            ]
+        );
+    }
+
+    protected function handle_route($action)
+    {
+        parent::handle_route($action);
+
+        if ($action == "new") {
+            $this->display_input_form();
+        } else if ($action == "edit") {
+            $this->display_edit_form($_REQUEST["id"]);
+        }
+    }
+
     protected function display_table()
     {
         $request_method = $_SERVER["REQUEST_METHOD"];
         $menu_page_slug = menu_page_url($this->menu_slug, false);
 
         if ($request_method == "POST") {
-            // new record create request
-            $this->create_new_record();
+            if ($_REQUEST["id"]) {
+                $this->update_record();
+            } else {
+                $this->create_new_record();
+            }
         }
 
         $connection_url = add_query_arg("page_action", "new", $menu_page_slug);
@@ -64,6 +96,10 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
 
     protected abstract function create_new_record();
 
+    protected abstract function update_record();
+
     protected abstract function display_input_form();
+
+    protected abstract function display_edit_form($id);
 
 }

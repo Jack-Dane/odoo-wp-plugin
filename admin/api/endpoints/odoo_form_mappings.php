@@ -63,6 +63,24 @@ class OdooConnGetOdooFormMappings extends OdooConnGetBaseSchema
 }
 
 
+class OdooConnGetOdooFormMappingSingle extends OdooConnGetExtendedSchema
+{
+
+    use OdooConnFormMappingTableName;
+
+    public function request($data)
+    {
+        $connections = parent::request($data);
+        return !$connections ? null : $connections[0];
+    }
+
+    protected function where_query()
+    {
+        return "id=%d";
+    }
+}
+
+
 class OdooConnPostOdooFormMappings extends OdooConnPostBaseSchema
 {
 
