@@ -5,7 +5,7 @@ abstract class OdooConnPageRouter
 
     public function request()
     {
-        $action = $_REQUEST["page_action"];
+        $action = $_REQUEST["page_action"] ?? null;
         $this->handle_route($action);
 
         if (!in_array($action, $this->dont_display_table_actions())) {
@@ -20,7 +20,7 @@ abstract class OdooConnPageRouter
 
     protected function handle_route($action)
     {
-        if ($action == "delete") {
+        if ($action === "delete") {
             $this->delete($_REQUEST["id"]);
         }
     }
@@ -68,9 +68,9 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
     {
         parent::handle_route($action);
 
-        if ($action == "new") {
+        if ($action === "new") {
             $this->display_input_form();
-        } else if ($action == "edit") {
+        } else if ($action === "edit") {
             $this->display_edit_form($_REQUEST["id"]);
         }
     }
