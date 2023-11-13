@@ -52,25 +52,40 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
         );
     }
 
-    protected function create_new_record()
-    {
+    private function update_request_submit_fields() {
         if (isset($_REQUEST["value_type"])) {
             $_REQUEST["cf7_field_name"] = "";
         } else {
             $_REQUEST["constant_value"] = "";
         }
+    }
 
+    protected function create_new_record()
+    {
+        $this->update_request_submit_fields();
         $odoo_form_mapping = new OdooConnPostOdooFormMappings();
         $odoo_form_mapping->request($_REQUEST);
     }
 
+    private function load_form_scripts()
+    {
+        wp_register_script(
+            "odoo-form-mapping", plugins_url("odoo_form_mapping.js", __FILE__), array("jquery"), "1.0.0", true
+        );
+        wp_enqueue_script("odoo-form-mapping");
+    }
+
     protected function display_input_form()
     {
+        $this->load_form_scripts();
+
         include("odoo_form_mapping_input_form.php");
     }
 
     protected function display_edit_form($id)
     {
+        $this->load_form_scripts();
+
         $odoo_conn_single = new OdooConnGetOdooFormMappingSingle($id);
         $odoo_conn_data = $odoo_conn_single->request([]);
 
@@ -79,8 +94,9 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
 
     protected function update_record()
     {
-        $id = $_REQUEST["id"];
-        $odoo_conn_update = new OdooConnPutOdooFormMappings($id);
+        $this->update_request_submit_fields();
+
+        $odoo_conn_update = new OdooConnPutOdooFormMappings($_REQUEST["id"]);
         $odoo_conn_update->request($_REQUEST);
     }
 
@@ -93,11 +109,6 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
 
 function odoo_conn_odoo_form_mapping_page()
 {
-    wp_register_script(
-        "odoo-form-mapping", plugins_url("odoo_form_mapping.js", __FILE__), array("jquery"), "1.0.0", true
-    );
-    wp_enqueue_script("odoo-form-mapping");
-
     $form_mapping_router = new OdooConnOdooFormMappingRouter("odoo-form-mapping");
     $form_mapping_router->request();
 }

@@ -15,7 +15,7 @@ trait OdooConnFormMappingTableName
     {
         global $table_prefix;
 
-        return $table_prefix. "odoo_conn_form_mapping";
+        return $table_prefix . "odoo_conn_form_mapping";
     }
 
 }
@@ -129,24 +129,21 @@ class OdooConnPutOdooFormMappings extends OdooConnPutBaseSchema
     {
         $parsed_data = [];
 
-        if (isset($data["cf7_field_name"]) && !empty($data["cf7_field_name"])) {
-            $parsed_data["cf7_field_name"] = $data["cf7_field_name"];
-        }
-
-        if (isset($data["constant_value"]) && !empty($data["constant_value"])) {
-            $parsed_data["constant_value"] = $data["constant_value"];
-        }
-
-        if (isset($parsed_data["constant_value"]) && isset($parsed_data["cf7_field_name"])) {
+        if (!empty($data["constant_value"]) && !empty($data["cf7_field_name"])) {
             throw new FieldNameConstantValueException(
                 "Can't pass both a constant value and a cf7 field name as arguments"
             );
         }
 
-        return $parsed_data + array(
+        return array_merge(
+            $parsed_data,
+            array(
+                "constant_value" => $data["constant_value"],
+                "cf7_field_name" => $data["cf7_field_name"],
                 "odoo_form_id" => $data["odoo_form_id"],
                 "odoo_field_name" => $data["odoo_field_name"],
-            );
+            )
+        );
     }
 }
 

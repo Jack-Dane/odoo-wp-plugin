@@ -45,8 +45,17 @@ class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
         parent::__construct($menu_slug);
     }
 
+    private function load_form_scripts()
+    {
+        wp_register_script(
+            "odoo-form", plugins_url("odoo_form.js", __FILE__), array("jquery"), "1.0.0", true
+        );
+        wp_enqueue_script("odoo-form");
+    }
+
     protected function display_input_form()
     {
+        $this->load_form_scripts();
         include("odoo_form_input_form.php");
     }
 
@@ -65,6 +74,8 @@ class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
 
     protected function display_edit_form($id)
     {
+        $this->load_form_scripts();
+
         $odoo_conn_get = new OdooConnGetOdooFormSingle($id);
         $odoo_conn_data = $odoo_conn_get->request([]);
         
@@ -87,14 +98,6 @@ class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
 
 function odoo_conn_odoo_form_page()
 {
-    wp_register_script(
-        "odoo-form", plugins_url("odoo_form.js", __FILE__), array("jquery"), "1.0.0", true
-    );
-    wp_localize_script("table-display", "wpApiSettings", array(
-        "root" => esc_url_raw(rest_url()), "nonce" => wp_create_nonce("wp_rest")
-    ));
-    wp_enqueue_script("odoo-form");
-
     $odoo_conn_odoo_form_router = new OdooConnOdooFormRouter("odoo-form");
     $odoo_conn_odoo_form_router->request();
 }
