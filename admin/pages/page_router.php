@@ -69,10 +69,17 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
         parent::handle_route($action);
 
         if ($action === "new") {
+            $this->add_form_style();
             $this->display_input_form();
         } else if ($action === "edit") {
+            $this->add_form_style();
             $this->display_edit_form($_REQUEST["id"]);
         }
+    }
+
+    private function add_form_style()
+    {
+        wp_enqueue_style("odoo-form-page-style", plugins_url("form_style.css", __FILE__));
     }
 
     protected function display_table()
