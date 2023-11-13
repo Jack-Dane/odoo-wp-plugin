@@ -9,10 +9,21 @@ use odoo_conn\admin\api\endpoints\OdooConnPostOdooConnection;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooConnection;
 use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use odoo_conn\encryption\OdooConnEncryptionHandler;
+use function odoo_conn\admin\api\endpoints\odoo_conn_test_odoo_connection;
 
 
 class OdooConnOdooConnectionListTableEditable extends OdooConnCustomTableEditableDisplay
 {
+
+    protected function row_action_buttons($item)
+    {
+        return array_merge(
+            parent::row_action_buttons($item),
+            [
+                "test" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=test_connection'>Test Connection</a>"
+            ]
+        );
+    }
 
     public function column_name($item)
     {
@@ -45,6 +56,22 @@ class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate
         $this->delete_backend = new OdooConnDeleteOdooConnection();
 
         parent::__construct($menu_slug);
+    }
+
+    protected function handle_route($action)
+    {
+        parent::handle_route($action);
+
+        if ($action == "test_connection") {
+            $this->test_connection($_REQUEST["id"]);
+        }
+    }
+
+    private function test_connection($id)
+    {
+        show_message(json_encode(odoo_conn_test_odoo_connection(
+            ["id" => $id]
+        )));
     }
 
     protected function display_input_form()
