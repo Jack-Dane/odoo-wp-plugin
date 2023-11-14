@@ -52,7 +52,8 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
         );
     }
 
-    private function update_request_submit_fields() {
+    private function update_request_submit_fields()
+    {
         if (isset($_REQUEST["value_type"])) {
             $_REQUEST["cf7_field_name"] = "";
         } else {
@@ -70,8 +71,19 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
     private function load_form_scripts()
     {
         wp_register_script(
-            "odoo-form-mapping", plugins_url("odoo_form_mapping.js", __FILE__), array("jquery"), "1.0.0", true
+            "odoo-form-mapping",
+            plugins_url("odoo_form_mapping.js", __FILE__),
+            array("jquery"),
+            "1.0.1",
+            true
         );
+
+        $root = esc_url_raw(rest_url());
+        $nonce = wp_create_nonce("wp_rest");
+        echo wp_localize_script("odoo-form-mapping", "wpApiSettings", array(
+            "root" => $root, "nonce" => $nonce
+        ));
+
         wp_enqueue_script("odoo-form-mapping");
     }
 

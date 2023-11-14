@@ -48,8 +48,19 @@ class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
     private function load_form_scripts()
     {
         wp_register_script(
-            "odoo-form", plugins_url("odoo_form.js", __FILE__), array("jquery"), "1.0.0", true
+            "odoo-form",
+            plugins_url("odoo_form.js", __FILE__),
+            array("jquery"),
+            "1.0.1",
+            true
         );
+
+        $root = esc_url_raw(rest_url());
+        $nonce = wp_create_nonce("wp_rest");
+        echo wp_localize_script("odoo-form", "wpApiSettings", array(
+            "root" => $root, "nonce" => $nonce
+        ));
+
         wp_enqueue_script("odoo-form");
     }
 
