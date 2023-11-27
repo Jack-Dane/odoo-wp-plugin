@@ -225,34 +225,4 @@ function odoo_conn_base_get_request_arguments()
     );
 }
 
-function odoo_conn_base_delete_request_schema($title)
-{
-    return array(
-        "$schema" => "https://json-schema.org/draft/2020-12/schema",
-        "title" => $title,
-        "type" => 'object',
-        "properties" => array(
-            "DELETE" => array(
-                "type" => "integer",
-                "description" => esc_html__("Primary key for the Odoo Connection that was deleted"),
-            ),
-            "table" => array(
-                "type" => "string",
-                "description" => esc_html__("Table that the row was deleted from"),
-            ),
-        ),
-    );
-}
-
-function odoo_conn_base_delete_arguments()
-{
-    return array(
-        "id" => array(
-            "type" => "integer",
-            "description" => esc_html__("Primary key for an Odoo Connection"),
-            "required" => true,
-        ),
-    );
-}
-
 ?>

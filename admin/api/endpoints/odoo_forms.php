@@ -129,201 +129,66 @@ class OdooConnDeleteOdooForm extends OdooConnDeleteBaseSchema
     use OdooConnOdooFormTableName;
 }
 
-function odoo_conn_base_odoo_forms_schema($properties)
+function odoo_conn_base_odoo_forms_schema()
 {
     return array(
-        "$schema" => "https://json-schema.org/draft/2020-12/schema",
+        "\$schema" => "https://json-schema.org/draft/2020-12/schema",
         "title" => "Odoo Form",
         "type" => "object",
-        "properties" => $properties,
-    );
-}
-
-function odoo_conn_base_odoo_forms_schema_properties()
-{
-    return array(
-        "id" => array(
-            "type" => "integer",
-            "description" => esc_html__("Primary key for an Odoo Form"),
-        ),
-        "odoo_connection_id" => array(
-            "type" => "integer",
-            "description" => esc_html__("Foreign key for the connection that relates to the Odoo Form"),
-        ),
-        "odoo_model" => array(
-            "type" => "string",
-            "description" => esc_html__("The name of the Odoo model that will be created when the form is submitted"),
-        ),
-        "name" => array(
-            "type" => "string",
-            "description" => esc_html__("The name of the Odoo Form instance"),
-        ),
-        "contact_7_id" => array(
-            "type" => "integer",
-            "description" => esc_html__("Foreign key for the Contact 7 Form that is submitted"),
-        ),
-    );
-}
-
-function odoo_conn_base_odoo_forms_arguments()
-{
-    return array(
-        "odoo_connection_id" => array(
-            "type" => "integer",
-            "description" => esc_html__("Foreign key for the connection that relates to the form"),
-            "required" => true,
-        ),
-        "odoo_model" => array(
-            "type" => "string",
-            "description" => esc_html__("The name of the odoo model that will be created when the form is submitted"),
-            "required" => true,
-        ),
-        "name" => array(
-            "type" => "string",
-            "description" => esc_html__("The name of the odoo form instance"),
-            "required" => true,
-        ),
-        "contact_7_id" => array(
-            "type" => "integer",
-            "description" => esc_html__("Foreign key for the Contact 7 Form that is submitted"),
-            "required" => true,
-        )
+        "properties" => [
+            "type" => "array",
+            "items" => array(
+                "type" => "object",
+                "properties" => array(
+                    "id" => array(
+                        "type" => "integer",
+                        "description" => esc_html__("Primary key for an Odoo Form"),
+                    ),
+                    "odoo_connection_id" => array(
+                        "type" => "integer",
+                        "description" => esc_html__("Foreign key for the connection that relates to the Odoo Form"),
+                    ),
+                    "odoo_model" => array(
+                        "type" => "string",
+                        "description" => esc_html__("The name of the Odoo model that will be created when the form is submitted"),
+                    ),
+                    "name" => array(
+                        "type" => "string",
+                        "description" => esc_html__("The name of the Odoo Form instance"),
+                    ),
+                    "contact_7_id" => array(
+                        "type" => "integer",
+                        "description" => esc_html__("Foreign key for the Contact 7 Form that is submitted"),
+                    ),
+                    "odoo_connection_name" => array(
+                        "type" => "string",
+                        "description" => esc_html__("The name of the connection name from the Connection object")
+                    ),
+                    "contact_7_title" => array(
+                        "type" => "string",
+                        "description" => esc_html__("Title of the Contact 7 Form that is submitted")
+                    ),
+                )
+            ),
+        ],
     );
 }
 
 function odoo_conn_get_odoo_forms($data)
 {
     $get_odoo_forms = new OdooConnGetOdooForm();
-    $response = $get_odoo_forms->request($data);
-    return $response;
-}
-
-function odoo_conn_get_odoo_forms_schema()
-{
-    return odoo_conn_base_odoo_forms_schema(
-        array(
-            "type" => "array",
-            "items" => array(
-                "type" => "object",
-                "properties" => odoo_conn_base_odoo_forms_schema_properties() + array(
-                        "odoo_connection_name" => array(
-                            "type" => "string",
-                            "description" => esc_html__("The name of the connection name from the Connection object")
-                        ),
-                        "contact_7_title" => array(
-                            "type" => "string",
-                            "description" => esc_html__("Title of the Contact 7 Form that is submitted")
-                        ),
-                    ),
-            ),
-        ),
-    );
-}
-
-function odoo_conn_get_odoo_forms_arguments()
-{
-    return odoo_conn_base_get_request_arguments();
-}
-
-function odoo_conn_create_odoo_form($data)
-{
-    $post_odoo_form = new OdooConnPostOdooForm();
-    $response = $post_odoo_form->request($data);
-    return $response;
-}
-
-function odoo_conn_create_odoo_form_schema()
-{
-    return odoo_conn_base_odoo_forms_schema(odoo_conn_base_odoo_forms_schema_properties());
-}
-
-function odoo_conn_create_odoo_form_arguments()
-{
-    return odoo_conn_base_odoo_forms_arguments();
-}
-
-function odoo_conn_update_odoo_form($data)
-{
-    $id = $data["id"];
-    $put_odoo_form = new OdooConnPutOdooForm($id);
-    $response = $put_odoo_form->request($data);
-    return $response;
-}
-
-function odoo_conn_updated_odoo_form_schema()
-{
-    return odoo_conn_base_odoo_forms_schema(odoo_conn_base_odoo_forms_schema_properties());
-}
-
-function odoo_conn_updated_odoo_form_arguments()
-{
-    return (
-        array(
-            "id" => array(
-                "type" => "integer",
-                "description" => esc_html__("Primary key for an Odoo Form"),
-                "required" => true,
-            ),
-        ) + odoo_conn_base_odoo_forms_arguments()
-    );
-}
-
-function odoo_conn_delete_odoo_form($data)
-{
-    $delete_odoo_form = new OdooConnDeleteOdooForm();
-    $response = $delete_odoo_form->request($data);
-    return $response;
-}
-
-function odoo_conn_delete_odoo_form_schema()
-{
-    return odoo_conn_base_delete_request_schema("Odoo Form");
-}
-
-function odoo_conn_delete_odoo_form_arguments()
-{
-    return odoo_conn_base_delete_arguments();
+    return $get_odoo_forms->request($data);
 }
 
 add_action("rest_api_init", function () {
-    register_rest_route("odoo_conn/v1", "/create-odoo-form", array(
-        array(
-            "methods" => "POST",
-            "callback" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form",
-            "args" => odoo_conn_create_odoo_form_arguments(),
-            "permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
-        ),
-        "schema" => __NAMESPACE__ . "\\odoo_conn_create_odoo_form_schema",
-    ));
-
     register_rest_route("odoo_conn/v1", "/get-odoo-forms", array(
         array(
             "methods" => "GET",
             "callback" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms",
-            "args" => odoo_conn_get_odoo_forms_arguments(),
+            "args" => odoo_conn_base_get_request_arguments(),
             "permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
         ),
-        "schema" => __NAMESPACE__ . "\\odoo_conn_get_odoo_forms_schema",
-    ));
-
-    register_rest_route("odoo_conn/v1", "/update-odoo-form", array(
-        array(
-            "methods" => "PUT",
-            "callback" => __NAMESPACE__ . "\\odoo_conn_update_odoo_form",
-            "args" => odoo_conn_updated_odoo_form_arguments(),
-            "permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
-        ),
-        "schema" => __NAMESPACE__ . "\\odoo_conn_updated_odoo_form_schema",
-    ));
-
-    register_rest_route("odoo_conn/v1", "/delete-odoo-form", array(
-        array(
-            "methods" => "DELETE",
-            "callback" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form",
-            "args" => odoo_conn_delete_odoo_form_arguments(),
-            "permission_callback" => __NAMESPACE__ . "\\odoo_conn_is_authorised_to_request_data",
-        ),
-        "schema" => __NAMESPACE__ . "\\odoo_conn_delete_odoo_form_schema"
+        "schema" => __NAMESPACE__ . "\\odoo_conn_base_odoo_forms_schema",
     ));
 });
 
