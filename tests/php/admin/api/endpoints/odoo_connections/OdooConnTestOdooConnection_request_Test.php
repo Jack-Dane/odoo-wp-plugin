@@ -27,7 +27,7 @@ class OdooConnTestOdooConnection_request_Test extends TestCase
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_connection WHERE id=%d ORDER BY wp_odoo_conn_connection.id DESC", [2])
             ->once()->andReturn("SELECT * FROM wp_odoo_conn_connection WHERE id=2 ORDER BY wp_odoo_conn_connection.id DESC");
-        $wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_connection WHERE id=2 ORDER BY wp_odoo_conn_connection.id DESC")
+        $wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_connection WHERE id=2 ORDER BY wp_odoo_conn_connection.id DESC", "OBJECT")
             ->once()->andReturn(
                 array(array("id" => 2, "name" => "Odoo Connection", "username" => "jackd98", "url" => "localhost:8069", "database_name" => "odoo_db", "api_key" => "abc"))
             );
@@ -47,7 +47,7 @@ class OdooConnTestOdooConnection_request_Test extends TestCase
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_connection WHERE id=%d ORDER BY wp_odoo_conn_connection.id DESC", [2])
             ->once()->andReturn("SELECT * FROM wp_odoo_conn_connection WHERE id=2 ORDER BY wp_odoo_conn_connection.id DESC");
-        $wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_connection WHERE id=2 ORDER BY wp_odoo_conn_connection.id DESC")
+        $wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_connection WHERE id=2 ORDER BY wp_odoo_conn_connection.id DESC", "OBJECT")
             ->once()->andReturn(array());
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";

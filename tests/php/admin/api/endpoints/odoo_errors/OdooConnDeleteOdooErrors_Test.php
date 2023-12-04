@@ -7,7 +7,7 @@ require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
 require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_errors.php");
 
 use \PHPUnit\Framework\TestCase;
-use function odoo_conn\admin\api\endpoints\odoo_conn_delete_odoo_error;
+use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooErrors;
 
 class OdooConnDeleteOdooErrors_Test extends TestCase
 {
@@ -22,7 +22,8 @@ class OdooConnDeleteOdooErrors_Test extends TestCase
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
 
-        $results = odoo_conn_delete_odoo_error($data);
+        $odoo_conn_delete_errors = new OdooConnDeleteOdooErrors();
+        $results = $odoo_conn_delete_errors->request($data);
 
         $this->assertEquals(
             array("DELETE" => 5, "table" => "wp_odoo_conn_errors"), $results

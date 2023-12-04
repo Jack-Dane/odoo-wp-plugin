@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\tests\admin\api\endpoints\cf7_posts\OdooConnGetContact7Form;
+namespace php\admin\api\endpoints\cf7_posts;
 
 require_once(__DIR__ . "/../common.php");
 require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
@@ -22,10 +22,15 @@ class OdooConnGetContact7Form_Test extends TestCase
         $wpdb->shouldReceive("prepare")->with(
             "SELECT ID, post_title FROM wp_posts WHERE post_type=%s ORDER BY wp_posts.ID DESC",
             ["wpcf7_contact_form"]
-        )
-            ->once()->andReturn("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC");
-        $wpdb->shouldReceive("get_results")->with("SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC")
-            ->once()->andReturn(array(array("ID" => 4, "post_title" => "Title")));
+        )->once()->andReturn(
+            "SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC"
+        );
+        $wpdb->shouldReceive("get_results")->with(
+            "SELECT ID, post_title FROM wp_posts WHERE post_type='wpcf7_contact_form' ORDER BY wp_posts.ID DESC",
+            "OBJECT"
+        )->once()->andReturn(
+            array(array("ID" => 4, "post_title" => "Title"))
+        );
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
 

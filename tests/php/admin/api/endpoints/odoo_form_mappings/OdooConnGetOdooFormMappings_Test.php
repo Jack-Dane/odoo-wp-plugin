@@ -7,7 +7,7 @@ require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
 require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");
 
 use \PHPUnit\Framework\TestCase;
-use function odoo_conn\admin\api\endpoints\odoo_conn_get_odoo_from_mappings;
+use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappings;
 
 class OdooConnGetOdooFormMappings_Test extends TestCase
 {
@@ -23,14 +23,21 @@ class OdooConnGetOdooFormMappings_Test extends TestCase
             )
         );
         $wpdb = \Mockery::mock("WPDB");
-        $wpdb->shouldReceive("prepare")->with("SELECT wp_odoo_conn_form_mapping.id, wp_odoo_conn_form_mapping.odoo_form_id, wp_odoo_conn_form.name as 'odoo_form_name', wp_odoo_conn_form_mapping.cf7_field_name, wp_odoo_conn_form_mapping.odoo_field_name, wp_odoo_conn_form_mapping.constant_value FROM wp_odoo_conn_form_mapping JOIN wp_odoo_conn_form ON wp_odoo_conn_form_mapping.odoo_form_id=wp_odoo_conn_form.id ORDER BY wp_odoo_conn_form_mapping.id DESC", [])
-            ->once()->andReturn("SELECT wp_odoo_conn_form_mapping.id, wp_odoo_conn_form_mapping.odoo_form_id, wp_odoo_conn_form.name as 'odoo_form_name', wp_odoo_conn_form_mapping.cf7_field_name, wp_odoo_conn_form_mapping.odoo_field_name, wp_odoo_conn_form_mapping.constant_value FROM wp_odoo_conn_form_mapping JOIN wp_odoo_conn_form ON wp_odoo_conn_form_mapping.odoo_form_id=wp_odoo_conn_form.id ORDER BY wp_odoo_conn_form_mapping.id DESC");
-        $wpdb->shouldReceive("get_results")->with("SELECT wp_odoo_conn_form_mapping.id, wp_odoo_conn_form_mapping.odoo_form_id, wp_odoo_conn_form.name as 'odoo_form_name', wp_odoo_conn_form_mapping.cf7_field_name, wp_odoo_conn_form_mapping.odoo_field_name, wp_odoo_conn_form_mapping.constant_value FROM wp_odoo_conn_form_mapping JOIN wp_odoo_conn_form ON wp_odoo_conn_form_mapping.odoo_form_id=wp_odoo_conn_form.id ORDER BY wp_odoo_conn_form_mapping.id DESC")
-            ->once()->andReturn($query_response);
+        $wpdb->shouldReceive("prepare")->with(
+            "SELECT wp_odoo_conn_form_mapping.id, wp_odoo_conn_form_mapping.odoo_form_id, wp_odoo_conn_form.name as 'odoo_form_name', wp_odoo_conn_form_mapping.cf7_field_name, wp_odoo_conn_form_mapping.odoo_field_name, wp_odoo_conn_form_mapping.constant_value FROM wp_odoo_conn_form_mapping JOIN wp_odoo_conn_form ON wp_odoo_conn_form_mapping.odoo_form_id=wp_odoo_conn_form.id ORDER BY wp_odoo_conn_form_mapping.id DESC", []
+        )->once()->andReturn(
+            "SELECT wp_odoo_conn_form_mapping.id, wp_odoo_conn_form_mapping.odoo_form_id, wp_odoo_conn_form.name as 'odoo_form_name', wp_odoo_conn_form_mapping.cf7_field_name, wp_odoo_conn_form_mapping.odoo_field_name, wp_odoo_conn_form_mapping.constant_value FROM wp_odoo_conn_form_mapping JOIN wp_odoo_conn_form ON wp_odoo_conn_form_mapping.odoo_form_id=wp_odoo_conn_form.id ORDER BY wp_odoo_conn_form_mapping.id DESC"
+        );
+        $wpdb->shouldReceive("get_results")->with(
+            "SELECT wp_odoo_conn_form_mapping.id, wp_odoo_conn_form_mapping.odoo_form_id, wp_odoo_conn_form.name as 'odoo_form_name', wp_odoo_conn_form_mapping.cf7_field_name, wp_odoo_conn_form_mapping.odoo_field_name, wp_odoo_conn_form_mapping.constant_value FROM wp_odoo_conn_form_mapping JOIN wp_odoo_conn_form ON wp_odoo_conn_form_mapping.odoo_form_id=wp_odoo_conn_form.id ORDER BY wp_odoo_conn_form_mapping.id DESC", "OBJECT"
+        )->once()->andReturn(
+            $query_response
+        );
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
 
-        $response = odoo_conn_get_odoo_from_mappings(array());
+        $odoo_conn_get_odoo_form_mappings = new OdooConnGetOdooFormMappings();
+        $response = $odoo_conn_get_odoo_form_mappings->request([]);
 
         $this->assertEquals($query_response, $response);
     }

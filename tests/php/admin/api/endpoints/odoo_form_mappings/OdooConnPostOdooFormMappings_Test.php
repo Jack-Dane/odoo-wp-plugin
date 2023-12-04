@@ -7,7 +7,8 @@ require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
 require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");
 
 use \PHPUnit\Framework\TestCase;
-use function odoo_conn\admin\api\endpoints\odoo_conn_create_odoo_form_mapping;
+use odoo_conn\admin\api\endpoints\OdooConnPostOdooFormMappings;
+use odoo_conn\admin\api\endpoints\FieldNameConstantValueException;
 
 class OdooConnPostOdooFormMappings_Test extends TestCase
 {
@@ -27,15 +28,22 @@ class OdooConnPostOdooFormMappings_Test extends TestCase
         );
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->insert_id = 3;
-        $wpdb->shouldReceive("insert")->with("wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s"))->once();
-        $wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3))->once()
-            ->andReturn("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3");
-        $wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3")
-            ->once()->andReturn($results);
+        $wpdb->shouldReceive("insert")->with(
+            "wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s")
+        )->once();
+        $wpdb->shouldReceive("prepare")->with(
+            "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3)
+        )->once()->andReturn(
+            "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3"
+        );
+        $wpdb->shouldReceive("get_results")->with(
+            "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3"
+        )->once()->andReturn($results);
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
 
-        $response = odoo_conn_create_odoo_form_mapping($data);
+        $odoo_conn_post_odoo_form_mappings = new OdooConnPostOdooFormMappings();
+        $response = $odoo_conn_post_odoo_form_mappings->request($data);
 
         $this->assertEquals($results, $response);
     }
@@ -53,21 +61,33 @@ class OdooConnPostOdooFormMappings_Test extends TestCase
         );
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->insert_id = 3;
-        $wpdb->shouldReceive("insert")->with("wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s"))->once();
-        $wpdb->shouldReceive("prepare")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3))->once()
-            ->andReturn("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3");
-        $wpdb->shouldReceive("get_results")->with("SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3")
-            ->once()->andReturn($results);
+        $wpdb->shouldReceive("insert")->with(
+            "wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s")
+        )->once();
+        $wpdb->shouldReceive("prepare")->with(
+            "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3)
+        )->once()->andReturn(
+            "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3"
+        );
+        $wpdb->shouldReceive(
+            "get_results"
+        )->with(
+            "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=3"
+        )->once()->andReturn($results);
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
 
-        $response = odoo_conn_create_odoo_form_mapping($data);
+        $odoo_conn_post_odoo_form_mappings = new OdooConnPostOdooFormMappings();
+        $response = $odoo_conn_post_odoo_form_mappings->request($data);
 
         $this->assertEquals($results, $response);
     }
 
     public function test_constant_value_and_odoo_field_value()
     {
+        $this->expectException(FieldNameConstantValueException::class);
+        $this->expectExceptionMessage("Can't pass both a constant value and a cf7 field name as arguments");
+
         $data = array(
             "odoo_form_id" => 1,
             "cf7_field_name" => "your-name",
@@ -85,14 +105,8 @@ class OdooConnPostOdooFormMappings_Test extends TestCase
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
 
-        $response = odoo_conn_create_odoo_form_mapping($data);
-
-        $this->assertInstanceOf(\WP_Error::class, $response);
-        $this->assertEquals("field_name_constant_value_failed", $response->error_id);
-        $this->assertEquals(
-            "Both cf7 field name and constant value passed, only one is expected", $response->error_message
-        );
-        $this->assertEquals(array("status" => 400), $response->error_status);
+        $odoo_conn_post_odoo_form_mappings = new OdooConnPostOdooFormMappings();
+        $odoo_conn_post_odoo_form_mappings->request($data);
     }
 
 }
