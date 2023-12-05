@@ -141,7 +141,6 @@ class OdooConnPutOdooConnection extends OdooConnPutBaseSchema
 
     protected function update_data($data)
     {
-        print_r($data);
         return array(
             "name" => $data["name"],
             "username" => $data["username"],
