@@ -7,6 +7,8 @@ use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooForm;
 use odoo_conn\admin\api\endpoints\OdooConnPostOdooForm;
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormSingle;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooForm;
+use odoo_conn\admin\pages\page_router\OdooConnPageRouterCreate;
+use odoo_conn\admin\table_display\OdooConnCustomTableEditableDisplay;
 
 
 class OdooConnOdooFormListTableEditable extends OdooConnCustomTableEditableDisplay

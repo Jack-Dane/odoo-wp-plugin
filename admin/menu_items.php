@@ -1,6 +1,6 @@
 <?php
 
-include("pageHelpers/table_display.php");
+include("table_display.php");
 include("pages/page_router.php");
 include("pages/forms/odoo_form.php");
 include("pages/connections/odoo_connection.php");

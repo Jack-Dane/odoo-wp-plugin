@@ -1,5 +1,8 @@
 <?php
 
+namespace odoo_conn\admin\pages\page_router;
+
+
 abstract class OdooConnPageRouter
 {
 
@@ -66,14 +69,14 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
 
     protected function handle_route($action)
     {
-        parent::handle_route($action);
-
         if ($action === "new") {
             $this->add_form_style();
             $this->display_input_form();
         } else if ($action === "edit") {
             $this->add_form_style();
             $this->display_edit_form($_REQUEST["id"]);
+        } else {
+            parent::handle_route($action);
         }
     }
 

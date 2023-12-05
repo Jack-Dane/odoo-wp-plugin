@@ -7,6 +7,8 @@ use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooFormMappings;
 use odoo_conn\admin\api\endpoints\OdooConnPostOdooFormMappings;
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappingSingle;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooFormMappings;
+use odoo_conn\admin\pages\page_router\OdooConnPageRouterCreate;
+use odoo_conn\admin\table_display\OdooConnCustomTableEditableDisplay;
 
 
 class OdooConnOdooFormMappingListTableEditable extends OdooConnCustomTableEditableDisplay
