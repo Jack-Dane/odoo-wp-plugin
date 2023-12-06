@@ -2,19 +2,24 @@
 
 namespace odoo_conn\tests\admin\api\endpoints\odoo_connections\OdooConnPostOdooConnection;
 
-require_once(__DIR__ . "/../common.php");
-require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_connections.php");
-require_once(__DIR__ . "/../../../../../../encryption.php");
+require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
-use \PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use odoo_conn\admin\api\endpoints\OdooConnPostOdooConnection;
 
-class OdooConnPostOdooConnection_Test extends TestCase
+class OdooConnPostOdooConnection_Test extends \TestClassBrainMonkey
 {
 
-    use \phpmock\phpunit\PHPMock;
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
+
+    function setUp(): void
+    {
+        parent::setUp();
+
+        require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+        require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_connections.php");
+        require_once(__DIR__ . "/../../../../../../encryption.php");
+    }
 
     public function test_ok()
     {

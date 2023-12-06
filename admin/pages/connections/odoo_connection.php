@@ -1,5 +1,7 @@
 <?php
 
+namespace odoo_conn\admin\pages\connections;
+
 require_once(__DIR__ . "/../../api/endpoints/odoo_connections.php");
 
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooConnectionSingle;
@@ -9,7 +11,7 @@ use odoo_conn\admin\api\endpoints\OdooConnPostOdooConnection;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooConnection;
 use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use odoo_conn\encryption\OdooConnEncryptionHandler;
-use odoo_conn\admin\pages\page_router\OdooConnPageRouterCreate;
+use odoo_conn\admin\pages\OdooConnPageRouterCreate;
 use odoo_conn\admin\table_display\OdooConnCustomTableEditableDisplay;
 
 use function odoo_conn\admin\api\endpoints\odoo_conn_test_odoo_connection;

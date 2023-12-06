@@ -2,18 +2,24 @@
 
 namespace odoo_conn\tests\admin\api\endpoints\odoo_form_mappings\OdooConnPostOdooFormMappings;
 
-require_once(__DIR__ . "/../common.php");
-require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");
+require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
-use \PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use odoo_conn\admin\api\endpoints\OdooConnPostOdooFormMappings;
 use odoo_conn\admin\api\endpoints\FieldNameConstantValueException;
 
-class OdooConnPostOdooFormMappings_Test extends TestCase
+class OdooConnPostOdooFormMappings_Test extends \TestClassBrainMonkey
 {
 
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
+
+    function setUp(): void
+    {
+        parent::setUp();
+
+        require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+        require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");
+    }
 
     public function test_odoo_field_value()
     {

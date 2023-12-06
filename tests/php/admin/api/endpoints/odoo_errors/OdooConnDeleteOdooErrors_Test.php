@@ -2,17 +2,23 @@
 
 namespace tests\php\admin\api\endpoints\odoo_errors\OdooConnDeleteOdooErrors;
 
-require_once(__DIR__ . "/../common.php");
-require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_errors.php");
+require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
-use \PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooErrors;
 
-class OdooConnDeleteOdooErrors_Test extends TestCase
+class OdooConnDeleteOdooErrors_Test extends \TestClassBrainMonkey
 {
 
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
+
+    function setUp(): void
+    {
+        parent::setUp();
+
+        require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+        require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_errors.php");
+    }
 
     public function test_ok()
     {

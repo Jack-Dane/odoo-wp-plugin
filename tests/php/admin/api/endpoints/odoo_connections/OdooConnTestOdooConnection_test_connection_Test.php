@@ -2,10 +2,7 @@
 
 namespace php\admin\api\endpoints\odoo_connections;
 
-require_once(__DIR__ . "/../common.php");
-require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_connections.php");
-require_once(__DIR__ . "/../../../../../../odoo_connector/odoo_connector.php");
+require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -16,8 +13,14 @@ class OdooConnTestOdooConnection_test_connection_Test extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function setUp(): void
+    function setUp(): void
     {
+        parent::setUp();
+
+        require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+        require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_connections.php");
+        require_once(__DIR__ . "/../../../../../../odoo_connector/odoo_connector.php");
+
         $this->odoo_connector = \Mockery::mock();
         $this->odoo_conn_test_odoo_connection = new OdooConnTestOdooConnection(2);
     }

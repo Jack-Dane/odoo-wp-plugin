@@ -2,17 +2,23 @@
 
 namespace odoo_conn\tests\admin\api\endpoints\odoo_forms\OdooConnPutOdooForm;
 
-require_once(__DIR__ . "/../common.php");
-require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_forms.php");
+require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
-use \PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooForm;
 
-class OdooConnPutOdooForm_Test extends TestCase
+class OdooConnPutOdooForm_Test extends \TestClassBrainMonkey
 {
 
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
+
+    function setUp(): void
+    {
+        parent::setUp();
+
+        require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+        require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_forms.php");
+    }
 
     public function test_ok()
     {

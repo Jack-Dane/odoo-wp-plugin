@@ -2,17 +2,23 @@
 
 namespace odoo_conn\tests\admin\api\endpoints\odoo_form_mappings\OdooConnDeleteOdooFormMappings;
 
-require_once(__DIR__ . "/../common.php");
-require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");
+require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
-use \PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooFormMappings;
 
-class OdooConnDeleteOdooFormMappings_Test extends TestCase
+class OdooConnDeleteOdooFormMappings_Test extends \TestClassBrainMonkey
 {
 
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
+
+    function setUp(): void
+    {
+        parent::setUp();
+
+        require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+        require_once(__DIR__ . "/../../../../../../admin/api/endpoints/odoo_form_mappings.php");
+    }
 
     public function test_ok()
     {

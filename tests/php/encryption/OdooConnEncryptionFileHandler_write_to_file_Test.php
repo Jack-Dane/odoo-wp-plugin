@@ -1,8 +1,8 @@
 <?php
 
-namespace odoo_conn\tests\OdooConnEncryptionFileHandler_Test;
-
+use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use \org\bovigo\vfs\vfsStream;
+use phpmock\phpunit\PHPMock;
 use \PHPUnit\Framework\TestCase;
 
 define("ABSPATH", "vfs://root/");
@@ -12,13 +12,13 @@ require_once(__DIR__ . "/../../../encryption.php");
 class OdooConnEncryptionFileHandler_write_to_file_Test extends TestCase
 {
 
-    use \phpmock\phpunit\PHPMock;
+    use PHPMock;
 
     public function setUp(): void
     {
         $this->root = vfsStream::setup("root", 0777);
         $this->flock = $this->getFunctionMock("odoo_conn\\encryption", "flock");
-        $this->file_handler = new \odoo_conn\encryption\OdooConnEncryptionFileHandler();
+        $this->file_handler = new OdooConnEncryptionFileHandler();
         $this->sleep = $this->getFunctionMock("odoo_conn\\encryption", "sleep");
     }
 
@@ -32,7 +32,7 @@ class OdooConnEncryptionFileHandler_write_to_file_Test extends TestCase
             }
         );
 
-        $key = $this->file_handler->write_to_file("abc");
+        $this->file_handler->write_to_file("abc");
 
         $this->assertEquals("abc", $this->root->getChild("odoo_conn.key")->getContent());
     }
@@ -48,7 +48,7 @@ class OdooConnEncryptionFileHandler_write_to_file_Test extends TestCase
             }
         );
 
-        $key = $this->file_handler->write_to_file("abc");
+        $this->file_handler->write_to_file("abc");
 
         $this->expectErrorMessage("Timed out waiting to write to the key file");
     }

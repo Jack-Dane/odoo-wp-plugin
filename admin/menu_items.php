@@ -15,7 +15,7 @@ function add_top_menu_page()
         "Odoo Forms",
         "administrator",
         "odoo-form",
-        "odoo_conn_odoo_form_page"
+        "odoo_conn\\admin\\pages\\forms\\odoo_conn_odoo_form_page"
     );
 
     add_submenu_page(
@@ -24,7 +24,7 @@ function add_top_menu_page()
         "Odoo Connections",
         "administrator",
         "odoo-connection",
-        "odoo_conn_odoo_connection_page"
+        "\\odoo_conn\\admin\\pages\\connections\\odoo_conn_odoo_connection_page"
     );
 
     add_submenu_page(
@@ -33,7 +33,7 @@ function add_top_menu_page()
         "Odoo Form Mappings",
         "administrator",
         "odoo-form-mapping",
-        "odoo_conn_odoo_form_mapping_page"
+        "\\odoo_conn\\admin\\pages\\form_mapping\\odoo_conn_odoo_form_mapping_page"
     );
 
     add_submenu_page(
@@ -42,7 +42,7 @@ function add_top_menu_page()
         "Odoo Submit Errors",
         "administrator",
         "odoo-submit-errors",
-        "odoo_conn_odoo_errors_page"
+        "\\odoo_conn\\admin\\pages\\errors\\odoo_conn_odoo_errors_page"
     );
 
     add_submenu_page(

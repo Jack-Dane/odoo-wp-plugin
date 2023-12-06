@@ -1,10 +1,12 @@
 <?php
 
+namespace odoo_conn\admin\pages\errors;
+
 require_once(__DIR__ . "/../../api/endpoints/odoo_errors.php");
 
 use odoo_conn\admin\api\endpoints\OdooConnGetOdooErrors;
 use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooErrors;
-use odoo_conn\admin\pages\page_router\OdooConnPageRouter;
+use odoo_conn\admin\pages\OdooConnPageRouter;
 use odoo_conn\admin\table_display\OdooConnCustomTableDeletableDisplay;
 
 

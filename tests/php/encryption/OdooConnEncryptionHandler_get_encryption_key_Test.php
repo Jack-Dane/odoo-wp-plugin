@@ -2,6 +2,9 @@
 
 namespace odoo_conn\tests\OdooConnEncryptionHandler_Test;
 
+use odoo_conn\encryption\OdooConnEncryptionFileHandler;
+use odoo_conn\encryption\OdooConnEncryptionHandler;
+use phpmock\phpunit\PHPMock;
 use \PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . "/../../../encryption.php");
@@ -9,7 +12,7 @@ require_once(__DIR__ . "/../../../encryption.php");
 class OdooConnEncryptionHandler_get_encryption_key_Test extends TestCase
 {
 
-    use \phpmock\phpunit\PHPMock;
+    use PHPMock;
 
     public function setUp(): void
     {
@@ -17,9 +20,9 @@ class OdooConnEncryptionHandler_get_encryption_key_Test extends TestCase
             "odoo_conn\\encryption", "sodium_crypto_secretbox_keygen"
         );
         $this->file_handler_mock = $this->createMock(
-            \odoo_conn\encryption\OdooConnEncryptionFileHandler::class
+            OdooConnEncryptionFileHandler::class
         );
-        $this->encryption_handler = new \odoo_conn\encryption\OdooConnEncryptionHandler(
+        $this->encryption_handler = new OdooConnEncryptionHandler(
             $this->file_handler_mock
         );
     }

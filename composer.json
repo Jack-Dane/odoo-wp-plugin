@@ -4,7 +4,8 @@
     "mikey179/vfsstream": "1.6.10",
     "php-mock/php-mock": "^2.3",
     "php-mock/php-mock-phpunit": "^2.6",
-    "mockery/mockery": "^1.5"
+    "mockery/mockery": "^1.5",
+    "brain/monkey": "2.*"
   },
   "require": {
     "guzzlehttp/guzzle": "^7.0",

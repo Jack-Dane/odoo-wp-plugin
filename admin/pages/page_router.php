@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\admin\pages\page_router;
+namespace odoo_conn\admin\pages;
 
 
 abstract class OdooConnPageRouter

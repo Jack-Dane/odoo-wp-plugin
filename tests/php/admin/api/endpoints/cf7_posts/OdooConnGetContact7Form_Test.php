@@ -2,18 +2,24 @@
 
 namespace php\admin\api\endpoints\cf7_posts;
 
-require_once(__DIR__ . "/../common.php");
-require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
-require_once(__DIR__ . "/../../../../../../admin/api/endpoints/c7f_posts.php");
+require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
-use \PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use function \odoo_conn\admin\api\endpoints\odoo_conn_get_contact_7_forms;
-use OdooConnGetContact7Form;
 
-class OdooConnGetContact7Form_Test extends TestCase
+
+class OdooConnGetContact7Form_Test extends \TestClassBrainMonkey
 {
 
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
+
+    function setUp(): void
+    {
+        parent::setUp();
+
+        require_once(__DIR__ . "/../../../../../../admin/api/schema.php");
+        require_once(__DIR__ . "/../../../../../../admin/api/endpoints/c7f_posts.php");
+    }
 
     public function test_ok()
     {

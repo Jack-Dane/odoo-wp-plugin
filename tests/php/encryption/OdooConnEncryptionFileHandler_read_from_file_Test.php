@@ -2,6 +2,7 @@
 
 namespace odoo_conn\tests\OdooConnEncryptionFileHandler_Test;
 
+use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use \org\bovigo\vfs\vfsStream;
 use \PHPUnit\Framework\TestCase;
 
@@ -15,7 +16,7 @@ class OdooConnEncryptionFileHandler_read_from_file_Test extends TestCase
     public function setUp(): void
     {
         $this->root = vfsStream::setup("root", 0777);
-        $this->file_handler = new \odoo_conn\encryption\OdooConnEncryptionFileHandler();
+        $this->file_handler = new OdooConnEncryptionFileHandler();
     }
 
     public function test_existing_file()
