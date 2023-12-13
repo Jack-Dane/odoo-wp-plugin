@@ -1,15 +1,15 @@
 <?php
 
-namespace php\admin\pages\forms;
+namespace php\admin\pages\form_mappings;
 
 require_once(__DIR__ . "/../../../TestClassBrainMonkey.php");
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use odoo_conn\admin\pages\forms\OdooConnOdooFormRouter;
+use odoo_conn\admin\pages\form_mapping\OdooConnOdooFormMappingRouter;
 use Brain\Monkey\Functions;
 
 
-class OdooConnOdooFormRouter_request_Test extends \TestClassBrainMonkey
+class OdooConnOdooFormMappingRouter_request_Test extends \TestClassBrainMonkey
 {
 
     use MockeryPHPUnitIntegration;
@@ -23,10 +23,10 @@ class OdooConnOdooFormRouter_request_Test extends \TestClassBrainMonkey
         require_once(__DIR__ . "/../../../../../admin/api/main.php");
         require_once(__DIR__ . "/../../../../../admin/table_display.php");
         require_once(__DIR__ . "/../../../../../admin/pages/page_router.php");
-        require_once(__DIR__ . "/../../../../../admin/pages/forms/odoo_form.php");
+        require_once(__DIR__ . "/../../../../../admin/pages/form_mappings/odoo_form_mapping.php");
 
         $this->odoo_conn_page_router = \Mockery::mock(
-            OdooConnOdooFormRouter::class, ["menu-slug"]
+            OdooConnOdooFormMappingRouter::class, ["menu-slug"]
         )->makePartial();
         $this->odoo_conn_page_router->shouldAllowMockingProtectedMethods();
     }

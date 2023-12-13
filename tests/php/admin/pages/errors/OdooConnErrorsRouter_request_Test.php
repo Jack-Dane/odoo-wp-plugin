@@ -1,15 +1,15 @@
 <?php
 
-namespace php\admin\pages\forms;
+namespace php\admin\pages\errors;
 
 require_once(__DIR__ . "/../../../TestClassBrainMonkey.php");
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use odoo_conn\admin\pages\forms\OdooConnOdooFormRouter;
+use odoo_conn\admin\pages\errors\OdooConnOdooErrorRouter;
 use Brain\Monkey\Functions;
 
 
-class OdooConnOdooFormRouter_request_Test extends \TestClassBrainMonkey
+class OdooConnErrorsRouter_request_Test extends \TestClassBrainMonkey
 {
 
     use MockeryPHPUnitIntegration;
@@ -23,10 +23,10 @@ class OdooConnOdooFormRouter_request_Test extends \TestClassBrainMonkey
         require_once(__DIR__ . "/../../../../../admin/api/main.php");
         require_once(__DIR__ . "/../../../../../admin/table_display.php");
         require_once(__DIR__ . "/../../../../../admin/pages/page_router.php");
-        require_once(__DIR__ . "/../../../../../admin/pages/forms/odoo_form.php");
+        require_once(__DIR__ . "/../../../../../admin/pages/errors/odoo_errors.php");
 
         $this->odoo_conn_page_router = \Mockery::mock(
-            OdooConnOdooFormRouter::class, ["menu-slug"]
+            OdooConnOdooErrorRouter::class, ["menu-slug"]
         )->makePartial();
         $this->odoo_conn_page_router->shouldAllowMockingProtectedMethods();
     }
@@ -43,10 +43,8 @@ class OdooConnOdooFormRouter_request_Test extends \TestClassBrainMonkey
     function test_request_new()
     {
         $GLOBALS["_REQUEST"] = ["page_action" => "new"];
-        $this->odoo_conn_page_router->shouldReceive("display_input_form")->once();
-        $this->odoo_conn_page_router->shouldReceive("display_table")->never();
-        Functions\expect("wp_enqueue_style")->once();
-        Functions\expect("plugins_url")->once();
+        $this->odoo_conn_page_router->shouldReceive("display_input_form")->never();
+        $this->odoo_conn_page_router->shouldReceive("display_table")->once();
 
         $this->odoo_conn_page_router->request();
     }
@@ -54,10 +52,8 @@ class OdooConnOdooFormRouter_request_Test extends \TestClassBrainMonkey
     function test_request_edit()
     {
         $GLOBALS["_REQUEST"] = ["page_action" => "edit", "id" => 3];
-        $this->odoo_conn_page_router->shouldReceive("display_edit_form")->with(3)->once();
-        $this->odoo_conn_page_router->shouldReceive("display_table")->never();
-        Functions\expect("wp_enqueue_style")->once();
-        Functions\expect("plugins_url")->once();
+        $this->odoo_conn_page_router->shouldReceive("display_edit_form")->never();
+        $this->odoo_conn_page_router->shouldReceive("display_table")->once();
 
         $this->odoo_conn_page_router->request();
     }
