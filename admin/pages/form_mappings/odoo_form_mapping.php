@@ -84,7 +84,7 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
 
         $root = esc_url_raw(rest_url());
         $nonce = wp_create_nonce("wp_rest");
-        echo wp_localize_script("odoo-form-mapping", "wpApiSettings", array(
+        wp_localize_script("odoo-form-mapping", "wpApiSettings", array(
             "root" => $root, "nonce" => $nonce
         ));
 

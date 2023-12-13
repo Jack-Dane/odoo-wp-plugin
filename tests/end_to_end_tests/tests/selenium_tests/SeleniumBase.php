@@ -110,9 +110,12 @@ class WordpressTableBase extends SeleniumBase
     private function wait_for_table_row($row_id)
     {
         $row_id += 1;  // xpath indices start at 1
-        return $this->wait_for_elements(
-            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr[{$row_id}]/td")
+        $elements = $this->wait_for_elements(
+            WebDriverBy::xpath("//tbody[@id='the-list']/tr[$row_id]/td")
         );
+        // ignore the checkbox
+//        array_shift($elements);
+        return $elements;
     }
 
 }
