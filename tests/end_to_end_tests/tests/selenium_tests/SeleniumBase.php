@@ -46,7 +46,7 @@ class SeleniumBase extends TestCase
         while (!$found_elements) {
             $attempts++;
             if ($attempts > $timeout) {
-                throw new \Exception("Could not find element after " . $timeout . " seconds");
+                throw new \Exception("Could not find element after $timeout seconds");
             }
 
             sleep(1);
