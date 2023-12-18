@@ -4,6 +4,7 @@ use \PHPUnit\Framework\TestCase;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Exception\NoSuchAlertException;
 
 class SeleniumBase extends TestCase
@@ -96,6 +97,17 @@ class SeleniumBase extends TestCase
 
 class WordpressTableBase extends SeleniumBase
 {
+
+    protected function show_action_buttons_on_table($row_index = 1) {
+        $action = new WebDriverActions($this->driver);
+        $action->moveToElement(
+            $this->driver->findElement(
+                WebDriverBy::xpath(
+                    "//tbody[@id='the-list']/tr[$row_index]/td"
+                )
+            )
+        )->perform();
+    }
 
     protected function get_table_row_text($row_id)
     {

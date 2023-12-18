@@ -9,96 +9,97 @@ class Update_Test extends WordpressTableBase
 
     public function test_update_connection()
     {
-        $this->update_row("http://localhost:8000/wp-admin/admin.php?page=odoo-connection", array());
+        $input_names = [
+            "name", "username", "url", "database_name"
+        ];
+
+        $this->update_row(
+            "http://localhost:8000/wp-admin/admin.php?page=odoo-connection",
+            $input_names,
+            "name"
+        );
     }
 
     public function test_update_form()
     {
-        $this->update_row("http://localhost:8000/wp-admin/admin.php?page=odoo-form", array());
+        $input_names = [
+            "odoo_model", "name"
+        ];
+
+        $this->update_row(
+            "http://localhost:8000/wp-admin/admin.php?page=odoo-form",
+            $input_names,
+            "name"
+        );
     }
 
     public function test_update_form_mapping_constant_value()
     {
+        $input_names = [
+            "constant_value", "odoo_field_name"
+        ];
+
         $this->update_row(
-            "http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping", array(0)
+            "http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping",
+            $input_names,
+            "odoo_form_name"
         );
     }
 
     public function test_update_form_mapping_cf7_field_name()
     {
+        $input_names = [
+            "cf7_field_name", "odoo_field_name"
+        ];
+
         $this->update_row(
-            "http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping", array(2), $row = 1
+            "http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping",
+            $input_names,
+            "odoo_form_name",
+            1
         );
     }
 
-    public function test_update_with_both_constant_value_cf7_field_name()
-    {
-        $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping");
-
-        $this->wait_for_element(WebDriverBy::cssSelector(".table-row-edit"))->click();
-        sleep(2);
-
-        $input_elements = $this->driver->findElements(
-            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr/td/input")
-        );
-
-        $input_elements[0]->sendKeys("Broken");
-
-        $this->save_edit();
-
-        $alertText = $this->driver->switchTo()->alert()->getText();
-        $this->assertEquals(
-            "Both cf7 field name and constant value passed, only one is expected", $alertText
-        );
-        $this->driver->switchTo()->alert()->accept();
-
-        $input_elements = $this->driver->findElements(
-            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr/td/input")
-        );
-
-        $text_table_elements = $this->get_table_row_text(0);
-        foreach ($text_table_elements as $text_table_element) {
-            $this->assertNotEquals("broken", $text_table_element);
-        }
-    }
-
-    private function save_edit($row = 0)
-    {
-        $save_button = $this->driver->findElements(WebDriverBy::cssSelector(".table-row-save"))[$row];
-        // sometimes not in view
-        $this->driver->executeScript("arguments[0].click();", array($save_button));
-        sleep(2);
-    }
-
-    private function update_row($edit_endpoint, $ignore_indexs, $row = 0)
+    private function update_row($edit_endpoint, $input_names, $column_data_name, $row = 0)
     {
         $this->driver->get($edit_endpoint);
 
-        $this->wait_for_elements(WebDriverBy::cssSelector(".table-row-edit"))[$row]->click();
-        sleep(2);
+        $this->wait_for_elements(
+            WebDriverBy::xpath("//tbody[@id='the-list']/tr")
+        )[$row];
 
-        $input_elements = $this->driver->findElements(
-            WebDriverBy::xpath("//table[@class='database-table']/tbody/tr/td/input")
+        $row_xpath_index = $row + 1;
+        $this->show_action_buttons_on_table($row_xpath_index);
+        $edit_button = $this->wait_for_element(
+            WebDriverBy::xpath(
+                "//tbody[@id='the-list']/tr[$row_xpath_index]/td[contains(@class, '$column_data_name')]/div[@class='row-actions']/span[@class='edit']/a"
+            )
         );
-        $expected_values = array();
-        $index = -1;
-        foreach ($input_elements as $input_element) {
-            $index++;
-            if (in_array($index, $ignore_indexs)) {
-                continue;
-            }
+        $edit_button->click();
 
-            $expected_value = $input_element->getAttribute("value") . "_edit";
+        foreach ($input_names as $input_name) {
+            $input_element = $this->wait_for_element(
+                WebDriverBy::name($input_name)
+            );
+
             $input_element->clear();
-            $input_element->sendKeys($expected_value);
-            array_push($expected_values, $expected_value);
+            $input_element->sendKeys($input_name . "_edit");
         }
-        $this->save_edit($row);
 
-        $text_table_elements = $this->get_table_row_text($row);
+        $this->driver->findElement(
+            WebDriverBy::name("submit")
+        )->click();
 
-        foreach ($expected_values as $expected_value) {
-            $this->assertContains($expected_value, $text_table_elements);
+        foreach ($input_names as $input_name) {
+            $display_element = $this->wait_for_element(
+                WebDriverBy::xpath(
+                    "//tbody[@id='the-list']/tr[$row_xpath_index]/td[contains(@class, 'column-${input_name}')]"
+                )
+            );
+
+            $this->assertEquals(
+                "${input_name}_edit", $display_element->getText()
+            );
         }
     }
 

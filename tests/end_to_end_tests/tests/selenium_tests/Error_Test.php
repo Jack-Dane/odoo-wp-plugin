@@ -2,22 +2,10 @@
 
 require_once(__DIR__ . "/SeleniumBase.php");
 
-use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\WebDriverBy;
 
 class Error_Test extends WordpressTableBase
 {
-
-    private function show_action_buttons_on_table() {
-        $action = new WebDriverActions($this->driver);
-        $action->moveToElement(
-            $this->driver->findElement(
-                WebDriverBy::xpath(
-                    "//tbody[@id='the-list']/tr[1]/td"
-                )
-            )
-        )->perform();
-    }
 
     public function test_broken_connection_alert()
     {
