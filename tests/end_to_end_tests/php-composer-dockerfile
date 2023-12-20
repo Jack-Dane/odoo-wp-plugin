@@ -5,6 +5,6 @@ RUN apt-get update
 RUN apt-get -y install git unzip libzip-dev
 RUN docker-php-ext-install zip
 
-COPY . /usr/src/odoo_conn
+COPY . /opt/odoo_conn
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
