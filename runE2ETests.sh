@@ -32,7 +32,7 @@ docker exec $dockerPHPContainerId /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/
 docker exec $dockerPHPContainerId /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/SendData_Test.php'
 docker exec $dockerPHPContainerId /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/Error_Test.php'
 docker exec $dockerPHPContainerId /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/Update_Test.php'
-#docker exec $dockerPHPContainerId /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/Delete_Test.php'
+docker exec $dockerPHPContainerId /bin/sh -c 'cd /usr/src/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/Delete_Test.php'
 
 # cleanup the containers
 docker compose -f tests/end_to_end_tests/odoo_compose.yaml down
