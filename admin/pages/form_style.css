@@ -1,0 +1,47 @@
+
+.submit-database {
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width: 100%;
+    max-width: 400px;
+    padding: 2em;
+    box-shadow: 0 0 2em rgba(0, 0, 0, 0.15);
+}
+
+.submit-database input:not([type=checkbox]) {
+    width: 100%;
+    margin-bottom: .5em;
+}
+
+#submit-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-top: .5em;
+}
+
+.submit-database input[type=Submit] {
+    width: 50%;
+}
+
+#form-data > select {
+    width: 48%;
+    margin-bottom: .5em;
+}
+
+#form-data > label {
+    display: inline-block;
+    width: 50%;
+    margin-bottom: .5em;
+}
+
+.input-wrapper {
+    display: inline-block;
+    width: 49%;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 0px;
+}
+
+#form-data > select, #form-data > input[type=text] {
+    font-size: 1em;
+}

@@ -1,9 +1,11 @@
 <?php
 
-include("pages/odoo_form.php");
-include("pages/odoo_connection.php");
-include("pages/odoo_form_mapping.php");
-include("pages/odoo_errors.php");
+include("table_display.php");
+include("pages/page_router.php");
+include("pages/forms/odoo_form.php");
+include("pages/connections/odoo_connection.php");
+include("pages/form_mappings/odoo_form_mapping.php");
+include("pages/errors/odoo_errors.php");
 include("pages/odoo_settings.php");
 
 function add_top_menu_page()
@@ -13,7 +15,7 @@ function add_top_menu_page()
         "Odoo Forms",
         "administrator",
         "odoo-form",
-        "odoo_conn_odoo_form_page"
+        "odoo_conn\\admin\\pages\\forms\\odoo_conn_odoo_form_page"
     );
 
     add_submenu_page(
@@ -22,7 +24,7 @@ function add_top_menu_page()
         "Odoo Connections",
         "administrator",
         "odoo-connection",
-        "odoo_conn_odoo_connection_page"
+        "\\odoo_conn\\admin\\pages\\connections\\odoo_conn_odoo_connection_page"
     );
 
     add_submenu_page(
@@ -31,7 +33,7 @@ function add_top_menu_page()
         "Odoo Form Mappings",
         "administrator",
         "odoo-form-mapping",
-        "odoo_conn_odoo_form_mapping_page"
+        "\\odoo_conn\\admin\\pages\\form_mapping\\odoo_conn_odoo_form_mapping_page"
     );
 
     add_submenu_page(
@@ -40,7 +42,7 @@ function add_top_menu_page()
         "Odoo Submit Errors",
         "administrator",
         "odoo-submit-errors",
-        "odoo_conn_odoo_errors_page"
+        "\\odoo_conn\\admin\\pages\\errors\\odoo_conn_odoo_errors_page"
     );
 
     add_submenu_page(

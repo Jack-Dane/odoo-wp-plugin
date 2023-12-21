@@ -88,6 +88,13 @@ abstract class OdooConnPutBaseSchema extends OdooConnPostPutBaseSchema
 abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
 {
 
+    protected string $output_type = OBJECT;
+
+    public function __construct($output = OBJECT)
+    {
+        $this->output_type = $output;
+    }
+
     protected function get_public_key()
     {
         return "id";
@@ -146,7 +153,16 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
         $joined_query = $this->join_query($query);
         $safe_query = $this->prepare_query($joined_query, $data, $argument_array);
 
-        return $wpdb->get_results($safe_query);
+        return $wpdb->get_results($safe_query, $this->output_type);
+    }
+
+    public function count_records()
+    {
+        global $wpdb;
+
+        $query = "SELECT COUNT(*) as 'count' FROM {$this->get_table_name()}";
+
+        return $wpdb->get_results($query)[0]->count;
     }
 
 }
@@ -180,7 +196,7 @@ abstract class OdooConnDeleteBaseSchema extends OdooConnBaseSchema
 
     public function request($data)
     {
-        global $wpdb, $table_prefix;
+        global $wpdb;
 
         $id = $data["id"];
         $wpdb->delete(
@@ -205,36 +221,6 @@ function odoo_conn_base_get_request_arguments()
         "offset" => array(
             "type" => "integer",
             "description" => esc_html__("The offset based on the primary key")
-        ),
-    );
-}
-
-function odoo_conn_base_delete_request_schema($title)
-{
-    return array(
-        "$schema" => "https://json-schema.org/draft/2020-12/schema",
-        "title" => $title,
-        "type" => 'object',
-        "properties" => array(
-            "DELETE" => array(
-                "type" => "integer",
-                "description" => esc_html__("Primary key for the Odoo Connection that was deleted"),
-            ),
-            "table" => array(
-                "type" => "string",
-                "description" => esc_html__("Table that the row was deleted from"),
-            ),
-        ),
-    );
-}
-
-function odoo_conn_base_delete_arguments()
-{
-    return array(
-        "id" => array(
-            "type" => "integer",
-            "description" => esc_html__("Primary key for an Odoo Connection"),
-            "required" => true,
         ),
     );
 }

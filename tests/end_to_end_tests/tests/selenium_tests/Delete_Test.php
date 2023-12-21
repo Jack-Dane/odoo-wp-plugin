@@ -12,37 +12,53 @@ class Delete_Test extends WordpressTableBase
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-connection");
         sleep(2);
 
-        $rows = $this->driver->findElements(WebDriverBy::xpath("//tbody/tr"));
-        $this->assertEquals(1, count($rows));
+        $this->show_action_buttons_on_table();
+        $rows = $this->driver->findElements(WebDriverBy::xpath("//tbody[@id='the-list']/tr"));
+        $this->assertCount(1, $rows);
 
-        $this->driver->findElement(WebDriverBy::cssSelector(".table-row-delete"))->click();
+        $this->wait_for_element(
+            WebDriverBy::xpath(
+                "//tbody[@id='the-list']/tr[1]/td[contains(@class, 'column-name')]/div[@class='row-actions']/span[@class='delete']/a"
+            )
+        )->click();
         sleep(2);
-
-        $rows = $this->driver->findElements(WebDriverBy::xpath("//tbody/tr"));
-        $this->assertEquals(0, count($rows));
+        $this->driver->findElement(WebDriverBy::xpath("//td[contains(text(), 'No items found')]"));
 
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-form");
         sleep(2);
-        $rows = $this->driver->findElements(WebDriverBy::xpath("//tbody/tr"));
-        $this->assertEquals(0, count($rows));
+        $this->driver->findElement(WebDriverBy::xpath("//td[contains(text(), 'No items found')]"));
 
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping");
         sleep(2);
-        $rows = $this->driver->findElements(WebDriverBy::xpath("//tbody/tr"));
-        $this->assertEquals(0, count($rows));
+        $this->driver->findElement(WebDriverBy::xpath("//td[contains(text(), 'No items found')]"));
+    }
 
+    public function test_delete_errors() {
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-submit-errors");
-        $delete_button = $this->wait_for_element(
-            WebDriverBy::cssSelector(".table-row-delete")
+
+        $rows = $this->driver->findElements(
+            WebDriverBy::xpath("//tbody[@id='the-list']/tr")
         );
-        $edit_buttons = $this->driver->findElements(
-            WebDriverBy::cssSelector(".table-row-edit")
-        );
-        $this->assertEquals(0, count($edit_buttons));
-        $delete_button->click();
+        $this->assertCount(1, $rows);
+
+        $this->show_action_buttons_on_table();
+
         sleep(2);
-        $rows = $this->driver->findElements(WebDriverBy::xpath("//tbody/tr"));
-        $this->assertEquals(0, count($rows));
+        $edit_button = $this->driver->findElements(
+            WebDriverBy::xpath(
+                "//tbody[@id='the-list']/tr[1]/td[contains(@class, 'column-contact_7_title')]/div[@class='row-actions']/span[@class='edit']/a"
+            )
+        );
+        $this->assertCount(0, $edit_button);
+
+        $this->wait_for_element(
+            WebDriverBy::xpath(
+                "//tbody[@id='the-list']/tr[1]/td[contains(@class, 'column-contact_7_title')]/div[@class='row-actions']/span[@class='delete']/a"
+            )
+        )->click();
+        sleep(2);
+
+        $this->driver->findElement(WebDriverBy::xpath("//td[contains(text(), 'No items found')]"));
     }
 
 }

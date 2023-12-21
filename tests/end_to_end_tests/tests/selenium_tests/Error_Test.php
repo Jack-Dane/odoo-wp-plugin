@@ -12,44 +12,45 @@ class Error_Test extends WordpressTableBase
         $this->driver->get(
             "http://localhost:8000/wp-admin/admin.php?page=odoo-connection"
         );
+
         $edit_button = $this->wait_for_element(
-            WebDriverBy::cssSelector(
-                ".table-row-edit"
+            WebDriverBy::xpath(
+                "//tbody[@id='the-list']/tr[1]/td[contains(@class, 'row-actions')]/div[@class='row-actions']/span[@class='edit']/a"
             )
         );
 
         // edit to an incorrect username
+        $this->show_action_buttons_on_table();
         $edit_button->click();
         $username_input = $this->wait_for_element(
-            WebDriverBy::xpath(
-                "//table[@class='database-table']/tbody/tr/td[4]/input"
-            )
+            WebDriverBy::id("username")
         );
+        $username_input->clear();
         $username_input->sendKeys(
             "wrong_email"
         );
         $save_button = $this->wait_for_element(
-            WebDriverBy::cssSelector(
-                ".table-row-save"
-            )
+            WebDriverBy::name("submit")
         );
         $save_button->click();
         sleep(2);
 
+        $this->show_action_buttons_on_table();
         $test_button = $this->wait_for_element(
-            WebDriverBy::cssSelector(
-                ".table-row-test"
+            WebDriverBy::xpath(
+                "//tbody[@id='the-list']/tr[1]/td[contains(@class, 'row-actions')]/div[@class='row-actions']/span[@class='test']/a"
             )
         );
         $test_button->click();
         sleep(2);
 
         $expected_error_message = "{\"success\":false,\"error_string\":\"Username or API Key is incorrect\",\"error_code\":0}";
-        $alert_text = $this->wait_for_alert();
-        $this->assertEquals(
-            $expected_error_message, $alert_text
+        $elements = $this->wait_for_elements(
+            WebDriverBy::xpath(
+                "//p[contains(text(), '$expected_error_message')]"
+            )
         );
-        $this->driver->switchTo()->alert()->accept();
+        $this->assertCount(1, $elements);
     }
 
     public function test_broken_send_data()
@@ -70,14 +71,19 @@ class Error_Test extends WordpressTableBase
         $this->driver->findElement(
             WebDriverBy::name("your-email")
         )->sendKeys("email@email.com")->submit();
+        $this->wait_for_element(
+            WebDriverBy::xpath(
+                "//div[contains(text(), 'There was an error trying to send your message.')]"
+            )
+        );
 
         $this->driver->get(
             "http://localhost:8000/wp-admin/admin.php?page=odoo-submit-errors"
         );
         $error_message = $this->wait_for_element(
             WebDriverBy::xpath(
-                "//table[@class='database-table']/tbody/tr[1]/td[5]"
-            )
+                "//tbody[@id='the-list']/tr[1]/td[3]"
+            ), 2
         )->getText();
 
         $this->assertEquals(
