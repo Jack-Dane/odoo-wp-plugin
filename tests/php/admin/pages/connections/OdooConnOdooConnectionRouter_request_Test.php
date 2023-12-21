@@ -19,6 +19,7 @@ class OdooConnOdooConnectionRouter_request_Test extends \TestClassBrainMonkey
         parent::setUp();
 
         \Mockery::mock("WP_List_Table");
+        \Mockery::mock("check_admin_referer");
 
         require_once(__DIR__ . "/../../../../../admin/api/main.php");
         require_once(__DIR__ . "/../../../../../admin/table_display.php");
@@ -36,6 +37,7 @@ class OdooConnOdooConnectionRouter_request_Test extends \TestClassBrainMonkey
         $GLOBALS["_REQUEST"] = ["id" => 3, "page_action" => "delete"];
         $this->odoo_conn_page_router->shouldReceive("delete")->with(3)->once();
         $this->odoo_conn_page_router->shouldReceive("display_table")->once();
+        Functions\expect("check_admin_referer")->once();
 
         $this->odoo_conn_page_router->request();
     }

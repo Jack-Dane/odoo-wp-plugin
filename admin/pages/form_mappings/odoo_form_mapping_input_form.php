@@ -1,4 +1,5 @@
 <form method="POST" action="?page=odoo-form-mapping" id="form-data" class="submit-database">
+    <?php wp_nonce_field(); ?>
     <input type="hidden" name="id" value="<?= $_REQUEST["id"] ?? "" ?>"/>
     <input type="hidden" name="odoo_form_edit_id" id="odoo_form_edit_id" value="<?= $odoo_conn_data->odoo_form_id ?? "" ?>" />
     <input type="hidden" name="constant_value_checkbox" id="constant_value_checkbox" value="<?= ($odoo_conn_data->constant_value ?? false) && ($_REQUEST["id"] ?? false) ?>" />

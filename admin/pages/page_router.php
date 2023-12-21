@@ -6,6 +6,11 @@ namespace odoo_conn\admin\pages;
 abstract class OdooConnPageRouter
 {
 
+    public function __construct()
+    {
+        $this->table_display = $this->create_table_display();
+    }
+
     public function request()
     {
         $action = $_REQUEST["page_action"] ?? null;
@@ -24,6 +29,7 @@ abstract class OdooConnPageRouter
     protected function handle_route($action)
     {
         if ($action === "delete") {
+            check_admin_referer();
             $this->delete($_REQUEST["id"]);
         }
     }
@@ -31,12 +37,11 @@ abstract class OdooConnPageRouter
     protected function display_table()
     {
         echo "<div class='wrap'>";
-        $table_display = $this->create_table_display();
-        $table_display->check_bulk_action();
+        $this->table_display->check_bulk_action();
 
         echo "<form method='post'>";
-        $table_display->prepare_items();
-        $table_display->display();
+        $this->table_display->prepare_items();
+        $this->table_display->display();
         echo "</form></div>";
     }
 
@@ -54,6 +59,7 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
 
     public function __construct($menu_slug)
     {
+        parent::__construct();
         $this->menu_slug = $menu_slug;
     }
 
@@ -85,12 +91,22 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
         wp_enqueue_style("odoo-form-page-style", plugins_url("form_style.css", __FILE__));
     }
 
+    private function verify_nonce() {
+        $action = ($_REQUEST["action"] ?? "") === "delete_bulk" ? "bulk-" . $this->table_display->_args["plural"] : -1;
+
+        if (!wp_verify_nonce($_REQUEST["_wpnonce"], $action)) {
+            die();
+        }
+    }
+
     protected function display_table()
     {
         $request_method = $_SERVER["REQUEST_METHOD"];
         $menu_page_slug = menu_page_url($this->menu_slug, false);
 
         if ($request_method == "POST") {
+            $this->verify_nonce();
+
             if ($_REQUEST["id"]) {
                 $this->update_record();
             } else {
