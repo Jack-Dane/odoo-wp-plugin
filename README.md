@@ -44,6 +44,8 @@ This plugin can be tested within a [docker environment](https://hub.docker.com/_
    set constant values that the form should fill in within Odoo.
 6. Submit the form and you should see the new object created in your odoo instance.
 
+**The UI has changed since this video was release but the concept is still the same**
+
 [Video Tutorial](https://www.youtube.com/watch?v=xhAvrEaBXAA)
 
 
