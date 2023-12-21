@@ -26,8 +26,15 @@ class OdooConnCustomTableDeletableDisplay extends WP_List_Table {
 
     protected function row_action_buttons($item)
     {
+        $base_url = wp_nonce_url(get_admin_url(null, "admin.php"));
+        $delete_url = add_query_arg([
+            "page" => $_REQUEST["page"],
+            "id" => $item["id"],
+            "page_action" => "delete"
+        ], $base_url);
+
         return array(
-            "delete" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=delete'>Delete</a>"
+            "delete" => "<a href='$delete_url'>Delete</a>"
         );
     }
 
@@ -109,10 +116,17 @@ class OdooConnCustomTableEditableDisplay extends OdooConnCustomTableDeletableDis
 
     protected function row_action_buttons($item)
     {
+        $base_url = wp_nonce_url(get_admin_url(null, "admin.php"));
+        $edit_url = add_query_arg([
+            "page" => $_REQUEST["page"],
+            "id" => $item["id"],
+            "page_action" => "edit"
+        ], $base_url);
+
         return array_merge(
             parent::row_action_buttons($item),
             array(
-                "edit" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=edit'>Edit</a>"
+                "edit" => "<a href='$edit_url'>Edit</a>"
             )
         );
     }

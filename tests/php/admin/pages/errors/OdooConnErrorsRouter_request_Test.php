@@ -36,6 +36,7 @@ class OdooConnErrorsRouter_request_Test extends \TestClassBrainMonkey
         $GLOBALS["_REQUEST"] = ["id" => 3, "page_action" => "delete"];
         $this->odoo_conn_page_router->shouldReceive("delete")->with(3)->once();
         $this->odoo_conn_page_router->shouldReceive("display_table")->once();
+        Functions\expect("check_admin_referer")->once();
 
         $this->odoo_conn_page_router->request();
     }

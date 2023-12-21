@@ -1,5 +1,6 @@
 <div class="wrap">
     <form method="POST" action="?page=odoo-connection" id="form-data" class="submit-database">
+        <?php wp_nonce_field(); ?>
         <input type="hidden" name="id" value="<?= $_REQUEST["id"] ?? "" ?>"/>
 
         <label for="name">Connection Name</label>

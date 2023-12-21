@@ -1,4 +1,5 @@
 <form method="POST" action="?page=odoo-form" id="form-data" class="submit-database">
+    <?php wp_nonce_field(); ?>
     <input type="hidden" name="id" value="<?= $_REQUEST["id"] ?? "" ?>"/>
     <input type="hidden" name="odoo_connection_edit_id" id="odoo_connection_edit_id" value="<?= $odoo_conn_data->odoo_connection_id ?? "" ?>"/>
     <input type="hidden" name="odoo_7_edit_id" id="odoo_7_edit_id" value="<?= $odoo_conn_data->contact_7_id ?? "" ?>"/>

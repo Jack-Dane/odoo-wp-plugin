@@ -22,10 +22,17 @@ class OdooConnOdooConnectionListTableEditable extends OdooConnCustomTableEditabl
 
     protected function row_action_buttons($item)
     {
+        $base_url = wp_nonce_url(get_admin_url(null, "admin.php"));
+        $test_url = add_query_arg([
+            "page" => $_REQUEST["page"],
+            "id" => $item["id"],
+            "page_action" => "test_connection"
+        ], $base_url);
+
         return array_merge(
             parent::row_action_buttons($item),
             [
-                "test" => "<a href='?page=${_REQUEST["page"]}&id=${item["id"]}&page_action=test_connection'>Test Connection</a>"
+                "test" => "<a href='$test_url'>Test Connection</a>"
             ]
         );
     }

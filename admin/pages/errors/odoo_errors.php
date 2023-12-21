@@ -37,6 +37,8 @@ class OdooConnOdooErrorRouter extends OdooConnPageRouter {
     {
         $this->get_backend = new OdooConnGetOdooErrors(ARRAY_A);
         $this->delete_backend = new OdooConnDeleteOdooErrors();
+
+        parent::__construct();
     }
 
     protected function create_table_display()
