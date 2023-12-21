@@ -4,7 +4,7 @@ jQuery(document).ready(function () {
 });
 
 async function setSelectData() {
-    connectionsSelect = jQuery("#odoo_connection_id");
+    let connectionsSelect = jQuery("#odoo_connection_id");
     connectionsSelect.empty();
 
     let connections = await fetch(wpApiSettings.root + "odoo_conn/v1/get-odoo-connections",
@@ -37,7 +37,7 @@ async function setSelectData() {
         option.appendTo(connectionsSelect);
     });
 
-    c7FormsSelect = jQuery("#contact_7_id");
+    let c7FormsSelect = jQuery("#contact_7_id");
     c7FormsSelect.empty();
 
     let c7Forms = await fetch(wpApiSettings.root + "odoo_conn/v1/get-contact-7-forms",

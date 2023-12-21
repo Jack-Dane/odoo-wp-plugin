@@ -4,7 +4,6 @@
     font-family: sans-serif;
     width: 100%;
     max-width: 400px;
-    text-align: center;
     padding: 2em;
     box-shadow: 0 0 2em rgba(0, 0, 0, 0.15);
 }
@@ -12,6 +11,12 @@
 .submit-database input:not([type=checkbox]) {
     width: 100%;
     margin-bottom: .5em;
+}
+
+#submit-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-top: .5em;
 }
 
 .submit-database input[type=Submit] {

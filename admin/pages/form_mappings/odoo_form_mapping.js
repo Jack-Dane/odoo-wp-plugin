@@ -10,14 +10,17 @@ jQuery("#value_type").click(function () {
 
 function checkboxEvent() {
     let checked = jQuery("#value_type").prop("checked");
-    console.log(checked);
 
     if (checked) {
         jQuery("#cf7_field_name").hide();
+        jQuery("#cf7_field_name_label").hide();
         jQuery("#constant_value").show();
+        jQuery("#constant_value_label").show();
     } else {
         jQuery("#constant_value").hide();
+        jQuery("#constant_value_label").hide();
         jQuery("#cf7_field_name").show();
+        jQuery("#cf7_field_name_label").show();
     }
 }
 
@@ -29,7 +32,7 @@ function setConstantValue () {
 }
 
 async function setSelectData() {
-    formSelect = jQuery("#odoo_form_id");
+    let formSelect = jQuery("#odoo_form_id");
     formSelect.empty();
 
     let forms = await fetch(wpApiSettings.root + "odoo_conn/v1/get-odoo-forms",
