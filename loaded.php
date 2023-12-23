@@ -9,6 +9,11 @@ function odoo_conn_update_db_check()
         odoo_conn_create_odoo_errors();
         update_option("odoo_conn_db_version", 2);
     }
+
+    if ($odoo_conn_db_version <= 2) {
+        odoo_conn_add_multi_table_column();
+        update_option("odoo_conn_db_version", 3);
+    }
 }
 
 function odoo_conn_create_odoo_errors()
@@ -31,6 +36,16 @@ function odoo_conn_create_odoo_errors()
     ";
 
     dbDelta($sql);
+}
+
+function odoo_conn_add_multi_table_column() {
+    global $wpdb, $table_prefix;
+
+    $table_name = $table_prefix . "odoo_conn_form_mapping";
+
+    $sql = "ALTER TABLE `$table_name` ADD COLUMN `x_2_many` TINYINT(1) NOT NULL;";
+
+    $wpdb->query($sql);
 }
 
 add_action("plugins_loaded", "odoo_conn_update_db_check");
