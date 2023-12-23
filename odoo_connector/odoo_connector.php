@@ -102,12 +102,6 @@ class OdooConnOdooConnector
         return new Request($methodName, $arguments);
     }
 
-    public function create_value($value, $type = null)
-    {
-        $type = $type ?? Value::$xmlrpcString;
-        return new Value($value, $type);
-    }
-
     private function check_connection_ok()
     {
         if ($this->uid === false) {
@@ -127,16 +121,16 @@ class OdooConnOdooConnector
     private function authenticate()
     {
         $common_client = $this->create_client($this->url . "/xmlrpc/2/common");
-        $version_request = $this->create_request("version", array());
+        $version_request = $this->create_request("version", []);
         $version_response = $common_client->send($version_request);
 
         $authentication_request = $this->create_request(
-            "authenticate", array(
-                $this->create_value($this->database),
-                $this->create_value($this->username),
-                $this->create_value($this->api_key),
+            "authenticate", [
+                new Value($this->database, Value::$xmlrpcString),
+                new Value($this->username, Value::$xmlrpcString),
+                new Value($this->api_key, Value::$xmlrpcString),
                 $version_response->value()
-            )
+            ]
         );
         return $common_client->send($authentication_request);
     }
@@ -175,14 +169,14 @@ class OdooConnOdooConnector
         $response = $model_client->send(
             $this->create_request(
                 "execute_kw",
-                array(
-                    $this->create_value($this->database),
-                    $this->create_value($this->uid),
-                    $this->create_value($this->api_key),
-                    $this->create_value($model),
-                    $this->create_value("create"),
+                [
+                    new Value($this->database, Value::$xmlrpcString),
+                    new Value($this->uid, Value::$xmlrpcString),
+                    new Value($this->api_key, Value::$xmlrpcString),
+                    new Value($model, Value::$xmlrpcString),
+                    new Value("create", Value::$xmlrpcString),
                     $parsed_field_values
-                )
+                ]
             )
         );
 
@@ -195,14 +189,12 @@ class OdooConnOdooConnector
 
     private function parse_field_values($field_values)
     {
-        $parsed_array = array();
-        foreach ($field_values as $field_value_array) {
-            foreach ($field_value_array as $field_value) {
-                $parsed_array[$field_value->key] = $field_value->get_parsed_value();
-            }
+        $parsed_array = [];
+        foreach ($field_values as $field_value) {
+            $parsed_array[$field_value->key] = $field_value->get_parsed_value();
         }
-        $field_values_xmlrpc = $this->create_value($parsed_array, Value::$xmlrpcStruct);
-        return $this->create_value(array($field_values_xmlrpc), Value::$xmlrpcArray);
+        $field_values_xmlrpc = new Value($parsed_array, Value::$xmlrpcStruct);
+        return new Value([$field_values_xmlrpc], Value::$xmlrpcArray);
     }
 
 }

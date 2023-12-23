@@ -157,7 +157,6 @@ class OdooConnContactForm7Hook
         $api_key = $this->encrypter->decrypt($connection->api_key);
         $database = $connection->database_name;
         $url = $connection->url;
-        $odoo_field_data = array($odoo_field_data);
         $odoo_connector = $this->create_odoo_connection(
             $username, $api_key, $database, $url
         );

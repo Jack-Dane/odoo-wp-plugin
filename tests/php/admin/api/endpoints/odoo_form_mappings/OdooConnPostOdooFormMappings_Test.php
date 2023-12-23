@@ -27,15 +27,19 @@ class OdooConnPostOdooFormMappings_Test extends \TestClassBrainMonkey
             "odoo_form_id" => 1,
             "cf7_field_name" => "your-name",
             "odoo_field_name" => "name",
-            "constant_value" => ""
+            "constant_value" => "",
+            "x_2_many" => ""
         );
-        $results = array(
-            array("id" => 3, "odoo_form_id" => 1, "cf7_field_name" => "your-name", "odoo_field_name" => "name", "constant_value" => null)
-        );
+        $results = [
+            [
+                "id" => 3, "odoo_form_id" => 1, "cf7_field_name" => "your-name", "odoo_field_name" =>
+                "name", "constant_value" => null, "x_2_many" => 0
+            ]
+        ];
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->insert_id = 3;
         $wpdb->shouldReceive("insert")->with(
-            "wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s")
+            "wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s", "%d")
         )->once();
         $wpdb->shouldReceive("prepare")->with(
             "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3)
@@ -60,15 +64,19 @@ class OdooConnPostOdooFormMappings_Test extends \TestClassBrainMonkey
             "odoo_form_id" => 1,
             "cf7_field_name" => "",
             "odoo_field_name" => "name",
-            "constant_value" => "jack"
+            "constant_value" => "jack",
+            "x_2_many" => "on"
         );
         $results = array(
-            array("id" => 3, "odoo_form_id" => 1, "cf7_field_name" => "", "constant_value" => "jack", "odoo_field_name" => "name")
+            array(
+                "id" => 3, "odoo_form_id" => 1, "cf7_field_name" => "", "constant_value" => "jack",
+                "odoo_field_name" => "name", "x_2_many" => 1
+            )
         );
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->insert_id = 3;
         $wpdb->shouldReceive("insert")->with(
-            "wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s")
+            "wp_odoo_conn_form_mapping", $data, array("%d", "%s", "%s", "%s", "%d")
         )->once();
         $wpdb->shouldReceive("prepare")->with(
             "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3)
@@ -98,10 +106,8 @@ class OdooConnPostOdooFormMappings_Test extends \TestClassBrainMonkey
             "odoo_form_id" => 1,
             "cf7_field_name" => "your-name",
             "odoo_field_name" => "name",
-            "constant_value" => "jack"
-        );
-        $results = array(
-            array("id" => 3, "odoo_form_id" => 1, "cf7_field_name" => "your-name", "constant_value" => "jack", "odoo_field_name" => "")
+            "constant_value" => "jack",
+            "x_2_many" => ""
         );
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->insert_id = 3;
