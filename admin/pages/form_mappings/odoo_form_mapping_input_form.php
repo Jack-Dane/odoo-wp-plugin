@@ -15,6 +15,10 @@
     <input type="text" id="cf7_field_name" name="cf7_field_name" value="<?= $odoo_conn_data->cf7_field_name ?? "" ?>"/>
     <label for="constant_value" id="constant_value_label" style="display: none;">Constant Value</label>
     <input type="text" id="constant_value" name="constant_value" style="display: none;" value="<?= $odoo_conn_data->constant_value ?? "" ?>"/><br/>
+    <label for="x_2_many">Many2Many/One2Many field</label>
+    <p class="input-wrapper">
+        <input type="checkbox" name="x_2_many" id="x_2_many" <?= ($odoo_conn_data->x_2_many ?? "") === "1" ? "checked" : "" ?>/><br/>
+    </p>
     <label for="odoo_field_name">Odoo Field Name</label>
     <input type="text" id="odoo_field_name" name="odoo_field_name" value="<?= $odoo_conn_data->odoo_field_name ?? "" ?>"/>
 
