@@ -12,6 +12,72 @@ class OdooConnException extends \Exception
 }
 
 
+abstract class OdooConnXMLRPCField
+{
+
+    public function __construct($key, $value)
+    {
+        $this->key = $key;
+        $this->value = $value;
+    }
+
+    public abstract function get_parsed_value();
+
+}
+
+
+class OdooConnXMLRPCStringField extends OdooConnXMLRPCField
+{
+
+    public function get_parsed_value()
+    {
+        return new Value($this->value, Value::$xmlrpcString);
+    }
+
+}
+
+
+class OdooConnXMLRPCBaseX2ManyField extends OdooConnXMLRPCField
+{
+
+    public function get_parsed_value()
+    {
+        $parsed_id_values = [];
+        foreach ($this->value as $id) {
+            $parsed_id_values[] = new Value($id, Value::$xmlrpcInt);
+        }
+
+        return new Value(
+            [
+                new Value(
+                    [
+                        new Value(6, Value::$xmlrpcInt),
+                        new Value(0, Value::$xmlrpcInt),
+                        new Value(
+                            $parsed_id_values,
+                            Value::$xmlrpcArray
+                        ),
+                    ],
+                    Value::$xmlrpcArray
+                )
+            ],
+            Value::$xmlrpcArray
+        );
+    }
+}
+
+
+class OdooConnXMLRPCStringX2ManyField extends OdooConnXMLRPCBaseX2ManyField {
+
+    public function get_parsed_value()
+    {
+        $this->value = explode(",", $this->value);
+        return parent::get_parsed_value();
+    }
+
+}
+
+
 class OdooConnOdooConnector
 {
 
@@ -36,8 +102,9 @@ class OdooConnOdooConnector
         return new Request($methodName, $arguments);
     }
 
-    public function create_value($value, $type = "string")
+    public function create_value($value, $type = null)
     {
+        $type = $type ?? Value::$xmlrpcString;
         return new Value($value, $type);
     }
 
@@ -130,12 +197,12 @@ class OdooConnOdooConnector
     {
         $parsed_array = array();
         foreach ($field_values as $field_value_array) {
-            foreach ($field_value_array as $field_key => $field_value) {
-                $parsed_array[$field_key] = $this->create_value($field_value);
+            foreach ($field_value_array as $field_value) {
+                $parsed_array[$field_value->key] = $field_value->get_parsed_value();
             }
         }
-        $field_values_xmlrpc = $this->create_value($parsed_array, "struct");
-        return $this->create_value(array($field_values_xmlrpc), "array");
+        $field_values_xmlrpc = $this->create_value($parsed_array, Value::$xmlrpcStruct);
+        return $this->create_value(array($field_values_xmlrpc), Value::$xmlrpcArray);
     }
 
 }

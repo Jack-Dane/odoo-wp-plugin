@@ -5,6 +5,9 @@ namespace odoo_conn\admin\php\cf7hook;
 
 use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
 use \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;
+use \odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringField;
+use \odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringX2ManyField;
+use \odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
 use \odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use \odoo_conn\encryption\OdooConnEncryptionHandler;
 
@@ -109,17 +112,37 @@ class OdooConnContactForm7Hook
                 return $wpcf;
             }
 
-            $odoo_field_data = array();
+            $odoo_field_data = [];
             foreach ($field_mappings as $field_mapping) {
-                $cf7_field_value = $posted_data[$field_mapping->cf7_field_name] ?? $field_mapping->constant_value;
+                $cf7_field_value = $field_mapping->cf7_field_name ?
+                    $posted_data[$field_mapping->cf7_field_name] : $field_mapping->constant_value;
 
-                if (is_array($cf7_field_value)) {
-                    // multiple choice input
-                    // implode as multiple options can be selected at the same time
-                    $cf7_field_value = implode(", ", $cf7_field_value);
+                if ($field_mapping->x_2_many) {
+                    if (is_array($cf7_field_value)) {
+                        $cf7_field_value = new OdooConnXMLRPCBaseX2ManyField(
+                            $field_mapping->odoo_field_name,
+                            $cf7_field_value
+                        );
+                    } else {
+                        $cf7_field_value = new OdooConnXMLRPCStringX2ManyField(
+                            $field_mapping->odoo_field_name,
+                            $cf7_field_value
+                        );
+                    }
+                } else {
+                    if (is_array($cf7_field_value)) {
+                        // multiple choice input
+                        // implode as multiple options can be selected at the same time
+                        $cf7_field_value = implode(", ", $cf7_field_value);
+                    }
+
+                    $cf7_field_value = new OdooConnXMLRPCStringField(
+                        $field_mapping->odoo_field_name,
+                        $cf7_field_value
+                    );
                 }
 
-                $odoo_field_data[$field_mapping->odoo_field_name] = $cf7_field_value;
+                $odoo_field_data[] = $cf7_field_value;
             }
 
             $this->send_form_data_to_odoo($connection, $odoo_model, $odoo_field_data);
