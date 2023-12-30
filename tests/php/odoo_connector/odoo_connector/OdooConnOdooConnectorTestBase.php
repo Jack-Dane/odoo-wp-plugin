@@ -6,6 +6,7 @@ require_once(__DIR__ . "/OdooConnOdooConnectorTestBase.php");
 
 use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PhpXmlRpc\Value;
 
 
 class OdooConnOdooConnectorTestBase extends TestCase
@@ -29,7 +30,7 @@ class OdooConnOdooConnectorTestBase extends TestCase
 
         $this->version_request = \Mockery::mock();
         $this->odoo_connector->shouldReceive("create_request")->with(
-            "version", array()
+            "version", []
         )->andReturn($this->version_request);
         $this->version_response = \Mockery::mock();
         $this->version_response->shouldReceive("value")->with()->andReturn("14.0");
@@ -37,7 +38,12 @@ class OdooConnOdooConnectorTestBase extends TestCase
         $this->authentication_request = \Mockery::mock();
         $this->odoo_connector->shouldReceive("create_request")->with(
             "authenticate",
-            array("database_value", "username_value", "api_key_value", "14.0")
+            [
+                new Value("database", Value::$xmlrpcString),
+                new Value("username", Value::$xmlrpcString),
+                new Value("api_key", Value::$xmlrpcString),
+                "14.0"
+            ]
         )->andReturn($this->authentication_request);
 
         $this->common_client = \Mockery::mock();
@@ -51,7 +57,12 @@ class OdooConnOdooConnectorTestBase extends TestCase
         );
         $this->odoo_connector->shouldReceive("create_request")->with(
             "authenticate",
-            array("database_value", "username_value", "api_key_value", "14.0")
+            [
+                new Value("database", Value::$xmlrpcString),
+                new Value("username", Value::$xmlrpcString),
+                new Value("api_key", Value::$xmlrpcString),
+                "14.0"
+            ]
         )->andReturn($this->authentication_request);
     }
 

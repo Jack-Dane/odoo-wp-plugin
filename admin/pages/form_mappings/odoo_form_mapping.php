@@ -28,7 +28,8 @@ class OdooConnOdooFormMappingListTableEditable extends OdooConnCustomTableEditab
             "odoo_form_name" => "Odoo Form",
             "cf7_field_name" => "CF7 Field Name",
             "odoo_field_name" => "Odoo Field Name",
-            "constant_value" => "Constant Value"
+            "constant_value" => "Constant Value",
+            "x_2_many" => "Many2Many/One2Many Field"
         );
     }
 

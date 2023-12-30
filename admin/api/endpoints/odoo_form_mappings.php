@@ -34,7 +34,8 @@ trait OdooConnFormMappingColumns
             $table_prefix . "odoo_conn_form.name as 'odoo_form_name'",
             $table_prefix . "odoo_conn_form_mapping.cf7_field_name",
             $table_prefix . "odoo_conn_form_mapping.odoo_field_name",
-            $table_prefix . "odoo_conn_form_mapping.constant_value"
+            $table_prefix . "odoo_conn_form_mapping.constant_value",
+            $table_prefix . "odoo_conn_form_mapping.x_2_many"
         ];
 
         return implode(", ", $columns);
@@ -104,17 +105,19 @@ class OdooConnPostOdooFormMappings extends OdooConnPostBaseSchema
 
     protected function parse_data($data)
     {
+        $x_2_many = ($data["x_2_many"] ?? "") === "on";
         return array(
             "odoo_form_id" => $data["odoo_form_id"],
             "cf7_field_name" => $data["cf7_field_name"],
             "odoo_field_name" => $data["odoo_field_name"],
             "constant_value" => $data["constant_value"],
+            "x_2_many" => $x_2_many,
         );
     }
 
     protected function insert_data_types()
     {
-        return array("%d", "%s", "%s", "%s");
+        return array("%d", "%s", "%s", "%s", "%d");
     }
 
 }
@@ -127,23 +130,20 @@ class OdooConnPutOdooFormMappings extends OdooConnPutBaseSchema
 
     protected function update_data($data)
     {
-        $parsed_data = [];
-
         if (!empty($data["constant_value"]) && !empty($data["cf7_field_name"])) {
             throw new FieldNameConstantValueException(
                 "Can't pass both a constant value and a cf7 field name as arguments"
             );
         }
 
-        return array_merge(
-            $parsed_data,
-            array(
-                "constant_value" => $data["constant_value"],
-                "cf7_field_name" => $data["cf7_field_name"],
-                "odoo_form_id" => $data["odoo_form_id"],
-                "odoo_field_name" => $data["odoo_field_name"],
-            )
-        );
+        $x_2_many = ($data["x_2_many"] ?? "") === "on";
+        return [
+            "constant_value" => $data["constant_value"],
+            "cf7_field_name" => $data["cf7_field_name"],
+            "odoo_form_id" => $data["odoo_form_id"],
+            "odoo_field_name" => $data["odoo_field_name"],
+            "x_2_many" => $x_2_many
+        ];
     }
 }
 

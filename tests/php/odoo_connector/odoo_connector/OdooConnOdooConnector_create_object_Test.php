@@ -6,6 +6,10 @@ require_once(__DIR__ . "/../../../../odoo_connector/odoo_connector.php");
 require_once(__DIR__ . "/OdooConnOdooConnectorTestBase.php");
 
 use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
+use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringField;
+use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
+use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringX2ManyField;
+use \PhpXmlRpc\Value;
 
 
 class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTestBase
@@ -14,10 +18,6 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
     public function setUp(): void
     {
         parent::setUp();
-        $this->odoo_connector->shouldReceive("create_request")->with(
-            "authenticate",
-            array("database_value", "username_value", "api_key_value", "14.0")
-        )->andReturn($this->authentication_request);
         $this->authentication_response = \Mockery::mock();
         $this->value_mock = \Mockery::mock();
         $this->value_mock->shouldReceive("scalarval")->andReturn(2);
@@ -25,15 +25,53 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
         $this->model_request = \Mockery::mock();
         $this->odoo_connector->shouldReceive("create_request")->with(
             "execute_kw",
-            array(
-                "database_value", "2_value", "api_key_value", "res.partner_value", "create_value",
-                array(
-                    array(
-                        "name" => "Jack_value",
-                        "email" => "test@test.com_value"
-                    )
-                )
-            )
+            [
+                new Value("database", Value::$xmlrpcString),
+                new Value("2", Value::$xmlrpcString),
+                new Value("api_key", Value::$xmlrpcString),
+                new Value("res.partner", Value::$xmlrpcString),
+                new Value("create", Value::$xmlrpcString),
+                new Value([
+                    new Value([
+                        "name" => new Value("Jack", Value::$xmlrpcString),
+                        "email" => new Value("test@test.com", Value::$xmlrpcString),
+                        "category_id" => new Value(
+                            [
+                                new Value(
+                                    [
+                                        new Value(6, Value::$xmlrpcInt),
+                                        new Value(0, Value::$xmlrpcInt),
+                                        new Value(
+                                            [
+                                                new Value(1, Value::$xmlrpcInt),
+                                                new Value(2, Value::$xmlrpcInt),
+                                                new Value(3, Value::$xmlrpcInt)
+                                            ], Value::$xmlrpcArray
+                                        )
+                                    ], Value::$xmlrpcArray
+                                )
+                            ], Value::$xmlrpcArray
+                        ),
+                        "test_id" => new Value(
+                            [
+                                new Value(
+                                    [
+                                        new Value(6, Value::$xmlrpcInt),
+                                        new Value(0, Value::$xmlrpcInt),
+                                        new Value(
+                                            [
+                                                new Value(4, Value::$xmlrpcInt),
+                                                new Value(5, Value::$xmlrpcInt),
+                                                new Value(6, Value::$xmlrpcInt)
+                                            ], Value::$xmlrpcArray
+                                        )
+                                    ], Value::$xmlrpcArray
+                                )
+                            ], Value::$xmlrpcArray
+                        )
+                    ], Value::$xmlrpcStruct)
+                ], Value::$xmlrpcArray)
+            ]
         )->andReturn($this->model_request);
 
         $this->common_client->shouldReceive("send")->with($this->authentication_request)->once()->andReturn(
@@ -60,12 +98,12 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
 
         $this->odoo_connector->create_object(
             "res.partner",
-            array(
-                array(
-                    "name" => "Jack",
-                    "email" => "test@test.com"
-                )
-            )
+            [
+                new OdooConnXMLRPCStringField("name", "Jack"),
+                new OdooConnXMLRPCStringField("email", "test@test.com"),
+                new OdooConnXMLRPCBaseX2ManyField("category_id", array(1, 2, 3)),
+                new OdooConnXMLRPCStringX2ManyField("test_id", "4,5,6")
+            ]
         );
 
         $this->assertEquals(2, $this->odoo_connector->uid);
@@ -94,10 +132,10 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
             $this->odoo_connector->create_object(
                 "res.partner",
                 array(
-                    array(
-                        "name" => "Jack",
-                        "email" => "test@test.com"
-                    )
+                    new OdooConnXMLRPCStringField("name", "Jack"),
+                    new OdooConnXMLRPCStringField("email", "test@test.com"),
+                    new OdooConnXMLRPCBaseX2ManyField("category_id", array(1, 2, 3)),
+                    new OdooConnXMLRPCStringX2ManyField("test_id", "4,5,6")
                 )
             );
         } catch (OdooConnException $exception) {

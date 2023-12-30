@@ -11,5 +11,10 @@
     "guzzlehttp/guzzle": "^7.0",
     "php-webdriver/webdriver": "^1.13",
     "phpxmlrpc/phpxmlrpc": "^4.9"
+  },
+  "config": {
+    "platform": {
+      "php": "7.3.0"
+    }
   }
 }

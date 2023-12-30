@@ -7,6 +7,10 @@ require_once(__DIR__ . "/../TestClassBrainMonkey.php");
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use \odoo_conn\admin\php\cf7hook\OdooConnContactForm7Hook;
 use \odoo_conn\odoo_connector\odoo_connector\OdooConnException;
+use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringField;
+use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
+use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringX2ManyField;
+use phpmock\phpunit\PHPMock;
 
 class FormMock
 {
@@ -36,11 +40,12 @@ class ConnectionMock
 class FieldMappingMock
 {
 
-    function __construct($cf7_field_name, $constant_value, $odoo_field_name)
+    function __construct($cf7_field_name, $constant_value, $odoo_field_name, $x_2_many)
     {
         $this->cf7_field_name = $cf7_field_name;
         $this->constant_value = $constant_value;
         $this->odoo_field_name = $odoo_field_name;
+        $this->x_2_many = $x_2_many;
     }
 
 }
@@ -50,7 +55,7 @@ class OdooConnContactForm7Hook_Test extends \TestClassBrainMonkey
 {
 
     use MockeryPHPUnitIntegration;
-    use \phpmock\phpunit\PHPMock;
+    use PHPMock;
 
     public function setUp(): void
     {
@@ -67,6 +72,9 @@ class OdooConnContactForm7Hook_Test extends \TestClassBrainMonkey
         $this->encryption_handler->shouldReceive("decrypt")->with("api_key")
             ->andReturn("decrypted_api_key");
         $this->database_handler = \Mockery::mock("DatabaseHandler");
+        $this->XMLRPC_string_field = \Mockery::mock("OdooConnXMLRPCStringField");
+        $this->XMLRPC_Base_X_2_Many_Field = \Mockery::mock("OdooConnXMLRPCBaseX2ManyField");
+        $this->XMLRPC_String_X_2_Many_Field = \Mockery::mock("OdooConnXMLRPCStringX2ManyField");
         $this->odoo_conn_contact_form_7_hook = \Mockery::mock(OdooConnContactForm7Hook::class,
             array(
                 $this->wpcf7_contact_form, $this->wpcf7_submission, $this->encryption_handler,
@@ -83,35 +91,43 @@ class OdooConnContactForm7Hook_Test extends \TestClassBrainMonkey
         $this->database_handler->shouldReceive("get_field_mappings_from_database")->with(3)
             ->andReturn(
                 [
-                    new FieldMappingMock("your-name", "", "name"),
-                    new FieldMappingMock("your-email", "", "email"),
-                    new FieldMappingMock("", "webform", "source"),
-                    new FieldMappingMock("multi", "", "multiple")
+                    new FieldMappingMock("your-name", "", "name", 0),
+                    new FieldMappingMock("your-email", "", "email", 0),
+                    new FieldMappingMock("", "webform", "source", 0),
+                    new FieldMappingMock("multi", "", "multiple", 0),
+                    new FieldMappingMock("your-tags", "", "category_id", 1),
+                    new FieldMappingMock("test-data", "", "test_id", 1)
                 ]
             );
         $this->database_handler->expects("insert_error")->never();
         $this->odoo_conn_contact_form_7_hook->shouldReceive("create_odoo_connection")
             ->with("username", "decrypted_api_key", "odoo", "http://127.0.0.1")
             ->andReturn($this->odoo_connector);
-        $this->odoo_connector->shouldReceive("create_object")
-            ->with("res.partner", array(
-                    array(
-                        "name" => "jack",
-                        "email" => "email@email.com",
-                        "source" => "webform",
-                        "multiple" => "option1, option2"
-                    ))
-            );
+        $this->odoo_connector->expects("create_object")->with(
+            "res.partner", [
+                new OdooConnXMLRPCStringField("name", "jack"),
+                new OdooConnXMLRPCStringField("email", "email@email.com"),
+                new OdooConnXMLRPCStringField("source", "webform"),
+                new OdooConnXMLRPCStringField("multiple", "option1, option2"),
+                new OdooConnXMLRPCBaseX2ManyField("category_id", [1, 2, 3]),
+                new OdooConnXMLRPCStringX2ManyField("test_id", "4,5,6")
+            ]
+        );
         $this->wpcf7_submission->shouldReceive("get_posted_data")->with()->andReturn(
-            array(
+            [
                 "your-name" => "jack",
                 "your-email" => "email@email.com",
-                "multi" => array(
+                "multi" => [
                     "option1",
                     "option2"
-                )
-            )
+                ],
+                "your-tags" => [
+                    1, 2, 3
+                ],
+                "test-data" => "4,5,6"
+            ]
         );
+        $this->odoo_connector->shouldReceive("create_object");
 
         $response = $this->odoo_conn_contact_form_7_hook->send_odoo_data("wpcf");
 
@@ -149,10 +165,10 @@ class OdooConnContactForm7Hook_Test extends \TestClassBrainMonkey
         $this->database_handler->shouldReceive("get_field_mappings_from_database")->with(3)
             ->andReturn(
                 [
-                    new FieldMappingMock("your-name", "", "name"),
-                    new FieldMappingMock("your-email", "", "email"),
-                    new FieldMappingMock("", "webform", "source"),
-                    new FieldMappingMock("multi", "", "multiple")
+                    new FieldMappingMock("your-name", "", "name", 0),
+                    new FieldMappingMock("your-email", "", "email", 0),
+                    new FieldMappingMock("", "webform", "source", 0),
+                    new FieldMappingMock("multi", "", "multiple", 0)
                 ]
             );
         $this->database_handler->shouldReceive("insert_error")
@@ -160,18 +176,16 @@ class OdooConnContactForm7Hook_Test extends \TestClassBrainMonkey
         $this->odoo_conn_contact_form_7_hook->shouldReceive("create_odoo_connection")
             ->with("username", "decrypted_api_key", "odoo", "http://127.0.0.1")
             ->andReturn($this->odoo_connector);
-        $this->odoo_connector->shouldReceive("create_object")
-            ->with("res.partner", array(
-                    array(
-                        "name" => "jack",
-                        "email" => "email@email.com",
-                        "source" => "webform",
-                        "multiple" => "option1, option2"
-                    )
+        $this->odoo_connector->expects("create_object")
+            ->with("res.partner", [
+                new OdooConnXMLRPCStringField("name", "jack"),
+                new OdooConnXMLRPCStringField("email", "email@email.com"),
+                new OdooConnXMLRPCStringField("source", "webform"),
+                new OdooConnXMLRPCStringField("multiple", "option1, option2")
+            ])->andThrow(new OdooConnException(
+                    "New error to be logged", 5
                 )
-            )->andThrow(new OdooConnException(
-                "New error to be logged", 5
-            ));
+            );
         $this->wpcf7_submission->shouldReceive("get_posted_data")->with()->andReturn(
             array(
                 "your-name" => "jack",

@@ -65,7 +65,15 @@ class SendData_Test extends SeleniumBase
         )->click();
 
         // 3. fill in the form
-        $this->wait_for_element(WebDriverBy::name("your-name"))->sendKeys("test_name");
+        $this->wait_for_element(
+            WebDriverBy::name("your-name")
+        )->sendKeys("test_name");
+        $this->driver->findElement(
+            WebDriverBy::xpath("//input[@type='checkbox'][@value='tag1']")
+        )->click();
+        $this->driver->findElement(
+            WebDriverBy::xpath("//input[@type='checkbox'][@value='tag2']")
+        )->click();
         $this->driver->findElement(
             WebDriverBy::name("your-email")
         )->sendKeys("email@email.com")->submit();
@@ -82,7 +90,7 @@ class SendData_Test extends SeleniumBase
         $contact_name = $this->wait_for_element(
             WebDriverBy::xpath("//span[@class='text-truncate']")
         );
-        $this->driver->findElement(
+        $this->wait_for_element(
             WebDriverBy::xpath("//a[@href='mailto:email@email.com']")
         );
         $this->driver->findElement(
@@ -100,6 +108,19 @@ class SendData_Test extends SeleniumBase
         $this->assertEquals(
             "choice1", $comment->getText()
         );
+
+        $tag1s = $this->driver->findElements(
+            WebDriverBy::xpath("//span[@title='tag1']")
+        );
+        $this->assertCount(1, $tag1s);
+        $tag2s = $this->driver->findElements(
+            WebDriverBy::xpath("//span[@title='tag2']")
+        );
+        $this->assertCount(1, $tag2s);
+        $tag3s = $this->driver->findElements(
+            WebDriverBy::xpath("//span[@title='tag3']")
+        );
+        $this->assertCount(0, $tag3s);
     }
 
 }

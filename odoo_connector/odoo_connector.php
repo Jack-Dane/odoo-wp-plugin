@@ -12,6 +12,72 @@ class OdooConnException extends \Exception
 }
 
 
+abstract class OdooConnXMLRPCField
+{
+
+    public function __construct($key, $value)
+    {
+        $this->key = $key;
+        $this->value = $value;
+    }
+
+    public abstract function get_parsed_value();
+
+}
+
+
+class OdooConnXMLRPCStringField extends OdooConnXMLRPCField
+{
+
+    public function get_parsed_value()
+    {
+        return new Value($this->value, Value::$xmlrpcString);
+    }
+
+}
+
+
+class OdooConnXMLRPCBaseX2ManyField extends OdooConnXMLRPCField
+{
+
+    public function get_parsed_value()
+    {
+        $parsed_id_values = [];
+        foreach ($this->value as $id) {
+            $parsed_id_values[] = new Value($id, Value::$xmlrpcInt);
+        }
+
+        return new Value(
+            [
+                new Value(
+                    [
+                        new Value(6, Value::$xmlrpcInt),
+                        new Value(0, Value::$xmlrpcInt),
+                        new Value(
+                            $parsed_id_values,
+                            Value::$xmlrpcArray
+                        ),
+                    ],
+                    Value::$xmlrpcArray
+                )
+            ],
+            Value::$xmlrpcArray
+        );
+    }
+}
+
+
+class OdooConnXMLRPCStringX2ManyField extends OdooConnXMLRPCBaseX2ManyField {
+
+    public function get_parsed_value()
+    {
+        $this->value = explode(",", $this->value);
+        return parent::get_parsed_value();
+    }
+
+}
+
+
 class OdooConnOdooConnector
 {
 
@@ -36,11 +102,6 @@ class OdooConnOdooConnector
         return new Request($methodName, $arguments);
     }
 
-    public function create_value($value, $type = "string")
-    {
-        return new Value($value, $type);
-    }
-
     private function check_connection_ok()
     {
         if ($this->uid === false) {
@@ -60,16 +121,16 @@ class OdooConnOdooConnector
     private function authenticate()
     {
         $common_client = $this->create_client($this->url . "/xmlrpc/2/common");
-        $version_request = $this->create_request("version", array());
+        $version_request = $this->create_request("version", []);
         $version_response = $common_client->send($version_request);
 
         $authentication_request = $this->create_request(
-            "authenticate", array(
-                $this->create_value($this->database),
-                $this->create_value($this->username),
-                $this->create_value($this->api_key),
+            "authenticate", [
+                new Value($this->database, Value::$xmlrpcString),
+                new Value($this->username, Value::$xmlrpcString),
+                new Value($this->api_key, Value::$xmlrpcString),
                 $version_response->value()
-            )
+            ]
         );
         return $common_client->send($authentication_request);
     }
@@ -108,14 +169,14 @@ class OdooConnOdooConnector
         $response = $model_client->send(
             $this->create_request(
                 "execute_kw",
-                array(
-                    $this->create_value($this->database),
-                    $this->create_value($this->uid),
-                    $this->create_value($this->api_key),
-                    $this->create_value($model),
-                    $this->create_value("create"),
+                [
+                    new Value($this->database, Value::$xmlrpcString),
+                    new Value($this->uid, Value::$xmlrpcString),
+                    new Value($this->api_key, Value::$xmlrpcString),
+                    new Value($model, Value::$xmlrpcString),
+                    new Value("create", Value::$xmlrpcString),
                     $parsed_field_values
-                )
+                ]
             )
         );
 
@@ -128,14 +189,12 @@ class OdooConnOdooConnector
 
     private function parse_field_values($field_values)
     {
-        $parsed_array = array();
-        foreach ($field_values as $field_value_array) {
-            foreach ($field_value_array as $field_key => $field_value) {
-                $parsed_array[$field_key] = $this->create_value($field_value);
-            }
+        $parsed_array = [];
+        foreach ($field_values as $field_value) {
+            $parsed_array[$field_value->key] = $field_value->get_parsed_value();
         }
-        $field_values_xmlrpc = $this->create_value($parsed_array, "struct");
-        return $this->create_value(array($field_values_xmlrpc), "array");
+        $field_values_xmlrpc = new Value($parsed_array, Value::$xmlrpcStruct);
+        return new Value([$field_values_xmlrpc], Value::$xmlrpcArray);
     }
 
 }
