@@ -19,10 +19,27 @@ Form Mapping Record:
 
 ![Odoo Parent Company Form Mapping](assets/odoo_parent_company_form_mapping.png)
 
-# One2Many
+# Many2Many and One2Many
 
-Not supported currently
+When creating form mappings for M2M or M2O fields, ensure the "Many2Many/One2Many field" checkbox is ticked. 
 
-# Many2Many
+This example will show you how to add tags to a contact on submission. 
 
-Not supported currently
+![Odoo Contact Tags Data](assets/odoo_contact_tags_data.png)
+
+## With checkboxes
+
+CF7 Form: 
+```
+[checkbox your-tags use_label_element "tag1|1" "tag2|2" "tag3|3"]
+```
+
+Form Mapping Record: 
+
+![Odoo Tags Form Mapping](assets/odoo_tags_form_mapping.png)
+
+## With constant tags
+
+Form Mapping Record for always adding tags with the ids 1 and 2:
+
+![Odoo Tags Form Mapping Constant Value](assets/odoo_tags_form_mapping_constant_value.png)

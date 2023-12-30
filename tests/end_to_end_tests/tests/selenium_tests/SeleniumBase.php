@@ -125,8 +125,6 @@ class WordpressTableBase extends SeleniumBase
         $elements = $this->wait_for_elements(
             WebDriverBy::xpath("//tbody[@id='the-list']/tr[$row_id]/td")
         );
-        // ignore the checkbox
-//        array_shift($elements);
         return $elements;
     }
 
