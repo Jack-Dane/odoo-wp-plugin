@@ -29,15 +29,16 @@ class OdooConnPutOdooFormMappings_Test extends TestCase
 
     public function test_constant_value()
     {
-        $data = array(
+        $data = [
             "constant_value" => "constant name",
             "odoo_form_id" => 1,
             "odoo_field_name" => "name",
-            "cf7_field_name" => ""
-        );
+            "cf7_field_name" => "",
+        ];
+        $update_data = ["x_2_many" => false] + $data;
         $results = array(array("id" => 3) + $data);
         $this->wpdb->shouldReceive("update")->with(
-            "wp_odoo_conn_form_mapping", $data, array("id" => 3)
+            "wp_odoo_conn_form_mapping", $update_data, array("id" => 3)
         )->once();
         $this->wpdb->shouldReceive("prepare")->with(
             "SELECT * FROM wp_odoo_conn_form_mapping WHERE id=%d", array(3)
@@ -59,7 +60,9 @@ class OdooConnPutOdooFormMappings_Test extends TestCase
             "odoo_form_id" => 1,
             "odoo_field_name" => "name",
             "constant_value" => "",
+            "x_2_many" => true
         );
+        $sent_data = ["x_2_many" => "on"] + $data;
         $results = array(array("id" => 3) + $data);
         $this->wpdb->shouldReceive("update")->with(
             "wp_odoo_conn_form_mapping", $data, array("id" => 3)
@@ -74,7 +77,7 @@ class OdooConnPutOdooFormMappings_Test extends TestCase
         )->once()->andReturn($results);
 
         $odoo_conn_put_form_mappings = new OdooConnPutOdooFormMappings(3);
-        $response = $odoo_conn_put_form_mappings->request($data + array("id" => 3));
+        $response = $odoo_conn_put_form_mappings->request($sent_data + array("id" => 3));
 
         $this->assertEquals($results, $response);
     }

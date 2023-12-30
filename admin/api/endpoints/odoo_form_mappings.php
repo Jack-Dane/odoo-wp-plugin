@@ -130,23 +130,20 @@ class OdooConnPutOdooFormMappings extends OdooConnPutBaseSchema
 
     protected function update_data($data)
     {
-        $parsed_data = [];
-
         if (!empty($data["constant_value"]) && !empty($data["cf7_field_name"])) {
             throw new FieldNameConstantValueException(
                 "Can't pass both a constant value and a cf7 field name as arguments"
             );
         }
 
-        return array_merge(
-            $parsed_data,
-            array(
-                "constant_value" => $data["constant_value"],
-                "cf7_field_name" => $data["cf7_field_name"],
-                "odoo_form_id" => $data["odoo_form_id"],
-                "odoo_field_name" => $data["odoo_field_name"],
-            )
-        );
+        $x_2_many = ($data["x_2_many"] ?? "") === "on";
+        return [
+            "constant_value" => $data["constant_value"],
+            "cf7_field_name" => $data["cf7_field_name"],
+            "odoo_form_id" => $data["odoo_form_id"],
+            "odoo_field_name" => $data["odoo_field_name"],
+            "x_2_many" => $x_2_many
+        ];
     }
 }
 
