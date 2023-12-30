@@ -52,6 +52,46 @@ class Create_Test extends WordpressTableBase
             WebDriverBy::xpath("//a[text()='Discuss']"), 60
         );
 
+        // 1.4 create tags to test x_2_many functionality
+        $this->odoo_click_on_app("Contacts");
+        $this->wait_for_element(
+            WebDriverBy::xpath(
+                "//button[@class='dropdown-toggle']/span[contains(text(), 'Configuration')]"
+            )
+        )->click();
+        sleep(2);
+        $this->wait_for_element(
+            WebDriverBy::xpath(
+                "//a[contains(text(), 'Contact Tags')]"
+            )
+        )->click();
+        sleep(2);
+        $this->wait_for_element(
+            WebDriverBy::xpath(
+                "//button[contains(text(), 'New')]"
+            )
+        )->click();
+
+        for ($i = 1; $i < 4; $i++) {
+            $tag_name = "tag" . $i;
+
+            $this->wait_for_element(
+                WebDriverBy::xpath("//input[@id='name']")
+            )->sendKeys($tag_name);
+
+            if ($i == 3) {
+                $this->wait_for_element(
+                    WebDriverBy::xpath("//button[@data-tooltip='Save manually']")
+                )->click();
+            } else {
+                $this->wait_for_element(
+                    WebDriverBy::xpath("//button[contains(text(), 'New')]")
+                )->click();
+            }
+        }
+        // unexpected alert getting the next page when not sleeping
+        sleep(3);
+
         // 2. create the connection
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=odoo-connection");
 
@@ -76,8 +116,14 @@ class Create_Test extends WordpressTableBase
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=wpcf7-new");
 
         $this->driver->findElement(WebDriverBy::id("title"))->sendKeys("Test Contact Form");
+
+        $contact_form = "<label>Your name[text* your-name]</label>";
+        $contact_form .= "<label> Your email[email* your-email]</label>";
+        $contact_form .= "<label> Multi Choice [select multi \"choice1\"]</label>";
+        $contact_form .= "[checkbox your-tags use_label_element \"tag1|1\" \"tag2|2\" \"tag3|3\"]";
+        $contact_form .= "[submit \"Submit\"]";
         $this->driver->findElement(WebDriverBy::id("wpcf7-form"))->clear()->sendKeys(
-            "<label>Your name[text* your-name]</label><label> Your email[email* your-email]</label><label> Multi Choice [select multi \"choice1\"]</label>[submit \"Submit\"]"
+            $contact_form
         );
         $this->driver->findElement(WebDriverBy::cssSelector("input[name='wpcf7-save']"))->submit();
 
@@ -120,6 +166,7 @@ class Create_Test extends WordpressTableBase
         $this->assertContains("test_form_name", $text_table_elements);
         $this->assertContains("your-name", $text_table_elements);
         $this->assertContains("name", $text_table_elements);
+        $this->assertContains("0", $text_table_elements);
 
         $this->wait_for_element(WebDriverBy::id("create-data"))->click();
         $this->wait_for_element(
@@ -135,6 +182,7 @@ class Create_Test extends WordpressTableBase
         $this->assertContains("test_form_name", $text_table_elements);
         $this->assertContains("your-email", $text_table_elements);
         $this->assertContains("email", $text_table_elements);
+        $this->assertContains("0", $text_table_elements);
 
         $this->wait_for_element(WebDriverBy::id("create-data"))->click();
         $this->wait_for_element(
@@ -150,6 +198,7 @@ class Create_Test extends WordpressTableBase
         $this->assertContains("test_form_name", $text_table_elements);
         $this->assertContains("multi", $text_table_elements);
         $this->assertContains("comment", $text_table_elements);
+        $this->assertContains("0", $text_table_elements);
 
         // test creating a constant value form mapping
         $this->wait_for_element(WebDriverBy::id("create-data"))->click();
@@ -167,6 +216,25 @@ class Create_Test extends WordpressTableBase
         $this->assertContains("test_form_name", $text_table_elements);
         $this->assertContains("http://test.com", $text_table_elements);
         $this->assertContains("website", $text_table_elements);
+        $this->assertContains("0", $text_table_elements);
+
+        // test Many2Many field
+        $this->wait_for_element(WebDriverBy::id("create-data"))->click();
+        $this->wait_for_element(
+            WebDriverBy::xpath("//option[text() = 'test_form_name']")
+        )->click();
+        $this->driver->findElement(WebDriverBy::id("x_2_many"))->click();
+        $this->driver->findElement(WebDriverBy::id("cf7_field_name"))->clear()->sendKeys("your-tags");
+        $this->driver->findElement(WebDriverBy::id("odoo_field_name"))->clear()->sendKeys("category_id")->submit();
+
+        // wait for the next row to be created
+        $this->get_table_row_text(4);
+        $text_table_elements = $this->get_table_row_text(0);
+
+        $this->assertContains("test_form_name", $text_table_elements);
+        $this->assertContains("your-tags", $text_table_elements);
+        $this->assertContains("category_id", $text_table_elements);
+        $this->assertContains("1", $text_table_elements);
     }
 
 }

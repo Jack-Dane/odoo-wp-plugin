@@ -42,7 +42,8 @@ class Update_Test extends WordpressTableBase
         $this->update_row(
             "http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping",
             $input_names,
-            "odoo_form_name"
+            "odoo_form_name",
+            1
         );
     }
 
@@ -55,20 +56,19 @@ class Update_Test extends WordpressTableBase
         $this->update_row(
             "http://localhost:8000/wp-admin/admin.php?page=odoo-form-mapping",
             $input_names,
-            "odoo_form_name",
-            1
+            "odoo_form_name"
         );
     }
 
     private function update_row($edit_endpoint, $input_names, $column_data_name, $row = 0)
     {
         $this->driver->get($edit_endpoint);
-
-        $this->wait_for_elements(
-            WebDriverBy::xpath("//tbody[@id='the-list']/tr")
-        )[$row];
-
         $row_xpath_index = $row + 1;
+
+        $this->wait_for_element(
+            WebDriverBy::xpath("//tbody[@id='the-list']/tr[$row_xpath_index]")
+        );
+
         $this->show_action_buttons_on_table($row_xpath_index);
         $edit_button = $this->wait_for_element(
             WebDriverBy::xpath(
