@@ -11,7 +11,7 @@ function odoo_conn_odoo_settings()
     }
     ?>
     <form method="POST">
-        <p><input id="" type="submit" class="button button-primary" value="Refresh Encryption Key"/></p>
+        <p><input id="" type="submit" class="button button-primary" value="Refresh Encryption Key" /></p>
     </form>
     <p>The encryption key is used to secure the api keys in the database. Refresh the Encryption Key if you think it has
         been compromised</p>
