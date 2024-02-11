@@ -5,6 +5,8 @@ Plugin URI: https://www.jackdane.co.uk
 Description: Connect your WordPress Contact 7 Forms to Odoo
 Version: 0.1.1
 Requires PHP: 7.3
+Author: Jack Dane
+Author URI: https://www.jackdane.co.uk
 */
 
 add_option("odoo_conn_db_version");
