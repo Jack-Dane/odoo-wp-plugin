@@ -27,7 +27,7 @@ abstract class OdooConnPageRouter
         $action = $_REQUEST["page_action"] ?? null;
         $this->handle_route($action);
 
-        if (!in_array($action, $this->dont_display_table_actions())) {
+        if (!in_array(strtolower($action), $this->dont_display_table_actions(), true)) {
             $this->display_table();
         }
     }
