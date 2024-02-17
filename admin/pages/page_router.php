@@ -11,8 +11,19 @@ abstract class OdooConnPageRouter
         $this->table_display = $this->create_table_display();
     }
 
+    private function valid_capability() {
+        // Should be restricted by the menu choices.
+        // Added as an extra security precaution.
+        return current_user_can("administrator");
+    }
+
     public function request()
     {
+        if (!$this->valid_capability()) {
+            echo "You are not authorised to view this page";
+            return;
+        };
+
         $action = $_REQUEST["page_action"] ?? null;
         $this->handle_route($action);
 

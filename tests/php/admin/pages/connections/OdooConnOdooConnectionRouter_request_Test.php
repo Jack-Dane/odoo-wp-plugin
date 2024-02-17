@@ -38,6 +38,10 @@ class OdooConnOdooConnectionRouter_request_Test extends \TestClassBrainMonkey
         $this->odoo_conn_page_router->shouldReceive("delete")->with(3)->once();
         $this->odoo_conn_page_router->shouldReceive("display_table")->once();
         Functions\expect("check_admin_referer")->once();
+        Functions\expect("current_user_can")->once()->with(
+            "administrator"
+        )->andReturn(true);
+
 
         $this->odoo_conn_page_router->request();
     }
@@ -49,6 +53,9 @@ class OdooConnOdooConnectionRouter_request_Test extends \TestClassBrainMonkey
         $this->odoo_conn_page_router->shouldReceive("display_table")->never();
         Functions\expect("wp_enqueue_style")->once();
         Functions\expect("plugins_url")->once();
+        Functions\expect("current_user_can")->once()->with(
+            "administrator"
+        )->andReturn(true);
 
         $this->odoo_conn_page_router->request();
     }
@@ -60,6 +67,9 @@ class OdooConnOdooConnectionRouter_request_Test extends \TestClassBrainMonkey
         $this->odoo_conn_page_router->shouldReceive("display_table")->never();
         Functions\expect("wp_enqueue_style")->once();
         Functions\expect("plugins_url")->once();
+        Functions\expect("current_user_can")->once()->with(
+            "administrator"
+        )->andReturn(true);
 
         $this->odoo_conn_page_router->request();
     }
@@ -70,6 +80,9 @@ class OdooConnOdooConnectionRouter_request_Test extends \TestClassBrainMonkey
         $this->odoo_conn_page_router->shouldReceive("delete")->never();
         $this->odoo_conn_page_router->shouldReceive("display_input_form")->never();
         $this->odoo_conn_page_router->shouldReceive("display_table")->once();
+        Functions\expect("current_user_can")->once()->with(
+            "administrator"
+        )->andReturn(true);
 
         $this->odoo_conn_page_router->request();
     }
@@ -80,6 +93,23 @@ class OdooConnOdooConnectionRouter_request_Test extends \TestClassBrainMonkey
         $this->odoo_conn_page_router->shouldReceive("delete")->never();
         $this->odoo_conn_page_router->shouldReceive("display_input_form")->never();
         $this->odoo_conn_page_router->shouldReceive("display_table")->once();
+        Functions\expect("current_user_can")->once()->with(
+            "administrator"
+        )->andReturn(true);
+
+        $this->odoo_conn_page_router->request();
+    }
+
+    function test_unauthorised()
+    {
+        $GLOBALS["_REQUEST"] = [];
+        $this->odoo_conn_page_router->shouldReceive("delete")->never();
+        $this->odoo_conn_page_router->shouldReceive("display_input_form")->never();
+        $this->odoo_conn_page_router->shouldReceive("display_edit_form")->never();
+        $this->odoo_conn_page_router->shouldReceive("display_table")->never();
+        Functions\expect("current_user_can")->once()->with(
+            "administrator"
+        )->andReturn(false);
 
         $this->odoo_conn_page_router->request();
     }
