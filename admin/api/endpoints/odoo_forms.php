@@ -90,10 +90,10 @@ class OdooConnPostOdooForm extends OdooConnPostBaseSchema
     protected function parse_data($data)
     {
         return array(
-            "odoo_connection_id" => $data["odoo_connection_id"],
-            "odoo_model" => $data["odoo_model"],
-            "name" => $data["name"],
-            "contact_7_id" => $data["contact_7_id"]
+            "odoo_connection_id" => sanitize_text_field($data["odoo_connection_id"]),
+            "odoo_model" => sanitize_text_field($data["odoo_model"]),
+            "name" => sanitize_text_field($data["name"]),
+            "contact_7_id" => sanitize_text_field($data["contact_7_id"])
         );
     }
 
@@ -113,10 +113,10 @@ class OdooConnPutOdooForm extends OdooConnPutBaseSchema
     protected function update_data($data)
     {
         return array(
-            "odoo_connection_id" => $data["odoo_connection_id"],
-            "name" => $data["name"],
-            "contact_7_id" => $data["contact_7_id"],
-            "odoo_model" => $data["odoo_model"],
+            "odoo_connection_id" => sanitize_text_field($data["odoo_connection_id"]),
+            "name" => sanitize_text_field($data["name"]),
+            "contact_7_id" => sanitize_text_field($data["contact_7_id"]),
+            "odoo_model" => sanitize_text_field($data["odoo_model"]),
         );
     }
 

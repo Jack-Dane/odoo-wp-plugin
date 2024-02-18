@@ -113,15 +113,15 @@ class OdooConnPostOdooConnection extends OdooConnPostBaseSchema
 
     protected function parse_data($data)
     {
-        $api_key = $data["api_key"];
+        $api_key = sanitize_text_field($data["api_key"]);
         $encrypted_api_key = $this->encryption_handler->encrypt($api_key);
 
         return array(
-            "name" => $data["name"],
-            "username" => $data["username"],
+            "name" => sanitize_text_field($data["name"]),
+            "username" => sanitize_text_field($data["username"]),
             "api_key" => $encrypted_api_key,
-            "url" => $data["url"],
-            "database_name" => $data["database_name"],
+            "url" => sanitize_url($data["url"]),
+            "database_name" => sanitize_text_field($data["database_name"]),
         );
     }
 
@@ -142,10 +142,10 @@ class OdooConnPutOdooConnection extends OdooConnPutBaseSchema
     protected function update_data($data)
     {
         return array(
-            "name" => $data["name"],
-            "username" => $data["username"],
-            "url" => $data["url"],
-            "database_name" => $data["database_name"]
+            "name" => sanitize_text_field($data["name"]),
+            "username" => sanitize_text_field($data["username"]),
+            "url" => sanitize_url($data["url"]),
+            "database_name" => sanitize_text_field($data["database_name"])
         );
     }
 

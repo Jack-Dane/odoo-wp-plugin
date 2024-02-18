@@ -105,12 +105,12 @@ class OdooConnPostOdooFormMappings extends OdooConnPostBaseSchema
 
     protected function parse_data($data)
     {
-        $x_2_many = ($data["x_2_many"] ?? "") === "on";
+        $x_2_many = (sanitize_text_field($data["x_2_many"]) ?? "") === "on";
         return array(
-            "odoo_form_id" => $data["odoo_form_id"],
-            "cf7_field_name" => $data["cf7_field_name"],
-            "odoo_field_name" => $data["odoo_field_name"],
-            "constant_value" => $data["constant_value"],
+            "odoo_form_id" => sanitize_text_field($data["odoo_form_id"]),
+            "cf7_field_name" => sanitize_text_field($data["cf7_field_name"]),
+            "odoo_field_name" => sanitize_text_field($data["odoo_field_name"]),
+            "constant_value" => sanitize_text_field($data["constant_value"]),
             "x_2_many" => $x_2_many,
         );
     }
@@ -136,12 +136,12 @@ class OdooConnPutOdooFormMappings extends OdooConnPutBaseSchema
             );
         }
 
-        $x_2_many = ($data["x_2_many"] ?? "") === "on";
+        $x_2_many = (sanitize_text_field($data["x_2_many"]) ?? "") === "on";
         return [
-            "constant_value" => $data["constant_value"],
-            "cf7_field_name" => $data["cf7_field_name"],
-            "odoo_form_id" => $data["odoo_form_id"],
-            "odoo_field_name" => $data["odoo_field_name"],
+            "constant_value" => sanitize_text_field($data["constant_value"]),
+            "cf7_field_name" => sanitize_text_field($data["cf7_field_name"]),
+            "odoo_form_id" => sanitize_text_field($data["odoo_form_id"]),
+            "odoo_field_name" => sanitize_text_field($data["odoo_field_name"]),
             "x_2_many" => $x_2_many
         ];
     }

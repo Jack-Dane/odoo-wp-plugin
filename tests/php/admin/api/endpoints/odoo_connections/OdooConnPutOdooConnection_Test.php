@@ -1,11 +1,12 @@
 <?php
 
-namespace odoo_conn\tests\admin\api\endpoints\odoo_connections\OdooConnPutOdooConnection;
+namespace php\admin\api\endpoints\odoo_connections;
 
 require_once(__DIR__ . "/../../../../TestClassBrainMonkey.php");
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use odoo_conn\admin\api\endpoints\OdooConnPutOdooConnection;
+use Brain\Monkey\Functions;
 
 class OdooConnPutOdooConnection_Test extends \TestClassBrainMonkey
 {
@@ -22,55 +23,69 @@ class OdooConnPutOdooConnection_Test extends \TestClassBrainMonkey
 
     public function test_ok()
     {
-        $data = array(
+        $data = [
             "name" => "name",
             "username" => "username",
             "url" => "url",
             "database_name" => "database_name"
-        );
-        $results = array(
-            array("id" => 3) + $data
-        );
+        ];
+        $san_data = [
+            "name" => "san_name",
+            "username" => "san_username",
+            "url" => "san_url",
+            "database_name" => "san_database_name"
+        ];
+        $results = [
+            ["id" => 3] + $data
+        ];
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->insert_id = 3;
-        $wpdb->shouldReceive("update")->with("wp_odoo_conn_connection", $data, array("id" => 3))->once();
-        $wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=%d", array(3))
+        $wpdb->shouldReceive("update")->with("wp_odoo_conn_connection", $san_data, ["id" => 3])->once();
+        $wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=%d", [3])
             ->once()->andReturn("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3");
         $wpdb->shouldReceive("get_results")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3")
             ->once()->andReturn($results);
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
+        Functions\expect("sanitize_text_field")
+            ->times(3)
+            ->andReturnValues(["san_name", "san_username", "san_database_name"]);
+        Functions\expect("sanitize_url")->once()->andReturn("san_url");
 
         $odoo_conn_put_connection = new OdooConnPutOdooConnection(3);
-        $response = $odoo_conn_put_connection->request($data + array("id" => 3));
+        $response = $odoo_conn_put_connection->request($data + ["id" => 3]);
 
         $this->assertEquals($results, $response);
     }
 
     public function test_cant_update_api_key()
     {
-        $update_data = array(
-            "name" => "name",
-            "username" => "username",
-            "url" => "url",
-            "database_name" => "database_name",
-        );
-        $results = array(
-            array("id" => 3) + $update_data
-        );
+        $update_data = [
+            "name" => "san_name",
+            "username" => "san_username",
+            "url" => "san_url",
+            "database_name" => "san_database_name",
+        ];
+        $results = [
+            ["id" => 3] + $update_data
+        ];
         $send_data = ["api_key" => "abc"] + $update_data;
         $wpdb = \Mockery::mock("WPDB");
         $wpdb->insert_id = 3;
-        $wpdb->shouldReceive("update")->with("wp_odoo_conn_connection", $update_data, array("id" => 3))->once();
-        $wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=%d", array(3))
+        $wpdb->shouldReceive("update")->with("wp_odoo_conn_connection", $update_data, ["id" => 3])->once();
+        $wpdb->shouldReceive("prepare")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=%d", [3])
             ->once()->andReturn("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3");
         $wpdb->shouldReceive("get_results")->with("SELECT id, name, username, url, database_name FROM wp_odoo_conn_connection WHERE id=3")
             ->once()->andReturn($results);
         $GLOBALS["wpdb"] = $wpdb;
         $GLOBALS["table_prefix"] = "wp_";
+        Functions\expect("sanitize_text_field")
+            ->times(3)
+            ->andReturnValues(["san_name", "san_username", "san_database_name"]);
+        Functions\expect("sanitize_url")->once()->andReturn("san_url");
 
         $odoo_conn_put_connection = new OdooConnPutOdooConnection(3);
-        $response = $odoo_conn_put_connection->request($send_data + array("id" => 3));
+        $response = $odoo_conn_put_connection->request($send_data + ["id" => 3]);
 
         $this->assertEquals($results, $response);
     }
