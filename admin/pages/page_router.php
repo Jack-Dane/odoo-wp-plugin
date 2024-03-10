@@ -125,7 +125,7 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
             }
         }
 
-        $connection_url = add_query_arg("page_action", "new", $menu_page_slug);
+        $connection_url = esc_url(add_query_arg("page_action", "new", $menu_page_slug));
         echo "<a href='$connection_url' id='create-data' class='create-database-record button-primary'>Create a new record</a>";
 
         parent::display_table();

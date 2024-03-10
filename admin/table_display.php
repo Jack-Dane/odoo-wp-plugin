@@ -6,8 +6,8 @@ namespace odoo_conn\admin\table_display;
 use WP_List_Table;
 
 
-if (!class_exists('WP_List_Table')) {
-    require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
+if (!class_exists("WP_List_Table")) {
+    require_once(ABSPATH . "wp-admin/includes/class-wp-list-table.php");
 }
 
 class OdooConnCustomTableDeletableDisplay extends WP_List_Table {
@@ -24,14 +24,21 @@ class OdooConnCustomTableDeletableDisplay extends WP_List_Table {
         $this->delete_backend = $delete_backend;
     }
 
-    protected function row_action_buttons($item)
+    protected function generate_action_button_url($record_id, $page_action)
     {
         $base_url = wp_nonce_url(get_admin_url(null, "admin.php"));
-        $delete_url = add_query_arg([
-            "page" => $_REQUEST["page"],
-            "id" => $item["id"],
-            "page_action" => "delete"
-        ], $base_url);
+        return esc_url(add_query_arg([
+            "page" => urlencode($_REQUEST["page"]),
+            "id" => urlencode($record_id),
+            "page_action" => $page_action
+        ], $base_url));
+    }
+
+    protected function row_action_buttons($item)
+    {
+        $delete_url = $this->generate_action_button_url(
+            $item["id"], "delete"
+        );
 
         return array(
             "delete" => "<a href='$delete_url'>Delete</a>"
@@ -83,16 +90,16 @@ class OdooConnCustomTableDeletableDisplay extends WP_List_Table {
         $columns = $this->get_columns();
         $hidden = array();
         $sortable = array();
-        $primary = 'name';
+        $primary = "name";
         $this->_column_headers = array($columns, $hidden, $sortable, $primary);
 
         $table_data = $this->get_table_data();
         $total_records = $this->total_records();
 
         $this->set_pagination_args(array(
-            'total_items' => $total_records,
-            'per_page' => $this->per_page,
-            'total_pages' => ceil($total_records / $this->per_page)
+            "total_items" => $total_records,
+            "per_page" => $this->per_page,
+            "total_pages" => ceil($total_records / $this->per_page)
         ));
 
         $this->items = $table_data;
@@ -105,7 +112,8 @@ class OdooConnCustomTableDeletableDisplay extends WP_List_Table {
 
     public function column_cb($item)
     {
-        return "<input type='checkbox' name='element[]' value='{$item['id']}' />";
+        $record_id = esc_attr($item["id"]);
+        return "<input type='checkbox' name='element[]' value='$record_id' />";
     }
 
 }
@@ -116,12 +124,9 @@ class OdooConnCustomTableEditableDisplay extends OdooConnCustomTableDeletableDis
 
     protected function row_action_buttons($item)
     {
-        $base_url = wp_nonce_url(get_admin_url(null, "admin.php"));
-        $edit_url = add_query_arg([
-            "page" => $_REQUEST["page"],
-            "id" => $item["id"],
-            "page_action" => "edit"
-        ], $base_url);
+        $edit_url = $this->generate_action_button_url(
+            $item["id"], "edit"
+        );
 
         return array_merge(
             parent::row_action_buttons($item),
