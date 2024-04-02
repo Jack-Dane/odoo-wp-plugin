@@ -1,5 +1,5 @@
 # WordPress with composer
-FROM wordpress:apache
+FROM wordpress:beta-6.5-php8.3-apache
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
