@@ -13,7 +13,7 @@ class SendData_Test extends SeleniumBase
         // 1. create a new post for to test the form
         // 1.1 get the short code to display on the post
         $this->driver->get("http://localhost:8000/wp-admin/admin.php?page=wpcf7");
-        $contact_form_title = $this->wait_for_element(
+        $this->wait_for_element(
             WebDriverBy::xpath("//a[@class='row-title'][text() = 'Test Contact Form']")
         )->click();
         $short_code = $this->wait_for_element(
@@ -33,9 +33,13 @@ class SendData_Test extends SeleniumBase
         }
         $this->driver->findElement(
             WebDriverBy::xpath(
-                "//button[@class='components-button components-guide__finish-button']"
+                "//button[@class='components-button components-guide__finish-button is-primary']"
             )
         )->click();
+
+        $this->driver->switchTo()->frame(
+            $this->driver->findElement(WebDriverBy::name("editor-canvas"))
+        );
         $this->wait_for_element(
             WebDriverBy::xpath(
                 "//p[@aria-label='Add default block']"
@@ -46,14 +50,16 @@ class SendData_Test extends SeleniumBase
                 "//p[@data-title='Paragraph']"
             )
         )->sendKeys($short_code);
+        $this->driver->switchTo()->defaultContent();
+
         $this->driver->findElement(
             WebDriverBy::cssSelector(
-                ".editor-post-publish-panel__toggle.editor-post-publish-button__button"
+                ".components-button.editor-post-publish-panel__toggle.editor-post-publish-button__button.is-primary.is-compact"
             )
         )->click();
         $this->wait_for_element(
             WebDriverBy::cssSelector(
-                ".editor-post-publish-button.editor-post-publish-button__button"
+                ".components-button.editor-post-publish-button.editor-post-publish-button__button.is-primary"
             )
         )->click();
 
