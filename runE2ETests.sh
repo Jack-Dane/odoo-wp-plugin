@@ -1,6 +1,6 @@
 #!/bin/bash
 
-docker compose -f tests/end_to_end_tests/compose.yaml rm -f
+docker compose -f tests/end_to_end_tests/compose.yaml rm -f --volumes --stop
 docker compose -f tests/end_to_end_tests/compose.yaml up --force-recreate --build --wait
 
 echo "Waiting for WP containers to start"
@@ -22,7 +22,7 @@ docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpu
 
 echo "Running Selenium Tests"
 dockerSeleniumContainerId=$(docker run -d --rm -it --network host --shm-size 2g selenium/standalone-chrome)
-docker compose -f tests/end_to_end_tests/odoo_compose.yaml rm -f
+docker compose -f tests/end_to_end_tests/odoo_compose.yaml rm -f --volumes --stop
 docker compose -f tests/end_to_end_tests/odoo_compose.yaml up --force-recreate --build --wait
 
 echo "Waiting for Odoo"
@@ -35,10 +35,8 @@ docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpu
 docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/Delete_Test.php'
 
 # cleanup the containers
-docker compose -f tests/end_to_end_tests/odoo_compose.yaml down
-docker compose -f tests/end_to_end_tests/odoo_compose.yaml rm -f
-docker compose --project-directory tests/end_to_end_tests down
-docker compose --project-directory tests/end_to_end_tests rm -f
+docker compose -f tests/end_to_end_tests/odoo_compose.yaml rm -f --volumes --stop
+docker compose --project-directory tests/end_to_end_tests rm -f --volumes --stop
 
 docker container rm --force $dockerPHPContainerId
 docker container rm --force $dockerSeleniumContainerId

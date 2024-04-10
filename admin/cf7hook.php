@@ -178,8 +178,6 @@ class OdooConnContactForm7Hook
 
     public function create_odoo_connection($username, $api_key, $database, $url)
     {
-        // TODO refactor OdooConnOdooConnector to allow attributes to be added by method
-        // So this method can be made private, only public to be mocked in testing
         return new OdooConnOdooConnector(
             $username, $api_key, $database, $url
         );
