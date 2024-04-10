@@ -3,7 +3,6 @@
 require_once(__DIR__ . "/SeleniumBase.php");
 
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\Exception\ElementClickInterceptedException;
 
 class SendData_Test extends SeleniumBase
 {

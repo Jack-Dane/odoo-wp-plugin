@@ -97,6 +97,11 @@ class Update_Test extends WordpressTableBase
                 )
             );
 
+            if ($input_name === "url") {
+                // url field appears to automatically prefix with 'http://'
+                $input_name = "http://{$input_name}";
+            }
+
             $this->assertEquals(
                 "${input_name}_edit", $display_element->getText()
             );
