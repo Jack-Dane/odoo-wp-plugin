@@ -1,36 +1,37 @@
 <?php
-/*
-Plugin Name: Contact 7 to Odoo connector
-Plugin URI: https://www.jackdane.co.uk
-Description: Connect your WordPress Contact 7 Forms to Odoo
-Version: 0.1.2
-Requires PHP: 7.3
-Author: Jack Dane
-Author URI: https://www.jackdane.co.uk
-*/
+/**
+ * Plugin Name: Contact Form 7 to Odoo connector
+ * Description: When submitting a form through Contact Form 7, the data is extracted and mapped to the designated fields in Odoo.
+ * Author: Jack Dane
+ * Author URI: https://www.jackdane.co.uk
+ * Plugin URI: https://github.com/Jack-Dane/odoo-wp-plugin
+ * Requires PHP: 7.3
+ * Text Domain: cf7-odoo-connector
+ * Requires Plugins: contact-form-7
+ * Version: 0.1.2
+ */
 
-add_option("odoo_conn_db_version");
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; 
+}
 
-require("vendor/autoload.php");
+// Add a new option to the database.
+add_option( 'odoo_conn_db_version' );
 
-require("encryption.php");
+// Require necessary files.
+require_once 'vendor/autoload.php';
+require_once 'encryption.php';
+require_once 'odoo_connector/odoo_connector.php';
 
-require("odoo_connector/odoo_connector.php");
+require_once 'dependency_check.php';
+register_activation_hook( __FILE__, '\\odoo_conn\\dependency_check\\odoo_conn_contact_7_plugin_active' );
 
-require("dependency_check.php");
+require_once 'activation.php';
+register_activation_hook( __FILE__, 'odoo_conn_activation_function' );
 
-register_activation_hook(__FILE__, "\\odoo_conn\\dependency_check\\odoo_conn_contact_7_plugin_active");
+require_once 'deactivation.php';
+register_deactivation_hook( __FILE__, 'odoo_conn_deactivation_function' );
 
-require("activation.php");
-
-register_activation_hook(__FILE__, "odoo_conn_activation_function");
-
-require("deactivation.php");
-
-register_deactivation_hook(__FILE__, "odoo_conn_deactivation_function");
-
-require("loaded.php");
-
-require("admin/main.php");
-
-?>
+require_once 'loaded.php';
+require_once 'admin/main.php';
