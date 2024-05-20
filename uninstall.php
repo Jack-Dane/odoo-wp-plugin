@@ -16,8 +16,8 @@ $tables_to_drop = [
 
 foreach ( $tables_to_drop as $table ) {
 	$table_name = $table_prefix . $table;
-	$sql = 'DROP TABLE IF EXISTS $table_name';
-	$wpdb->query($sql);
+	$sql = 'DROP TABLE IF EXISTS %i';
+	$wpdb->query( $wpdb->prepare( $sql, $table_name ) );
 }
 
 delete_option( 'odoo_conn_db_version' );
