@@ -30,8 +30,5 @@ register_activation_hook( __FILE__, '\\odoo_conn\\dependency_check\\odoo_conn_co
 require_once 'activation.php';
 register_activation_hook( __FILE__, 'odoo_conn_activation_function' );
 
-require_once 'deactivation.php';
-register_deactivation_hook( __FILE__, 'odoo_conn_deactivation_function' );
-
 require_once 'loaded.php';
 require_once 'admin/main.php';
