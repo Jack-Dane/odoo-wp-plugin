@@ -1,6 +1,6 @@
 <?php
 
-namespace odoo_conn\admin\api\endpoints;
+namespace odoo_conn\admin\database_connection;
 
 
 class FieldNameConstantValueException extends \Exception

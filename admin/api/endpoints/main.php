@@ -1,9 +1,7 @@
 <?php
 
-include_once("odoo_connections.php");
-include_once("odoo_forms.php");
-include_once("odoo_form_mappings.php");
-include_once("c7f_posts.php");
-include_once("odoo_errors.php");
+require_once 'odoo_connections.php';
+require_once 'odoo_forms.php';
+require_once 'c7f_posts.php';
 
 ?>

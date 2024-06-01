@@ -1,9 +1,8 @@
 <?php
 
-require("api/main.php");
-
-require("menu_items.php");
-
-require("cf7hook.php");
+require_once 'database_connection/main.php';
+require_once 'api/main.php';
+require_once 'menu_items.php';
+require_once 'cf7hook.php';
 
 ?>

@@ -2,43 +2,13 @@
 
 namespace odoo_conn\admin\api\endpoints;
 
+use odoo_conn\admin\database_connection\OdooConnGetContact7Form;
 
-class OdooConnGetContact7Form extends OdooConnGetExtendedSchema
-{
-
-    public function __construct()
-    {
-        parent::__construct("wpcf7_contact_form");
-    }
-
-    protected function get_public_key()
-    {
-        return "ID";
-    }
-
-    protected function get_columns()
-    {
-        return "ID, post_title";
-    }
-
-    protected function get_table_name()
-    {
-        global $wpdb;
-
-        return $wpdb->posts;
-    }
-
-    protected function where_query()
-    {
-        return "post_type=%s";
-    }
-}
 
 function odoo_conn_get_contact_7_forms($data)
 {
     $get_contact_7_form = new OdooConnGetContact7Form();
-    $response = $get_contact_7_form->request($data);
-    return $response;
+    return $get_contact_7_form->request($data);
 }
 
 function odoo_conn_get_contact_7_forms_schema()

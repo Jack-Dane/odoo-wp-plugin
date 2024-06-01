@@ -2,13 +2,13 @@
 
 namespace odoo_conn\admin\pages\connections;
 
-require_once(__DIR__ . "/../../api/endpoints/odoo_connections.php");
+require_once __DIR__ . '/../../api/endpoints/odoo_connections.php';
 
-use odoo_conn\admin\api\endpoints\OdooConnGetOdooConnectionSingle;
-use odoo_conn\admin\api\endpoints\OdooConnGetOdooConnection;
-use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooConnection;
-use odoo_conn\admin\api\endpoints\OdooConnPostOdooConnection;
-use odoo_conn\admin\api\endpoints\OdooConnPutOdooConnection;
+use odoo_conn\admin\database_connection\OdooConnGetOdooConnectionSingle;
+use odoo_conn\admin\database_connection\OdooConnGetOdooConnection;
+use odoo_conn\admin\database_connection\OdooConnDeleteOdooConnection;
+use odoo_conn\admin\database_connection\OdooConnPostOdooConnection;
+use odoo_conn\admin\database_connection\OdooConnPutOdooConnection;
 use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use odoo_conn\encryption\OdooConnEncryptionHandler;
 use odoo_conn\admin\pages\OdooConnPageRouterCreate;
