@@ -3,7 +3,7 @@
 namespace odoo_conn\admin\database_connection;
 
 
-abstract class OdooConnBaseSchema
+abstract class OdooConnBaseDatabaseConnection
 {
 
 	abstract public function request($data);
@@ -13,7 +13,7 @@ abstract class OdooConnBaseSchema
 }
 
 
-abstract class OdooConnPostPutBaseSchema extends OdooConnBaseSchema
+abstract class OdooConnPostPutBaseDatabaseConnection extends OdooConnBaseDatabaseConnection
 {
 
 	protected function get_columns()
@@ -33,7 +33,7 @@ abstract class OdooConnPostPutBaseSchema extends OdooConnBaseSchema
 }
 
 
-abstract class OdooConnPostBaseSchema extends OdooConnPostPutBaseSchema
+abstract class OdooConnPostBaseDatabaseConnection extends OdooConnPostPutBaseDatabaseConnection
 {
 
 	abstract protected function parse_data($data);
@@ -58,7 +58,7 @@ abstract class OdooConnPostBaseSchema extends OdooConnPostPutBaseSchema
 }
 
 
-abstract class OdooConnPutBaseSchema extends OdooConnPostPutBaseSchema
+abstract class OdooConnPutBaseDatabaseConnection extends OdooConnPostPutBaseDatabaseConnection
 {
 
 	public function __construct($id)
@@ -85,7 +85,7 @@ abstract class OdooConnPutBaseSchema extends OdooConnPostPutBaseSchema
 }
 
 
-abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
+abstract class OdooConnGetBaseDatabaseConnection extends OdooConnBaseDatabaseConnection
 {
 
 	protected string $output_type = OBJECT;
@@ -168,7 +168,7 @@ abstract class OdooConnGetBaseSchema extends OdooConnBaseSchema
 }
 
 
-abstract class OdooConnGetExtendedSchema extends OdooConnGetBaseSchema
+abstract class OdooConnGetExtendedDatabaseConnection extends OdooConnGetBaseDatabaseConnection
 {
 
 	public function __construct($where_value)
@@ -191,7 +191,7 @@ abstract class OdooConnGetExtendedSchema extends OdooConnGetBaseSchema
 }
 
 
-abstract class OdooConnDeleteBaseSchema extends OdooConnBaseSchema
+abstract class OdooConnDeleteBaseDatabaseConnection extends OdooConnBaseDatabaseConnection
 {
 
 	public function request($data)

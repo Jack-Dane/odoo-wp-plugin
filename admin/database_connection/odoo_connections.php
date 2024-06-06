@@ -9,7 +9,7 @@ use odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;
 use WP_Error;
 
 
-class OdooConnDeleteOdooConnection extends OdooConnDeleteBaseSchema
+class OdooConnDeleteOdooConnection extends OdooConnDeleteBaseDatabaseConnection
 {
 
 	use OdooConnOdooConnectionTableName;
@@ -47,14 +47,14 @@ trait OdooConnOdooConnectionColumns
 }
 
 
-class OdooConnGetOdooConnection extends OdooConnGetBaseSchema
+class OdooConnGetOdooConnection extends OdooConnGetBaseDatabaseConnection
 {
 
 	use OdooConnOdooConnectionTableName;
 	use OdooConnOdooConnectionColumns;
 }
 
-class OdooConnGetOdooConnectionSingle extends OdooConnGetExtendedSchema
+class OdooConnGetOdooConnectionSingle extends OdooConnGetExtendedDatabaseConnection
 {
 
 	use OdooConnOdooConnectionTableName;
@@ -106,7 +106,7 @@ class OdooConnTestOdooConnection extends OdooConnGetOdooConnectionSingle
 }
 
 
-class OdooConnPostOdooConnection extends OdooConnPostBaseSchema
+class OdooConnPostOdooConnection extends OdooConnPostBaseDatabaseConnection
 {
 
 	use OdooConnOdooConnectionTableName;
@@ -139,7 +139,7 @@ class OdooConnPostOdooConnection extends OdooConnPostBaseSchema
 }
 
 
-class OdooConnPutOdooConnection extends OdooConnPutBaseSchema
+class OdooConnPutOdooConnection extends OdooConnPutBaseDatabaseConnection
 {
 
 	use OdooConnOdooConnectionTableName;

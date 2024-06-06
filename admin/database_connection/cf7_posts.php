@@ -3,7 +3,7 @@
 namespace odoo_conn\admin\database_connection;
 
 
-class OdooConnGetContact7Form extends OdooConnGetExtendedSchema
+class OdooConnGetContact7Form extends OdooConnGetExtendedDatabaseConnection
 {
 
 	public function __construct()

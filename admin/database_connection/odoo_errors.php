@@ -37,7 +37,7 @@ trait OdooConnOdooErrorsColumns
 }
 
 
-class OdooConnGetOdooErrors extends OdooConnGetBaseSchema
+class OdooConnGetOdooErrors extends OdooConnGetBaseDatabaseConnection
 {
 
     use OdooConnOdooErrorsTableName;
@@ -58,7 +58,7 @@ class OdooConnGetOdooErrors extends OdooConnGetBaseSchema
 }
 
 
-class OdooConnDeleteOdooErrors extends OdooConnDeleteBaseSchema
+class OdooConnDeleteOdooErrors extends OdooConnDeleteBaseDatabaseConnection
 {
 
     use OdooConnOdooErrorsTableName;
