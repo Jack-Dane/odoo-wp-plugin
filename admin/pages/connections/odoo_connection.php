@@ -2,8 +2,6 @@
 
 namespace odoo_conn\admin\pages\connections;
 
-require_once __DIR__ . '/../../api/endpoints/odoo_connections.php';
-
 use odoo_conn\admin\database_connection\OdooConnGetOdooConnectionSingle;
 use odoo_conn\admin\database_connection\OdooConnGetOdooConnection;
 use odoo_conn\admin\database_connection\OdooConnDeleteOdooConnection;
@@ -14,7 +12,7 @@ use odoo_conn\encryption\OdooConnEncryptionHandler;
 use odoo_conn\admin\pages\OdooConnPageRouterCreate;
 use odoo_conn\admin\table_display\OdooConnCustomTableEditableDisplay;
 
-use function odoo_conn\admin\api\endpoints\odoo_conn_test_odoo_connection;
+use function odoo_conn\admin\database_connection\odoo_conn_test_odoo_connection;
 
 
 class OdooConnOdooConnectionListTableEditable extends OdooConnCustomTableEditableDisplay
@@ -44,13 +42,13 @@ class OdooConnOdooConnectionListTableEditable extends OdooConnCustomTableEditabl
 
     public function get_columns()
     {
-        return array(
+        return [
             "cb" => '<input type="checkbox" />',
             "name" => "Name",
             "username" => "Username",
             "url" => "URL",
             "database_name" => "Database Name"
-        );
+        ];
     }
 
 }
@@ -88,7 +86,7 @@ class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate
 
     protected function display_input_form()
     {
-        include("odoo_connection_input_form.php");
+        require_once "odoo_connection_input_form.php";
     }
 
     protected function create_new_record()
@@ -111,7 +109,7 @@ class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate
         $odoo_conn_get = new OdooConnGetOdooConnectionSingle($id);
         $odoo_conn_data = $odoo_conn_get->request([]);
 
-        include("odoo_connection_input_form.php");
+        require_once "odoo_connection_input_form.php";
     }
 
     protected function update_record()

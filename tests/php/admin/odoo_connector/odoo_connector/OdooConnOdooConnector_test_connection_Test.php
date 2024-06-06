@@ -1,11 +1,11 @@
 <?php
 
-namespace odoo_conn\tests\odoo_connector\odoo_connector;
+namespace php\admin\odoo_connector\odoo_connector;
 
-require_once(__DIR__ . "/../../../../odoo_connector/odoo_connector.php");
-require_once(__DIR__ . "/OdooConnOdooConnectorTestBase.php");
+require_once __DIR__ . "/../../../../../admin/odoo_connector/odoo_connector.php";
+require_once __DIR__ . "/OdooConnOdooConnectorTestBase.php";
 
-use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
+use odoo_conn\admin\odoo_connector\OdooConnException;
 
 
 class OdooConnOdooConnector_test_connection_Test extends OdooConnOdooConnectorTestBase

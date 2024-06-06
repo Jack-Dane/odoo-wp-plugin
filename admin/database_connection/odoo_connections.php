@@ -4,8 +4,8 @@ namespace odoo_conn\admin\database_connection;
 
 use odoo_conn\encryption\OdooConnEncryptionFileHandler;
 use odoo_conn\encryption\OdooConnEncryptionHandler;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;
+use odoo_conn\admin\odoo_connector\OdooConnException;
+use odoo_conn\admin\odoo_connector\OdooConnOdooConnector;
 use WP_Error;
 
 

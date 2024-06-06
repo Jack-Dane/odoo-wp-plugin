@@ -3,13 +3,13 @@
 namespace odoo_conn\admin\php\cf7hook;
 
 
-use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
-use \odoo_conn\odoo_connector\odoo_connector\OdooConnOdooConnector;
-use \odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringField;
-use \odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringX2ManyField;
-use \odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
-use \odoo_conn\encryption\OdooConnEncryptionFileHandler;
-use \odoo_conn\encryption\OdooConnEncryptionHandler;
+use odoo_conn\admin\odoo_connector\OdooConnException;
+use odoo_conn\admin\odoo_connector\OdooConnOdooConnector;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCStringField;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCStringX2ManyField;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
+use odoo_conn\encryption\OdooConnEncryptionFileHandler;
+use odoo_conn\encryption\OdooConnEncryptionHandler;
 
 
 class DatabaseHandler

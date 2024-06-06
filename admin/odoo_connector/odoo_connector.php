@@ -1,13 +1,14 @@
 <?php
 
-namespace odoo_conn\odoo_connector\odoo_connector;
+namespace odoo_conn\admin\odoo_connector;
 
-use \PhpXmlRpc\Request;
-use \PhpXmlRpc\Value;
-use \PhpXmlRpc\Client;
+use Exception;
+use PhpXmlRpc\Request;
+use PhpXmlRpc\Value;
+use PhpXmlRpc\Client;
 
 
-class OdooConnException extends \Exception
+class OdooConnException extends Exception
 {
 }
 

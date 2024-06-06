@@ -4,7 +4,7 @@ namespace php\admin\database_connection\odoo_connections;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use odoo_conn\admin\database_connection\OdooConnTestOdooConnection;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
+use odoo_conn\admin\odoo_connector\OdooConnException;
 use PHPUnit\Framework\TestCase;
 
 class OdooConnTestOdooConnection_test_connection_Test extends TestCase
@@ -14,7 +14,7 @@ class OdooConnTestOdooConnection_test_connection_Test extends TestCase
     function setUp(): void
     {
         require_once __DIR__ . '/../../../../../admin/database_connection/main.php';
-		require_once __DIR__ . '/../../../../../odoo_connector/odoo_connector.php';
+		require_once __DIR__ . '/../../../../../admin/odoo_connector/odoo_connector.php';
 
         $this->odoo_connector = \Mockery::mock();
         $this->odoo_conn_test_odoo_connection = new OdooConnTestOdooConnection(2);

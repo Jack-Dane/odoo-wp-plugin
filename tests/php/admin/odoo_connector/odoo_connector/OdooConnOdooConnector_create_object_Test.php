@@ -1,15 +1,15 @@
 <?php
 
-namespace odoo_conn\tests\odoo_connector\odoo_connector;
+namespace php\admin\odoo_connector\odoo_connector;
 
-require_once(__DIR__ . "/../../../../odoo_connector/odoo_connector.php");
-require_once(__DIR__ . "/OdooConnOdooConnectorTestBase.php");
+require_once __DIR__ . "/../../../../../admin/odoo_connector/odoo_connector.php";
+require_once __DIR__ . "/OdooConnOdooConnectorTestBase.php";
 
-use odoo_conn\odoo_connector\odoo_connector\OdooConnException;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringField;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringX2ManyField;
-use \PhpXmlRpc\Value;
+use odoo_conn\admin\odoo_connector\OdooConnException;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCStringField;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCStringX2ManyField;
+use PhpXmlRpc\Value;
 
 
 class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTestBase
@@ -101,7 +101,7 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
             [
                 new OdooConnXMLRPCStringField("name", "Jack"),
                 new OdooConnXMLRPCStringField("email", "test@test.com"),
-                new OdooConnXMLRPCBaseX2ManyField("category_id", array(1, 2, 3)),
+                new OdooConnXMLRPCBaseX2ManyField("category_id", [1, 2, 3]),
                 new OdooConnXMLRPCStringX2ManyField("test_id", "4,5,6")
             ]
         );
@@ -131,12 +131,12 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
         try {
             $this->odoo_connector->create_object(
                 "res.partner",
-                array(
+                [
                     new OdooConnXMLRPCStringField("name", "Jack"),
                     new OdooConnXMLRPCStringField("email", "test@test.com"),
-                    new OdooConnXMLRPCBaseX2ManyField("category_id", array(1, 2, 3)),
+                    new OdooConnXMLRPCBaseX2ManyField("category_id", [1, 2, 3]),
                     new OdooConnXMLRPCStringX2ManyField("test_id", "4,5,6")
-                )
+                ]
             );
         } catch (OdooConnException $exception) {
             $this->assertEquals(
@@ -160,12 +160,12 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
         try {
             $this->odoo_connector->create_object(
                 "res.partner",
-                array(
-                    array(
+                [
+					[
                         "name" => "Jack",
                         "email" => "test@test.com"
-                    )
-                )
+                    ]
+                ]
             );
         } catch (OdooConnException $exception) {
             $this->assertEquals(
@@ -191,12 +191,12 @@ class OdooConnOdooConnector_create_object_Test extends OdooConnOdooConnectorTest
         try {
             $this->odoo_connector->create_object(
                 "res.partner",
-                array(
-                    array(
+                [
+                    [
                         "name" => "Jack",
                         "email" => "test@test.com"
-                    )
-                )
+                    ]
+                ]
             );
         } catch (OdooConnException $exception) {
             $this->assertEquals(

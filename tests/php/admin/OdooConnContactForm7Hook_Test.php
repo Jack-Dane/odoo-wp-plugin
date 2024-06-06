@@ -5,11 +5,11 @@ namespace php\admin;
 require_once __DIR__ . '/../TestClassBrainMonkey.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use \odoo_conn\admin\php\cf7hook\OdooConnContactForm7Hook;
-use \odoo_conn\odoo_connector\odoo_connector\OdooConnException;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringField;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
-use odoo_conn\odoo_connector\odoo_connector\OdooConnXMLRPCStringX2ManyField;
+use odoo_conn\admin\php\cf7hook\OdooConnContactForm7Hook;
+use odoo_conn\admin\odoo_connector\OdooConnException;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCStringField;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCBaseX2ManyField;
+use odoo_conn\admin\odoo_connector\OdooConnXMLRPCStringX2ManyField;
 use phpmock\phpunit\PHPMock;
 use TestClassBrainMonkey;
 
@@ -63,7 +63,7 @@ class OdooConnContactForm7Hook_Test extends TestClassBrainMonkey
         parent::setUp();
 
         require_once(__DIR__ . '/../../../admin/cf7hook.php');
-        require_once(__DIR__ . '/../../../odoo_connector/odoo_connector.php');
+        require_once(__DIR__ . '/../../../admin/odoo_connector/odoo_connector.php');
 
         $this->odoo_connector = \Mockery::mock('OdooConnector');
         $this->wpcf7_contact_form = \Mockery::mock('WPCF7_ContactForm_current');
