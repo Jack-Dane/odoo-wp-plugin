@@ -22,10 +22,6 @@ add_option( 'odoo_conn_db_version' );
 // Require necessary files.
 require_once 'vendor/autoload.php';
 require_once 'encryption.php';
-require_once 'odoo_connector/odoo_connector.php';
-
-require_once 'dependency_check.php';
-register_activation_hook( __FILE__, '\\odoo_conn\\dependency_check\\odoo_conn_contact_7_plugin_active' );
 
 require_once 'activation.php';
 register_activation_hook( __FILE__, 'odoo_conn_activation_function' );

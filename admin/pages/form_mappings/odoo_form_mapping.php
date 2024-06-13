@@ -2,13 +2,11 @@
 
 namespace odoo_conn\admin\pages\form_mapping;
 
-require_once(__DIR__ . "/../../api/endpoints/odoo_form_mappings.php");
-
-use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappings;
-use odoo_conn\admin\api\endpoints\OdooConnDeleteOdooFormMappings;
-use odoo_conn\admin\api\endpoints\OdooConnPostOdooFormMappings;
-use odoo_conn\admin\api\endpoints\OdooConnGetOdooFormMappingSingle;
-use odoo_conn\admin\api\endpoints\OdooConnPutOdooFormMappings;
+use odoo_conn\admin\database_connection\OdooConnGetOdooFormMappings;
+use odoo_conn\admin\database_connection\OdooConnDeleteOdooFormMappings;
+use odoo_conn\admin\database_connection\OdooConnPostOdooFormMappings;
+use odoo_conn\admin\database_connection\OdooConnGetOdooFormMappingSingle;
+use odoo_conn\admin\database_connection\OdooConnPutOdooFormMappings;
 use odoo_conn\admin\pages\OdooConnPageRouterCreate;
 use odoo_conn\admin\table_display\OdooConnCustomTableEditableDisplay;
 
