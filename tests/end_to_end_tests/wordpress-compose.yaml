@@ -6,7 +6,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: wordpress_dockerfile
+      dockerfile: wordpress-dockerfile
     ports:
       - 8000:80
     environment:
@@ -20,7 +20,7 @@ services:
         source: ../../
         target: /var/www/html/wp-content/plugins/odoo
     # install composer before starting the apache server
-    command: '/bin/sh -c "cd /var/www/html/wp-content/plugins/odoo; composer install --no-cache; cd /var/www/html/; docker-entrypoint.sh apache2-foreground"'
+    command: '/bin/sh -c "cd /var/www/html/wp-content/plugins/odoo; composer install --no-cache --no-dev; cd /var/www/html/; docker-entrypoint.sh apache2-foreground"'
 
   test_db:
     restart: always
