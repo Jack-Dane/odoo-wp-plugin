@@ -48,7 +48,7 @@ class OdooConnOdooFormMappingRouter extends OdooConnPageRouterCreate
         parent::__construct($menu_slug);
     }
 
-    protected function create_table_display()
+    protected function get_table_display()
     {
         return new OdooConnOdooFormMappingListTableEditable(
             $this->get_backend, $this->delete_backend
