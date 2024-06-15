@@ -5,11 +5,11 @@
     "php-mock/php-mock": "^2.3",
     "php-mock/php-mock-phpunit": "^2.6",
     "mockery/mockery": "^1.5",
-    "brain/monkey": "2.*"
+    "brain/monkey": "2.*",
+    "guzzlehttp/guzzle": "^7.0",
+    "php-webdriver/webdriver": "^1.13"
   },
   "require": {
-    "guzzlehttp/guzzle": "^7.0",
-    "php-webdriver/webdriver": "^1.13",
     "phpxmlrpc/phpxmlrpc": "^4.9"
   },
   "config": {

@@ -1,29 +1,22 @@
 #!/bin/bash
 
-docker compose -f tests/end_to_end_tests/compose.yaml rm -f --volumes --stop
-docker compose -f tests/end_to_end_tests/compose.yaml up --force-recreate --build --wait
+docker compose -f tests/end_to_end_tests/wordpress-compose.yaml rm -f --volumes --stop
+docker compose -f tests/end_to_end_tests/wordpress-compose.yaml up --force-recreate --build --wait
 
 echo "Waiting for WP containers to start"
 sleep 30
 
 echo "Starting PHP container"
-dockerPHPImageId=$(docker build -f tests/end_to_end_tests/php-composer-dockerfile . -q)
+dockerPHPImageId=$(docker build -t cf7-odoo-connector-php -f tests/end_to_end_tests/php-composer-dockerfile . -q)
 dockerPHPContainerId=$(docker container run -d --network=host ${dockerPHPImageId} tail -f /dev/null)
-
-echo "Installing Vendor"
-# no-cache because the container fails to create directories when cloning
-# from git eg:
-# could not create leading directories of
-# '/.composer/cache/vcs/https ---github.com-bovigo-vfsStream.git'
-docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; composer install --no-cache'
 
 echo "Running Endpoint Tests"
 docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/endpoint_tests'
 
 echo "Running Selenium Tests"
 dockerSeleniumContainerId=$(docker run -d --rm -it --network host --shm-size 2g selenium/standalone-chrome)
-docker compose -f tests/end_to_end_tests/odoo_compose.yaml rm -f --volumes --stop
-docker compose -f tests/end_to_end_tests/odoo_compose.yaml up --force-recreate --build --wait
+docker compose -f tests/end_to_end_tests/odoo-compose.yaml rm -f --volumes --stop
+docker compose -f tests/end_to_end_tests/odoo-compose.yaml up --force-recreate --build --wait
 
 echo "Waiting for Odoo"
 sleep 20
@@ -35,8 +28,10 @@ docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpu
 docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/Delete_Test.php'
 
 # cleanup the containers
-docker compose -f tests/end_to_end_tests/odoo_compose.yaml rm -f --volumes --stop
-docker compose --project-directory tests/end_to_end_tests rm -f --volumes --stop
+docker compose -f tests/end_to_end_tests/odoo-compose.yaml rm -f --volumes --stop
+docker compose -f tests/end_to_end_tests/wordpress-compose.yaml rm -f --volumes --stop
 
-docker container rm --force $dockerPHPContainerId
-docker container rm --force $dockerSeleniumContainerId
+docker container rm -f $dockerPHPContainerId
+docker container rm -f $dockerSeleniumContainerId
+
+docker image rm $dockerPHPImageId

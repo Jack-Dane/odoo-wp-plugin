@@ -1,10 +1,17 @@
-# Container with PHP + Composer
+# syntax=docker/dockerfile:1.7-labs
 FROM php:7.4-cli
 
 RUN apt-get update
 RUN apt-get -y install git unzip libzip-dev
 RUN docker-php-ext-install zip
 
-COPY . /opt/odoo_conn
+COPY --exclude=vendor/ . /opt/odoo_conn
+WORKDIR /opt/odoo_conn
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+# no-cache because the container fails to create directories when cloning
+# from git eg:
+# could not create leading directories of
+# '/.composer/cache/vcs/https ---github.com-bovigo-vfsStream.git'
+RUN composer install --no-cache
