@@ -1,30 +1,21 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+namespace end_to_end_tests\tests\endpoint_tests;
 
-class OdooForm_Test extends TestCase
+require_once __DIR__ . '/EndpointTestBase.php';
+
+class OdooForm_Test extends EndpointTestBase
 {
 
-    public function setUp(): void
-    {
-        $this->client = new Client();
-    }
+	protected function endpoint()
+	{
+		return 'http://localhost:8000/?rest_route=/odoo_conn/v1/get-odoo-forms';
+	}
 
-    public function test_get_odoo_forms()
-    {
-        $failure = false;
-        try {
-            $this->client->request(
-                "GET", "http://localhost:8000/?rest_route=/odoo_conn/v1/get-odoo-forms"
-            );
-        } catch (ClientException $e) {
-            $failure = true;
-            $this->assertEquals(401, $e->getResponse()->getStatusCode());
-        }
-        $this->assertTrue($failure);
-    }
+	public function test()
+	{
+		$this->make_request();
+	}
 
 }
 
