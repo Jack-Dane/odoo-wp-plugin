@@ -8,7 +8,7 @@ abstract class OdooConnPageRouter
 
     public function __construct()
     {
-        $this->table_display = $this->create_table_display();
+        $this->table_display = $this->get_table_display();
     }
 
     private function valid_capability() {
@@ -47,16 +47,26 @@ abstract class OdooConnPageRouter
 
     protected function display_table()
     {
-        echo "<div class='wrap'>";
+		$this->start_wrap();
         $this->table_display->check_bulk_action();
 
         echo "<form method='post'>";
         $this->table_display->prepare_items();
         $this->table_display->display();
-        echo "</form></div>";
+        echo "</form>";
+
+		$this->end_wrap();
     }
 
-    protected abstract function create_table_display();
+	protected function start_wrap() {
+		echo "<div class='wrap'>";
+	}
+
+	protected function end_wrap() {
+		echo "</div>";
+	}
+
+    protected abstract function get_table_display();
 
     protected abstract function delete($id);
 
@@ -113,7 +123,6 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
     protected function display_table()
     {
         $request_method = $_SERVER["REQUEST_METHOD"];
-        $menu_page_slug = menu_page_url($this->menu_slug, false);
 
         if ($request_method == "POST") {
             $this->verify_nonce();
@@ -125,11 +134,16 @@ abstract class OdooConnPageRouterCreate extends OdooConnPageRouter
             }
         }
 
-        $connection_url = esc_url(add_query_arg("page_action", "new", $menu_page_slug));
-        echo "<a href='$connection_url' id='create-data' class='create-database-record button-primary'>Create a new record</a>";
-
         parent::display_table();
     }
+
+	protected function start_wrap() {
+		parent::start_wrap();
+
+		$menu_page_slug = menu_page_url($this->menu_slug, false);
+		$create_record_url = esc_url(add_query_arg("page_action", "new", $menu_page_slug));
+		echo "<a href='$create_record_url' id='create-data' class='create-database-record button-primary'>Create a new record</a>";
+	}
 
     protected abstract function create_new_record();
 

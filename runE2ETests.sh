@@ -28,10 +28,17 @@ docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpu
 docker exec $dockerPHPContainerId /bin/sh -c 'cd /opt/odoo_conn; vendor/bin/phpunit tests/end_to_end_tests/tests/selenium_tests/Delete_Test.php'
 
 # cleanup the containers
-docker compose -f tests/end_to_end_tests/odoo-compose.yaml rm -f --volumes --stop
-docker compose -f tests/end_to_end_tests/wordpress-compose.yaml rm -f --volumes --stop
+echo "Stopping and removing Odoo compose containers"
+docker compose -f tests/end_to_end_tests/odoo-compose.yaml down --volumes
+docker compose -f tests/end_to_end_tests/odoo-compose.yaml rm
 
+echo "Stopping and removing WordPress containers"
+docker compose -f tests/end_to_end_tests/wordpress-compose.yaml down --volumes
+docker compose -f tests/end_to_end_tests/wordpress-compose.yaml rm
+
+echo "Removing PHP container and image"
 docker container rm -f $dockerPHPContainerId
-docker container rm -f $dockerSeleniumContainerId
-
 docker image rm $dockerPHPImageId
+
+echo "Removing Selenium container"
+docker container rm -f $dockerSeleniumContainerId

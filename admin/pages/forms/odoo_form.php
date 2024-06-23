@@ -80,7 +80,7 @@ class OdooConnOdooFormRouter extends OdooConnPageRouterCreate
         $post_odoo_connection->request($_REQUEST);
     }
 
-    protected function create_table_display()
+    protected function get_table_display()
     {
         return new OdooConnOdooFormListTableEditable(
             $this->get_backend, $this->delete_backend
