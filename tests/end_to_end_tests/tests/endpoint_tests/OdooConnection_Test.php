@@ -16,7 +16,7 @@ class OdooConnection_Test extends TestCase
     {
         $failure = false;
         try {
-            $response = $this->client->request(
+			$this->client->request(
                 "GET", "http://localhost:8000/?rest_route=/odoo_conn/v1/get-odoo-connections"
             );
         } catch (ClientException $e) {

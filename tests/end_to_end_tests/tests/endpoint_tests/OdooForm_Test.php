@@ -1,8 +1,8 @@
 <?php
 
-use \PHPUnit\Framework\TestCase;
-use \GuzzleHttp\Client;
-use \GuzzleHttp\Exception\ClientException;
+use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class OdooForm_Test extends TestCase
 {
@@ -16,7 +16,7 @@ class OdooForm_Test extends TestCase
     {
         $failure = false;
         try {
-            $response = $this->client->request(
+            $this->client->request(
                 "GET", "http://localhost:8000/?rest_route=/odoo_conn/v1/get-odoo-forms"
             );
         } catch (ClientException $e) {
