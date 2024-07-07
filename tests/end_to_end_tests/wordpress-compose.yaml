@@ -32,7 +32,9 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
 
   test_wpcli:
-    user: xfs
+    # 33:33 is the UID of the www-data user that created the WP files.
+    # There isn't a user associated with this UID in the newest WordPress cli container.
+    user: "33:33"
     image: wordpress:cli
     depends_on:
       - test_wordpress

@@ -10,11 +10,12 @@
     "php-webdriver/webdriver": "^1.13"
   },
   "require": {
+    "php": ">=8.1.0",
     "phpxmlrpc/phpxmlrpc": "^4.9"
   },
   "config": {
     "platform": {
-      "php": "7.3.0"
+      "php": "8.1.0"
     }
   }
 }

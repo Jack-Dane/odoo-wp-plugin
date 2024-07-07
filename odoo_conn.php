@@ -5,7 +5,7 @@
  * Author: Jack Dane
  * Author URI: https://www.jackdane.co.uk
  * Plugin URI: https://github.com/Jack-Dane/odoo-wp-plugin
- * Requires PHP: 7.3
+ * Requires PHP: 8.1
  * Text Domain: cf7-odoo-connector
  * Requires Plugins: contact-form-7
  * Version: 0.1.5
