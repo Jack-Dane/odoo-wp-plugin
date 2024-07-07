@@ -8,7 +8,7 @@
  * Requires PHP: 8.1
  * Text Domain: cf7-odoo-connector
  * Requires Plugins: contact-form-7
- * Version: 0.1.5
+ * Version: 0.1.6
  */
 
 // Exit if accessed directly.
