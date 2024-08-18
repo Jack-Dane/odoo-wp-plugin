@@ -79,9 +79,12 @@ class OdooConnOdooConnectionRouter extends OdooConnPageRouterCreate
 
     private function test_connection($id)
     {
-        show_message(json_encode(odoo_conn_test_odoo_connection(
-            ["id" => $id]
-        )));
+		$test_result = odoo_conn_test_odoo_connection(
+			["id" => $id]
+		);
+
+		wp_enqueue_style("test-connection-result", plugins_url("test_connection_result.css", __FILE__));
+		require_once "test_connection_result.php";
     }
 
     protected function display_input_form()
