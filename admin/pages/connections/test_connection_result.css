@@ -5,3 +5,11 @@
     border: 1px solid #c3c4c7;
     padding: 8px 10px;
 }
+
+.test-result-ok {
+    background: #ddffdd;
+}
+
+.test-result-failure {
+    background: #ffdddd;
+}
