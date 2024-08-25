@@ -44,13 +44,27 @@ class Error_Test extends WordpressTableBase
         $test_button->click();
         sleep(2);
 
-        $expected_error_message = "{\"success\":false,\"error_string\":\"Username or API Key is incorrect\",\"error_code\":0}";
-        $elements = $this->wait_for_elements(
+        $this->wait_for_elements(
             WebDriverBy::xpath(
-                "//p[contains(text(), '$expected_error_message')]"
+                "//h1[contains(text(), 'Test Result: Failure')]"
             )
         );
-        $this->assertCount(1, $elements);
+		$this->driver->findElement(
+			WebDriverBy::xpath("//b[contains(text(), 'Error Message: ')]")
+		);
+		$this->driver->findElement(
+			WebDriverBy::xpath("//span[contains(text(), 'Username or API Key is incorrect')]")
+		);
+		$this->driver->findElement(
+			WebDriverBy::xpath("//b[contains(text(), 'Error Code: ')]")
+		);
+		$this->driver->findElement(
+			WebDriverBy::xpath("//span[contains(text(), '0')]")
+		);
+
+		// to make the test not appear to be 'risky' as it hasn't made any assertions.
+		// findElement will raise an exception if the test fails.
+		$this->assertTrue(true);
     }
 
     public function test_broken_send_data()

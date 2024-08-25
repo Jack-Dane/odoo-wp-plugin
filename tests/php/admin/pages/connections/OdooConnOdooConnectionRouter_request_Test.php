@@ -76,6 +76,25 @@ class OdooConnOdooConnectionRouter_request_Test extends TestClassBrainMonkey
         $this->odoo_conn_page_router->request();
     }
 
+	function test_request_test_connection()
+	{
+		$GLOBALS['_REQUEST'] = ['page_action' => 'test_connection', 'id' => 3];
+		$this->odoo_conn_page_router->shouldReceive('display_test_connection_result')->with(
+			['success' => true]
+		)->once();
+		$this->odoo_conn_page_router->shouldReceive('display_table')->once();
+		Functions\expect('current_user_can')->once()->with(
+			'administrator'
+		)->andReturn(true);
+		Functions\expect(
+			'odoo_conn\admin\database_connection\odoo_conn_test_odoo_connection'
+		)->with(
+			['id' => 3]
+		)->andReturn(['success' => true]);
+
+		$this->odoo_conn_page_router->request();
+	}
+
     function test_request_other()
     {
         $GLOBALS['_REQUEST'] = ['id' => 3, 'page_action' => 'other'];
