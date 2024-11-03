@@ -5,6 +5,7 @@ services:
   wordpress:
     image: wordpress:apache
     restart: always
+    user: 1000:1000
     ports:
       - 8080:80
     environment:

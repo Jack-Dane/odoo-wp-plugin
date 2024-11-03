@@ -1,5 +1,17 @@
 <?php
 
+function move_existing_encryption_file(): void
+{
+	// Original encryption file path that isn't compatible with WordPress SaaS.
+	// The directory is owned by root in WordPress SaaS.
+	$old_encryption_key_path = ABSPATH . "odoo_conn.key";
+	$new_encryption_key_path = plugin_dir_path(__FILE__) . "odoo_conn.key";
+
+	if (file_exists($old_encryption_key_path)) {
+		rename($old_encryption_key_path, $new_encryption_key_path);
+	}
+}
+
 function odoo_conn_update_db_check()
 {
     require_once(ABSPATH . "wp-admin/includes/upgrade.php");
@@ -48,6 +60,7 @@ function odoo_conn_add_multi_table_column() {
     $wpdb->query($sql);
 }
 
+add_action("plugins_loaded", "move_existing_encryption_file");
 add_action("plugins_loaded", "odoo_conn_update_db_check");
 
 ?>
