@@ -27,3 +27,5 @@ vendor/
 .idea
 
 *.phpunit.result.cache
+
+odoo_conn.key

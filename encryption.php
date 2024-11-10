@@ -8,7 +8,7 @@ class OdooConnEncryptionFileHandler
 
     public function __construct()
     {
-        $this->encryption_key_path = ABSPATH . "odoo_conn.key";
+        $this->encryption_key_path = plugin_dir_path(__FILE__) . "odoo_conn.key";
     }
 
     public function write_to_file($api_key)
@@ -38,7 +38,7 @@ class OdooConnEncryptionFileHandler
         } finally {
             // https://github.com/Jack-Dane/odoo-wp-plugin/issues/2
             // Sometimes (Integration test) the encryption_file isn't seen as a resource to flock
-            // add this check to avoid 500 errors when intially creating data in Wordpress
+            // add this check to avoid 500 errors when initially creating data in WordPress
             // until a better solution is found, this will do.
             if (is_resource($encryption_file)) {
                 flock($encryption_file, LOCK_UN);
