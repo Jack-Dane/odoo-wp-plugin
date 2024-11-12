@@ -7,8 +7,6 @@ function odoo_conn_activation_function()
     odoo_conn_create_odoo_connections_table();
     odoo_conn_create_odoo_form_table();
     odoo_conn_create_odoo_form_field_mapping();
-
-    update_option("odoo_conn_db_version", 1);
 }
 
 function odoo_conn_create_odoo_connections_table()
